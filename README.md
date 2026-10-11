@@ -2,7 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/@vincent.ri/react-tils)](https://www.npmjs.com/package/@vincent.ri/react-tils)
 [![CI](https://github.com/vincentri/react-tils/actions/workflows/ci.yml/badge.svg)](https://github.com/vincentri/react-tils/actions/workflows/ci.yml)
-[![size](https://img.shields.io/badge/all%2047%20hooks-7.2%20kB-blue)](#hooks)
+[![size](https://img.shields.io/badge/all%2051%20hooks-7.9%20kB-blue)](#hooks)
 [![license](https://img.shields.io/npm/l/@vincent.ri/react-tils)](LICENSE)
 
 React hooks for browser state and interaction that are correct on the first frame: they render on the server, hydrate without mismatches, clean up every listener, and work with React Compiler. Documented so AI coding agents pick the right hook and use it correctly.
@@ -39,7 +39,7 @@ The usual way to read browser state in React is `useState` plus `useEffect`. It 
 - **No leaks.** Every listener, observer, and timer is removed on unmount, including under StrictMode.
 - **Tested for real.** Every hook passes a server-render, hydration, and leak check on React 18, 19, and canary, plus browser tests in Chromium, Firefox, WebKit, and a Next.js app.
 - **React Compiler safe.** Every hook compiles with zero bailouts, and the full test suite runs again on compiled code.
-- **Small.** No dependencies, one file per hook, tree-shakeable. All 47 hooks together are 7.2 kB (brotli).
+- **Small.** No dependencies, one file per hook, tree-shakeable. All 51 hooks together are 7.9 kB (brotli).
 - **Made for agents.** Every hook's JSDoc says when to use it and when not to, with examples. `AGENTS.md` maps everyday tasks to hooks and lists the patterns to avoid.
 
 ## Setup for AI agents
@@ -85,6 +85,7 @@ Every hook is documented in its type declarations, so your editor shows the full
 | `useVisualViewport(serverValue?)`    | Keeping a bottom bar above the mobile keyboard             | 285 B |
 | `useWindowScroll(serverValue?)`      | Page scroll position: back-to-top buttons, progress bars   | 169 B |
 | `useScrollDirection(threshold?)`     | Hiding the header while scrolling down                     | 190 B |
+| `useScrollSpy(ids, options?)`        | Highlighting the current section in a table of contents    | 266 B |
 
 ### Elements
 
@@ -93,6 +94,7 @@ Every hook is documented in its type declarations, so your editor shows the full
 | `useElementSize({ box? })` | An element's pixel size, for canvases and charts            | 322 B |
 | `useElementScroll()`       | Scroll position and edges of a scroll container             | 451 B |
 | `useInView(options?)`      | Lazy loading, infinite lists, play when visible             | 252 B |
+| `useIsStuck()`             | Styling a sticky header once it sticks                      | 268 B |
 | `useStickToBottom()`       | Chats and logs that follow new messages until you scroll up | 589 B |
 | `useMergedRefs(...refs)`   | Putting several refs on one element                         | 315 B |
 
@@ -130,9 +132,11 @@ Every hook is documented in its type declarations, so your editor shows the full
 | `useLongPress(onLongPress, options?)`               | Press and hold on touch and mouse                      | 381 B |
 | `useSwipe(onSwipe, options?)`                       | Swiping between slides, swipe to dismiss               | 401 B |
 | `useFileDrop(onDrop, options?)`                     | Drag-and-drop file upload areas                        | 348 B |
+| `usePasteFiles(onFiles, options?)`                  | Pasting screenshots and files into a chat or editor    | 347 B |
 | `useTextSelection()`                                | Floating toolbars for selected text                    | 351 B |
 | `useRovingFocus(options?)`                          | Arrow-key navigation in toolbars, menus, and tab lists | 688 B |
 | `useFocusTrap(active?)`                             | Keeping focus inside a custom modal or drawer          | 512 B |
+| `useAutosizeTextarea(options?)`                     | Chat inputs that grow with their text                  | 474 B |
 
 ### Timers
 

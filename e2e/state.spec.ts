@@ -36,6 +36,8 @@ test('useMediaQuery follows the OS color scheme', async ({ page }) => {
 test('useWindowScroll and useInView follow real scrolling', async ({ page }) => {
   await page.goto('/')
   await expect(page.getByTestId('inview')).toHaveText('no')
+  // Over the content, not the sidebar, which scrolls on its own.
+  await page.mouse.move(700, 400)
   await page.mouse.wheel(0, 600)
   await expect(page.getByTestId('window-scroll')).not.toHaveText('y = 0')
   await page.getByTestId('inview-target').scrollIntoViewIfNeeded()
@@ -132,7 +134,7 @@ test('useIdle goes idle after 3s without input and back on input', async ({ page
 test('useScrollDirection follows real scrolling', async ({ page }) => {
   await page.goto('/')
   await expect(page.getByTestId('scroll-direction')).toHaveText('up')
-  await page.mouse.move(400, 400)
+  await page.mouse.move(700, 400)
   await page.mouse.wheel(0, 800)
   await expect(page.getByTestId('scroll-direction')).toHaveText('down')
   await page.mouse.wheel(0, -300)
@@ -190,4 +192,31 @@ test('useElementScroll follows a scroll container and its edges', async ({ page 
   await expect(value).toHaveText(/top no · bottom yes$/)
   await expect(panel).toHaveClass(/shadow-top/)
   await expect(panel).not.toHaveClass(/shadow-bottom/)
+})
+
+test('useScrollSpy: the sidebar marks the section being read', async ({ page }) => {
+  await page.goto('/')
+  const spy = page.getByTestId('spy-active')
+  await expect(spy).toHaveText('reading: —') // top of the page: no section past the line yet
+
+  await page.getByTestId('nav-useHash').click()
+  await expect(spy).toHaveText('reading: useHash')
+  await expect(page.getByTestId('nav-useHash')).toHaveAttribute('aria-current', 'location')
+  await expect(page.getByTestId('nav-useMediaQuery')).not.toHaveAttribute('aria-current')
+
+  // At the very bottom, the last section is active even though it's too short to reach the line.
+  await page.getByTestId('inview-target').scrollIntoViewIfNeeded()
+  await expect(spy).toHaveText('reading: useControllableState')
+})
+
+test('useIsStuck: the status bar reports when it sticks', async ({ page }) => {
+  await page.goto('/')
+  const stuck = page.getByTestId('stuck')
+  await expect(stuck).toHaveText('status bar stuck: no')
+  await page.mouse.move(700, 400)
+  await page.mouse.wheel(0, 800)
+  await expect(stuck).toHaveText('status bar stuck: yes')
+  await expect(page.locator('.sticky-status')).toHaveClass(/stuck/)
+  await page.evaluate(() => window.scrollTo(0, 0))
+  await expect(stuck).toHaveText('status bar stuck: no')
 })

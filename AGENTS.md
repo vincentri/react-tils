@@ -50,6 +50,10 @@ React hooks for browser state. Every hook renders on the server, hydrates with n
 | Debounced copy of state (a query to fetch with), not a debounced handler               | `useDebouncedValue(value, delayMs)`                                                                                |
 | Scroll position or edges of a scroll container (fade shadows, "read to the end")       | `useElementScroll()` → `[ref, { y, atTop, atBottom, … }]`; for the page use `useWindowScroll`                      |
 | Chat, AI chat, or log that follows new messages until the user scrolls up              | `useStickToBottom()` → `[ref, { atBottom, scrollToBottom }]`                                                       |
+| Highlight the current section in a table of contents or docs sidebar                   | `useScrollSpy(ids, { offset? })` → active id                                                                       |
+| Chat input or comment box that grows with its text                                     | `useAutosizeTextarea({ maxRows? })` → `ref`; set the minimum with `rows`                                           |
+| Paste screenshots or files into a chat, editor, or upload area                         | `usePasteFiles(onFiles, { accept? })` → `ref`; pairs with `useFileDrop`                                            |
+| Style a sticky header once it sticks (shadow, border, smaller)                         | `useIsStuck()` → `[ref, stuck]`; the element needs `position: sticky`                                              |
 | Arrow-key navigation in a toolbar, menu, tab list, or listbox (one Tab stop)           | `useRovingFocus({ orientation?, loop? })`; radio groups and `<select>` do it natively                              |
 | Hide the header on scroll down, show it on scroll up                                   | `useScrollDirection(threshold?)`                                                                                   |
 | Keep keyboard focus inside a custom modal or drawer                                    | `useFocusTrap(active)`; prefer `<dialog>` with `showModal()`                                                       |
@@ -73,29 +77,33 @@ import { useMediaQuery } from '@vincent.ri/react-tils/useMediaQuery'
 
 Names from react-use, ahooks, usehooks-ts, @uidotdev/usehooks, MUI, and Mantine, and the react-tils hook to use instead. Check the API in its JSDoc: arguments differ.
 
-| Their name                                                    | Use                     |
-| ------------------------------------------------------------- | ----------------------- |
-| `useAutoScroll`, `useChatScroll`                              | `useStickToBottom`      |
-| `useClickAway`, `useOnClickOutside`                           | `useClickOutside`       |
-| `useControlled`, `useUncontrolled`, `useControllableValue`    | `useControllableState`  |
-| `useDebounce`, `useDebounceValue`                             | `useDebouncedValue`     |
-| `useDebounceCallback`, `useDebounceFn`                        | `useDebouncedCallback`  |
-| `useExternal`                                                 | `useScript`             |
-| `useIntersection`, `useIntersectionObserver`, `useInViewport` | `useInView`             |
-| `useIsClient`, `useMounted`                                   | `useHydrated`           |
-| `useKey`, `useKeyPress`, `useHotkeys`                         | `useHotkey`             |
-| `useLocalStorageState`                                        | `useLocalStorage`       |
-| `useLockBodyScroll`                                           | `useScrollLock`         |
-| `useMeasure`, `useSize`, `useResizeObserver`                  | `useElementSize`        |
-| `useMedia`, `useBreakpoint`, `useResponsive`                  | `useMediaQuery`         |
-| `useMergeRefs`, `useForkRef`, `mergeRefs`                     | `useMergedRefs`         |
-| `useNetworkState`, `useNetwork`                               | `useOnline`             |
-| `usePageVisibility`                                           | `useDocumentVisibility` |
-| `useRafLoop`                                                  | `useAnimationFrame`     |
-| `useRovingTabIndex`                                           | `useRovingFocus`        |
-| `useScroll`                                                   | `useElementScroll`      |
-| `useSessionStorageState`                                      | `useSessionStorage`     |
-| `useTimeoutFn`                                                | `useTimeout`            |
+| Their name                                                        | Use                     |
+| ----------------------------------------------------------------- | ----------------------- |
+| `useAutoScroll`, `useChatScroll`                                  | `useStickToBottom`      |
+| `useActiveSection`, `useScrollspy`                                | `useScrollSpy`          |
+| `useTextareaAutosize`, `useAutoResize`, `react-textarea-autosize` | `useAutosizeTextarea`   |
+| `usePaste`, `useClipboardFiles`                                   | `usePasteFiles`         |
+| `useSticky`, `useStickyFixed`                                     | `useIsStuck`            |
+| `useClickAway`, `useOnClickOutside`                               | `useClickOutside`       |
+| `useControlled`, `useUncontrolled`, `useControllableValue`        | `useControllableState`  |
+| `useDebounce`, `useDebounceValue`                                 | `useDebouncedValue`     |
+| `useDebounceCallback`, `useDebounceFn`                            | `useDebouncedCallback`  |
+| `useExternal`                                                     | `useScript`             |
+| `useIntersection`, `useIntersectionObserver`, `useInViewport`     | `useInView`             |
+| `useIsClient`, `useMounted`                                       | `useHydrated`           |
+| `useKey`, `useKeyPress`, `useHotkeys`                             | `useHotkey`             |
+| `useLocalStorageState`                                            | `useLocalStorage`       |
+| `useLockBodyScroll`                                               | `useScrollLock`         |
+| `useMeasure`, `useSize`, `useResizeObserver`                      | `useElementSize`        |
+| `useMedia`, `useBreakpoint`, `useResponsive`                      | `useMediaQuery`         |
+| `useMergeRefs`, `useForkRef`, `mergeRefs`                         | `useMergedRefs`         |
+| `useNetworkState`, `useNetwork`                                   | `useOnline`             |
+| `usePageVisibility`                                               | `useDocumentVisibility` |
+| `useRafLoop`                                                      | `useAnimationFrame`     |
+| `useRovingTabIndex`                                               | `useRovingFocus`        |
+| `useScroll`                                                       | `useElementScroll`      |
+| `useSessionStorageState`                                          | `useSessionStorage`     |
+| `useTimeoutFn`                                                    | `useTimeout`            |
 
 ## Do not write these patterns
 

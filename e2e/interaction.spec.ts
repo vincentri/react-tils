@@ -52,6 +52,7 @@ test('useScrollLock stops page scrolling while the modal is open', async ({ page
   expect(await page.evaluate(() => getComputedStyle(document.body).overflow)).toBe('hidden')
   // Clicking scrolled the button into view, so compare against where the page is now.
   const before = await page.evaluate(() => window.scrollY)
+  await page.mouse.move(700, 300)
   await page.mouse.wheel(0, 800)
   await page.keyboard.press('PageDown')
   await page.waitForTimeout(300)
@@ -60,7 +61,7 @@ test('useScrollLock stops page scrolling while the modal is open', async ({ page
   await page.getByTestId('modal-close').click()
   expect(await page.evaluate(() => document.body.style.overflow)).toBe('')
   // WebKit drops a wheel event aimed at the just-removed Close button until the mouse moves.
-  await page.mouse.move(300, 300)
+  await page.mouse.move(700, 300)
   await page.mouse.wheel(0, 400)
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(before)
 })
@@ -338,4 +339,56 @@ test('useTextSelection follows mouse and programmatic selection', async ({ page 
 
   await page.locator('header h1').click() // collapses the selection
   await expect(selected).toHaveText('selected: —')
+})
+
+test('useAutosizeTextarea grows with the text, stops at maxRows, and shrinks when cleared', async ({
+  page,
+}) => {
+  await page.goto('/')
+  const input = page.getByTestId('autosize')
+  const height = async () => (await input.boundingBox())!.height
+  const oneLine = await height()
+
+  await input.click()
+  await input.pressSequentially('one')
+  for (const line of ['two', 'three']) {
+    await page.keyboard.press('Enter')
+    await input.pressSequentially(line)
+  }
+  const threeLines = await height()
+  expect(threeLines).toBeGreaterThan(oneLine + 30) // two more 20px lines
+
+  for (let i = 0; i < 6; i++) {
+    await page.keyboard.press('Enter')
+    await input.pressSequentially(`more ${i}`)
+  }
+  const capped = await height()
+  await page.keyboard.press('Enter')
+  await input.pressSequentially('even more')
+  expect(await height()).toBe(capped) // maxRows reached: it scrolls instead of growing
+  expect(await input.evaluate((el) => el.scrollHeight > el.clientHeight)).toBe(true)
+
+  await page.getByTestId('autosize-send').click() // clears the controlled value from code
+  await expect.poll(height).toBe(oneLine)
+})
+
+test('usePasteFiles takes pasted images and leaves text pastes alone', async ({ page }) => {
+  await page.goto('/')
+  const input = page.getByTestId('paste-input')
+  // A paste event as the browser fires it, with a screenshot or plain text on the clipboard.
+  const paste = (kind: 'image' | 'text') =>
+    input.evaluate((el, what) => {
+      const data = new DataTransfer()
+      if (what === 'image') data.items.add(new File(['png'], 'shot.png', { type: 'image/png' }))
+      else data.setData('text/plain', 'hello')
+      const event = new ClipboardEvent('paste', { bubbles: true, cancelable: true })
+      Object.defineProperty(event, 'clipboardData', { value: data })
+      el.dispatchEvent(event)
+      return event.defaultPrevented
+    }, kind)
+
+  expect(await paste('text')).toBe(false)
+  await expect(page.getByTestId('pasted')).toHaveText('nothing pasted')
+  expect(await paste('image')).toBe(true)
+  await expect(page.getByTestId('pasted')).toHaveText('shot.png (image/png)')
 })

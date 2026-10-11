@@ -1,6 +1,15 @@
-import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react'
+import {
+  createElement,
+  Fragment,
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import {
   useAnimationFrame,
+  useAutosizeTextarea,
   useBeforeUnload,
   useBroadcastChannel,
   useClickOutside,
@@ -22,12 +31,14 @@ import {
   useIdle,
   useInterval,
   useInView,
+  useIsStuck,
   useLocalStorage,
   useLongPress,
   useMergedRefs,
   useMediaQuery,
   useNetworkInformation,
   useNow,
+  usePasteFiles,
   useOnline,
   usePermission,
   usePreferredLanguages,
@@ -35,6 +46,7 @@ import {
   useScript,
   useScrollDirection,
   useScrollLock,
+  useScrollSpy,
   useSessionStorage,
   useShare,
   useStickToBottom,
@@ -49,14 +61,77 @@ import {
   useWindowSize,
 } from '@vincent.ri/react-tils'
 
+// Each hook's description and example, read from its JSDoc so the demo can't drift from the docs.
+const sources = import.meta.glob(['../../src/use*.ts', '!../../src/*.test.ts'], {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+}) as Record<string, string>
+
+function hookDocs(hook: string): { description: string; example: string } {
+  const source = sources[`../../src/${hook}.ts`] ?? ''
+  const match = new RegExp(
+    `/\\*\\*((?:(?!\\*/)[\\s\\S])*)\\*/\\s*export function ${hook}[<(]`,
+  ).exec(source)
+  if (!match) return { description: '', example: '' }
+  const lines = match[1]!.split('\n').map((line) => line.replace(/^\s*\* ?/, ''))
+  const start = lines.findIndex((line) => line.trim() !== '')
+  const end = lines.indexOf('', start)
+  const at = lines.findIndex((line) => line.startsWith('@example'))
+  return {
+    description: lines
+      .slice(start, end === -1 ? undefined : end)
+      .join(' ')
+      .trim(),
+    example:
+      at === -1
+        ? ''
+        : lines
+            .slice(at + 1)
+            .join('\n')
+            .trim(),
+  }
+}
+
+/** Text with `code` spans. */
+function Prose({ text }: { text: string }) {
+  return createElement(
+    Fragment,
+    null,
+    ...text.split('`').map((part, i) => (i % 2 === 1 ? createElement('code', null, part) : part)),
+  )
+}
+
 function Card({ hook, hint, children }: { hook: string; hint: string; children: ReactNode }) {
+  const hooks = hook.split(' · ')
+  const examples = hooks
+    .map((name) => hookDocs(name).example)
+    .filter(Boolean)
+    .join('\n\n')
   return (
-    <section className="card" data-hook={hook}>
-      <h2>
+    <section className="card" id={hooks[0]} data-hook={hook}>
+      {hooks.slice(1).map((name) => (
+        <span key={name} id={name} className="anchor" />
+      ))}
+      <h3>
         <code>{hook}</code>
-      </h2>
-      <p className="hint">{hint}</p>
-      <div className="body">{children}</div>
+      </h3>
+      {hooks.map((name) => (
+        <p key={name} className="desc">
+          <Prose text={hookDocs(name).description} />
+        </p>
+      ))}
+      <div className="card-grid">
+        <div className="demo">
+          <p className="hint">{hint}</p>
+          <div className="body">{children}</div>
+        </div>
+        {examples && (
+          <pre className="code">
+            <code>{examples}</code>
+          </pre>
+        )}
+      </div>
     </section>
   )
 }
@@ -117,10 +192,6 @@ function ElementSizeDemo() {
       </button>
     </Card>
   )
-}
-
-function InViewDemo({ target }: { target: (el: HTMLDivElement | null) => void }) {
-  return <div ref={target} className="sentinel" data-testid="inview-target" />
 }
 
 function OnlineDemo() {
@@ -791,76 +862,290 @@ function TextSelectionDemo() {
   )
 }
 
+function AutosizeDemo() {
+  const [message, setMessage] = useState('')
+  const [sent, setSent] = useState(0)
+  const ref = useAutosizeTextarea({ maxRows: 5 })
+  return (
+    <Card
+      hook="useAutosizeTextarea"
+      hint="Type several lines: it grows up to 5, then scrolls. Send clears it."
+    >
+      <textarea
+        ref={ref}
+        rows={1}
+        className="autosize"
+        data-testid="autosize"
+        placeholder="Message…"
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+      />
+      <button
+        type="button"
+        data-testid="autosize-send"
+        onClick={() => {
+          setMessage('')
+          setSent((n) => n + 1)
+        }}
+      >
+        Send
+      </button>
+      <Value id="autosize-sent">sent {sent}</Value>
+    </Card>
+  )
+}
+
+function PasteFilesDemo() {
+  const [files, setFiles] = useState<string[]>([])
+  const ref = usePasteFiles<HTMLDivElement>(
+    (pasted) => setFiles(pasted.map((file) => `${file.name} (${file.type})`)),
+    { accept: 'image/*' },
+  )
+  return (
+    <Card
+      hook="usePasteFiles"
+      hint="Copy a screenshot, click the box, and paste. Text pastes normally."
+    >
+      <div ref={ref} className="paste">
+        <textarea data-testid="paste-input" rows={2} placeholder="Paste an image here" />
+      </div>
+      <Value id="pasted">{files.length > 0 ? files.join(', ') : 'nothing pasted'}</Value>
+    </Card>
+  )
+}
+
+function ScrollSpyDemo({ active }: { active: string | null }) {
+  return (
+    <Card
+      hook="useScrollSpy"
+      hint="Scroll the page: the sidebar highlights the section you're reading."
+    >
+      <Value id="spy-active">reading: {active ?? '—'}</Value>
+    </Card>
+  )
+}
+
+function IsStuckDemo({ stuck }: { stuck: boolean }) {
+  return (
+    <Card hook="useIsStuck" hint="The status bar at the top gets a shadow once it sticks.">
+      <Value id="stuck">status bar stuck: {stuck ? 'yes' : 'no'}</Value>
+    </Card>
+  )
+}
+
+function InViewCard({ inView }: { inView: boolean }) {
+  return (
+    <Card hook="useInView" hint="Watches the footer at the very bottom of the page.">
+      <Value id="inview-card">footer in view: {inView ? 'yes' : 'no'}</Value>
+    </Card>
+  )
+}
+
+function ScrollDirectionCard({ direction }: { direction: string }) {
+  return (
+    <Card hook="useScrollDirection" hint="Scroll down, then up. Also shown in the status bar.">
+      <Value id="scroll-direction-card">scrolling {direction}</Value>
+    </Card>
+  )
+}
+
+// Sidebar and page order. Each card lists its hooks; most show one, a few show two together.
+const CATEGORIES: { title: string; cards: string[][] }[] = [
+  {
+    title: 'Viewport and media',
+    cards: [
+      ['useMediaQuery'],
+      ['useWindowSize'],
+      ['useVisualViewport'],
+      ['useWindowScroll'],
+      ['useScrollDirection'],
+      ['useScrollSpy'],
+    ],
+  },
+  {
+    title: 'Elements',
+    cards: [
+      ['useElementSize'],
+      ['useElementScroll'],
+      ['useInView'],
+      ['useIsStuck'],
+      ['useStickToBottom'],
+      ['useMergedRefs'],
+    ],
+  },
+  {
+    title: 'Storage and URL',
+    cards: [['useLocalStorage', 'useSessionStorage'], ['useHash'], ['useBroadcastChannel']],
+  },
+  {
+    title: 'Page, device, and user',
+    cards: [
+      ['useOnline'],
+      ['useNetworkInformation'],
+      ['useDocumentVisibility', 'useWindowFocus'],
+      ['useIdle'],
+      ['usePreferredLanguages'],
+      ['usePermission', 'useGeolocation'],
+      ['useHydrated'],
+      ['useNow'],
+    ],
+  },
+  {
+    title: 'Events and input',
+    cards: [
+      ['useEventListener'],
+      ['useClickOutside'],
+      ['useHotkey'],
+      ['useLongPress'],
+      ['useSwipe'],
+      ['useFileDrop'],
+      ['usePasteFiles'],
+      ['useTextSelection'],
+      ['useRovingFocus'],
+      ['useFocusTrap'],
+      ['useAutosizeTextarea'],
+    ],
+  },
+  {
+    title: 'Timers',
+    cards: [
+      ['useInterval'],
+      ['useTimeout'],
+      ['useDebouncedCallback'],
+      ['useDebouncedValue'],
+      ['useAnimationFrame'],
+    ],
+  },
+  {
+    title: 'Browser APIs',
+    cards: [
+      ['useCopyToClipboard'],
+      ['useShare'],
+      ['useFullscreen'],
+      ['useWakeLock'],
+      ['useUserMedia'],
+      ['useScript'],
+      ['useScrollLock'],
+      ['useBeforeUnload'],
+    ],
+  },
+  { title: 'Component helpers', cards: [['useControllableState']] },
+]
+const IDS = CATEGORIES.flatMap((category) => category.cards.flat())
+
 export function App() {
   const [inViewRef, inView] = useInView<HTMLDivElement>()
   const direction = useScrollDirection()
+  const [stuckRef, stuck] = useIsStuck<HTMLParagraphElement>()
+  // Below the sticky status bar.
+  const active = useScrollSpy(IDS, { offset: 80 })
+
+  // Each card's demo, keyed by its first hook.
+  const demos: Record<string, ReactNode> = {
+    useMediaQuery: <MediaQueryDemo />,
+    useWindowSize: <WindowSizeDemo />,
+    useVisualViewport: <VisualViewportDemo />,
+    useWindowScroll: <WindowScrollDemo />,
+    useScrollDirection: <ScrollDirectionCard direction={direction} />,
+    useScrollSpy: <ScrollSpyDemo active={active} />,
+    useElementSize: <ElementSizeDemo />,
+    useElementScroll: <ElementScrollDemo />,
+    useInView: <InViewCard inView={inView} />,
+    useIsStuck: <IsStuckDemo stuck={stuck} />,
+    useStickToBottom: <StickToBottomDemo />,
+    useMergedRefs: <MergedRefsDemo />,
+    useLocalStorage: <StorageDemo />,
+    useHash: <HashDemo />,
+    useBroadcastChannel: <BroadcastDemo />,
+    useOnline: <OnlineDemo />,
+    useNetworkInformation: <NetworkDemo />,
+    useDocumentVisibility: <VisibilityDemo />,
+    useIdle: <IdleDemo />,
+    usePreferredLanguages: <LanguageDemo />,
+    usePermission: <GeolocationDemo />,
+    useHydrated: <HydratedDemo />,
+    useNow: <NowDemo />,
+    useEventListener: <EventListenerDemo />,
+    useClickOutside: <ClickOutsideDemo />,
+    useHotkey: <HotkeyDemo />,
+    useLongPress: <LongPressDemo />,
+    useSwipe: <SwipeDemo />,
+    useFileDrop: <FileDropDemo />,
+    usePasteFiles: <PasteFilesDemo />,
+    useTextSelection: <TextSelectionDemo />,
+    useRovingFocus: <RovingFocusDemo />,
+    useFocusTrap: <FocusTrapDemo />,
+    useAutosizeTextarea: <AutosizeDemo />,
+    useInterval: <IntervalDemo />,
+    useTimeout: <TimeoutDemo />,
+    useDebouncedCallback: <DebounceDemo />,
+    useDebouncedValue: <DebouncedValueDemo />,
+    useAnimationFrame: <AnimationFrameDemo />,
+    useCopyToClipboard: <CopyDemo />,
+    useShare: <ShareDemo />,
+    useFullscreen: <FullscreenDemo />,
+    useWakeLock: <WakeLockDemo />,
+    useUserMedia: <UserMediaDemo />,
+    useScript: <ScriptDemo />,
+    useScrollLock: <ScrollLockDemo />,
+    useBeforeUnload: <BeforeUnloadDemo />,
+    useControllableState: <ControllableDemo />,
+  }
+
   return (
-    <main>
-      <header>
-        <h1>react-tils</h1>
-        <p>
-          Every card below is server-rendered at build time and hydrated in your browser. Values
-          update live.
-        </p>
-        <p className="sticky-status">
+    <div className="layout">
+      <aside className="sidebar">
+        <a className="brand" href="#top">
+          react-tils
+        </a>
+        <nav aria-label="Hooks">
+          {CATEGORIES.map((category) => (
+            <div key={category.title} className="nav-group">
+              <h2>{category.title}</h2>
+              <ul>
+                {category.cards.flat().map((hook) => (
+                  <li key={hook}>
+                    <a
+                      href={`#${hook}`}
+                      data-testid={`nav-${hook}`}
+                      aria-current={active === hook ? 'location' : undefined}
+                    >
+                      {hook}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </nav>
+      </aside>
+      <main id="top">
+        <header>
+          <h1>react-tils</h1>
+          <p>
+            {IDS.length} React hooks for browser state, correct on the first frame. Every example
+            below is server-rendered at build time and hydrated in your browser.
+          </p>
+        </header>
+        <p ref={stuckRef} className={stuck ? 'sticky-status stuck' : 'sticky-status'}>
           Scrolling <Value id="scroll-direction">{direction}</Value> · bottom of page in view:{' '}
           <Value id="inview">{inView ? 'yes' : 'no'}</Value>
         </p>
-      </header>
-      <h2 className="group">Browser state</h2>
-      <div className="grid">
-        <MediaQueryDemo />
-        <WindowSizeDemo />
-        <WindowScrollDemo />
-        <ElementSizeDemo />
-        <ElementScrollDemo />
-        <OnlineDemo />
-        <VisibilityDemo />
-        <HydratedDemo />
-        <StorageDemo />
-        <LanguageDemo />
-        <GeolocationDemo />
-        <IdleDemo />
-        <VisualViewportDemo />
-        <NetworkDemo />
-        <NowDemo />
-        <HashDemo />
-      </div>
-      <h2 className="group">Events and interaction</h2>
-      <div className="grid">
-        <EventListenerDemo />
-        <ClickOutsideDemo />
-        <HotkeyDemo />
-        <CopyDemo />
-        <ShareDemo />
-        <ScrollLockDemo />
-        <BeforeUnloadDemo />
-        <IntervalDemo />
-        <TimeoutDemo />
-        <ScriptDemo />
-        <FullscreenDemo />
-        <WakeLockDemo />
-        <BroadcastDemo />
-        <FileDropDemo />
-        <LongPressDemo />
-        <UserMediaDemo />
-        <DebounceDemo />
-        <DebouncedValueDemo />
-        <StickToBottomDemo />
-        <RovingFocusDemo />
-        <ControllableDemo />
-        <TextSelectionDemo />
-        <FocusTrapDemo />
-        <SwipeDemo />
-        <AnimationFrameDemo />
-        <MergedRefsDemo />
-      </div>
-      <footer>
-        <InViewDemo target={inViewRef} />
-        <p>
-          <code>useInView</code>: you reached the bottom.
-        </p>
-      </footer>
-    </main>
+        {CATEGORIES.map((category) => (
+          <section key={category.title} className="category">
+            <h2 className="group">{category.title}</h2>
+            {category.cards.map((card) => (
+              <Fragment key={card[0]}>{demos[card[0]!]}</Fragment>
+            ))}
+          </section>
+        ))}
+        <footer>
+          <div ref={inViewRef} className="sentinel" data-testid="inview-target" />
+          <p>
+            You reached the bottom: <code>useInView</code> in the status bar says yes.
+          </p>
+        </footer>
+      </main>
+    </div>
   )
 }

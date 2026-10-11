@@ -6,6 +6,12 @@
     "limit": "200 B"
   },
   {
+    "name": "useAutosizeTextarea",
+    "path": "dist/useAutosizeTextarea.js",
+    "import": "{ useAutosizeTextarea }",
+    "limit": "500 B"
+  },
+  {
     "name": "useBeforeUnload",
     "path": "dist/useBeforeUnload.js",
     "import": "{ useBeforeUnload }",
@@ -132,6 +138,12 @@
     "limit": "400 B"
   },
   {
+    "name": "useIsStuck",
+    "path": "dist/useIsStuck.js",
+    "import": "{ useIsStuck }",
+    "limit": "300 B"
+  },
+  {
     "name": "useLocalStorage",
     "path": "dist/useLocalStorage.js",
     "import": "{ useLocalStorage }",
@@ -174,6 +186,12 @@
     "limit": "200 B"
   },
   {
+    "name": "usePasteFiles",
+    "path": "dist/usePasteFiles.js",
+    "import": "{ usePasteFiles }",
+    "limit": "400 B"
+  },
+  {
     "name": "usePermission",
     "path": "dist/usePermission.js",
     "import": "{ usePermission }",
@@ -208,6 +226,12 @@
     "path": "dist/useScrollLock.js",
     "import": "{ useScrollLock }",
     "limit": "350 B"
+  },
+  {
+    "name": "useScrollSpy",
+    "path": "dist/useScrollSpy.js",
+    "import": "{ useScrollSpy }",
+    "limit": "300 B"
   },
   {
     "name": "useSessionStorage",
@@ -285,6 +309,6 @@
     "name": "everything",
     "path": "dist/index.js",
     "import": "*",
-    "limit": "8 kB"
+    "limit": "9 kB"
   }
 ]

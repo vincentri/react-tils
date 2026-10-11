@@ -92,7 +92,16 @@ function spyListeners() {
   }
 }
 
+// Listeners on elements that are no longer in a document can't leak: they go away with the element.
+const detached = (target: unknown) =>
+  target instanceof Node && target !== document && !target.isConnected
+
 export async function checkLeaks(Component: FunctionComponent): Promise<string | null> {
+  // React adds a `selectionchange` listener to the document with its first root and never
+  // removes it. Create that root before spying, so React's own listener doesn't count.
+  const warmUp = createRoot(document.createElement('div'))
+  await act(async () => warmUp.render(null))
+  await act(async () => warmUp.unmount())
   const spy = spyListeners()
   try {
     const container = document.createElement('div')
@@ -100,8 +109,9 @@ export async function checkLeaks(Component: FunctionComponent): Promise<string |
     await act(async () => root.render(createElement(StrictMode, null, createElement(Component))))
     await act(async () => root.unmount())
 
-    // React's own delegated listeners live on the container; ignore them.
-    const live = spy.added().filter((l) => l.target !== container)
+    // React's own delegated listeners live on the container; ignore them. Also skip listeners on
+    // detached elements, including those the test environment adds to inputs (happy-dom's `invalid`).
+    const live = spy.added().filter((l) => l.target !== container && !detached(l.target))
     for (const r of spy.removed()) {
       const at = live.findIndex((l) => l.target === r.target && l.type === r.type && l.fn === r.fn)
       if (at !== -1) live.splice(at, 1)
