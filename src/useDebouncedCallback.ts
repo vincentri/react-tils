@@ -59,7 +59,8 @@ function createDebounced<A extends unknown[]>(
  * Use when: search-as-you-type requests, autosaving a draft, or validating an
  * input after the user pauses.
  * Don't use when: you only want to keep typing responsive while rendering
- * something expensive; use React's `useDeferredValue`. For scroll or resize
+ * something expensive; use React's `useDeferredValue`. To keep running during
+ * a burst (live results, sending positions), use `useThrottledCallback`. For scroll or resize
  * values, prefer the dedicated hooks, which already avoid extra re-renders.
  *
  * With Chinese, Japanese, or Korean input, skip calls while

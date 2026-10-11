@@ -31,7 +31,7 @@ function getSize(): WindowSize {
  * or positioning a popover inside the viewport.
  * Don't use when: you only need a breakpoint; use `useMediaQuery`, which
  * re-renders only when the breakpoint flips. For styling, use CSS. For an
- * element's size, use CSS container queries or a ResizeObserver.
+ * element's size, use CSS container queries or `useElementSize`.
  *
  * @param serverValue - Size on the server and during hydration. Default
  * `{ width: 0, height: 0 }`. Pass a constant, not an inline object.

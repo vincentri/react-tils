@@ -26,7 +26,7 @@ function subscribe(onChange: () => void) {
  * Use when: tabs or an open panel that should survive reload and be linkable
  * (`/settings#billing`), or highlighting the section a link pointed to.
  * Don't use when: the state must reach the server or appear in search
- * results; use a query param through your router. To style the target
+ * results; use a query param (`useSearchParam`, or your router's). To style the target
  * element, use CSS `:target`.
  *
  * @param serverValue - Value on the server and during hydration. Default `''`.

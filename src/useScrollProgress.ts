@@ -22,9 +22,9 @@ function progressOf(element: Element): number {
  * until the element is measured.
  *
  * Use when: a reading-progress bar for an article or docs page, or showing
- * how much of a long form or terms text is left.
- * Don't use when: you want the whole page's progress; use `useWindowScroll`
- * with the page height. For progress inside a scroll container, use
+ * how much of a long form or terms text is left. For the whole page, put the
+ * ref on the element that wraps its content (`<main>`).
+ * Don't use when: the content scrolls inside a container, not the page; use
  * `useElementScroll`. For purely visual effects, CSS scroll-driven animations
  * avoid re-renders where supported.
  *

@@ -14,8 +14,8 @@ function subscribe(onChange: () => void) {
  *
  * Use when: pausing polling, video, animations, or timers while the page is
  * hidden, or refreshing data when the user comes back.
- * Don't use when: you need to know if an element is on screen; use an
- * IntersectionObserver. Don't use it to save state before the page closes;
+ * Don't use when: you need to know if an element is on screen; use
+ * `useInView`. Don't use it to save state before the page closes;
  * listen for `pagehide` instead, since a hidden page may never become visible.
  *
  * Other libraries call this `usePageVisibility`.

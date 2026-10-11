@@ -20,7 +20,7 @@ export type SwipeOptions = {
  * Use when: swiping between carousel slides, dismissing a card or
  * notification, or closing a drawer with a swipe.
  * Don't use when: you need the element to follow the finger while dragging;
- * that needs a drag hook or a gesture library. For scrolling between items,
+ * use `useDrag`. For scrolling between items,
  * CSS scroll snap (`scroll-snap-type`) needs no JS. Swipes must have a button
  * or keyboard alternative.
  *

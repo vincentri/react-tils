@@ -25,9 +25,11 @@ function getScroll(): WindowScroll {
  * that moves the page (not throttled).
  *
  * Use when: JS needs the scroll position, e.g. a "back to top" button after
- * scrolling down, a header that hides on scroll, or a reading progress bar.
- * Don't use when: you only need to know if an element is visible; use an
- * IntersectionObserver, which does not re-render on every scroll. For sticky
+ * scrolling down, or parallax that depends on the exact offset.
+ * Don't use when: you only need to know if an element is visible; use
+ * `useInView`, which does not re-render on every scroll. For a header that
+ * hides on scroll down, use `useScrollDirection`; for a reading progress bar,
+ * `useScrollProgress`; both re-render far less. For sticky
  * elements, use CSS `position: sticky`. For scroll-linked animation, use CSS
  * scroll-driven animations.
  *
