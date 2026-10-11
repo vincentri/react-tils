@@ -24,7 +24,7 @@ React hooks for browser state. Every hook renders on the server, hydrates with n
 | User's location after they ask for it                                                  | `useGeolocation({ enabled })`; keep `enabled` false until a click                                                  |
 | Rough location (country, city)                                                         | No hook. Use IP-based location on the server; no prompt.                                                           |
 | Close a dropdown/popover/menu when the user presses outside it                         | `useClickOutside(handler, enabled?)` on a wrapper around the menu and its button, or native `<dialog>` / `popover` |
-| Keyboard shortcut (`mod+k` palette, Escape to close, `/` to search)                    | `useHotkey(hotkey, handler, options?)`                                                                             |
+| Keyboard shortcut (`mod+k` palette, Escape to close, `/` to search, `g i` sequences)   | `useHotkey(hotkey, handler, options?)`                                                                             |
 | "Copy" button with a "Copied!" label                                                   | `useCopyToClipboard(resetMs?)`                                                                                     |
 | Stop the page scrolling behind a modal or drawer                                       | `useScrollLock(locked)`                                                                                            |
 | Warn before leaving with unsaved changes                                               | `useBeforeUnload(when)` (does not catch client-side router navigation)                                             |
@@ -58,6 +58,10 @@ React hooks for browser state. Every hook renders on the server, hydrates with n
 | Resizable panel, splitter, custom slider, dragging on a canvas                         | `useDrag(onDrag, { threshold? })` → `ref`; add CSS `touch-action: none`                                            |
 | Tell screen reader users "Copied", "Added to cart", "3 results"                        | `useAnnounce()` → `announce(message, politeness?)`                                                                 |
 | `@mention` or `/command` popup at the caret in a textarea                              | `useCaretPosition()` → `[ref, { top, left, height } \| null]`                                                      |
+| Record a voice note, voice input for AI chat, or a video message                       | `useMediaRecorder(stream)` with `useUserMedia`; picks a format the browser supports                                |
+| "Read aloud" button for AI answers or articles                                         | `useSpeechSynthesis()` → `{ voices, speaking, speak, cancel }`                                                     |
+| "New version available, reload" banner in a PWA                                        | `useServiceWorkerUpdate({ checkIntervalMs? })`; the worker must handle `SKIP_WAITING`                              |
+| Reading-progress bar for an article                                                    | `useScrollProgress()` → `[ref, progress]` from 0 to 1                                                              |
 | Arrow-key navigation in a toolbar, menu, tab list, or listbox (one Tab stop)           | `useRovingFocus({ orientation?, loop? })`; radio groups and `<select>` do it natively                              |
 | Hide the header on scroll down, show it on scroll up                                   | `useScrollDirection(threshold?)`                                                                                   |
 | Keep keyboard focus inside a custom modal or drawer                                    | `useFocusTrap(active)`; prefer `<dialog>` with `showModal()`                                                       |
@@ -81,37 +85,41 @@ import { useMediaQuery } from '@vincent.ri/react-tils/useMediaQuery'
 
 Names from react-use, ahooks, usehooks-ts, @uidotdev/usehooks, MUI, and Mantine, and the react-tils hook to use instead. Check the API in its JSDoc: arguments differ.
 
-| Their name                                                        | Use                     |
-| ----------------------------------------------------------------- | ----------------------- |
-| `useAutoScroll`, `useChatScroll`                                  | `useStickToBottom`      |
-| `useActiveSection`, `useScrollspy`                                | `useScrollSpy`          |
-| `useTextareaAutosize`, `useAutoResize`, `react-textarea-autosize` | `useAutosizeTextarea`   |
-| `usePaste`, `useClipboardFiles`                                   | `usePasteFiles`         |
-| `useSticky`, `useStickyFixed`                                     | `useIsStuck`            |
-| `useBfcache`, `usePageShow`                                       | `usePageRestore`        |
-| `useDraggable`, `useGesture` (`onDrag`), `usePointerDrag`         | `useDrag`               |
-| `useAnnouncer`, `useLiveAnnouncer`, `LiveAnnouncer`               | `useAnnounce`           |
-| `useCaretCoordinates`, `textarea-caret`                           | `useCaretPosition`      |
-| `useClickAway`, `useOnClickOutside`                               | `useClickOutside`       |
-| `useControlled`, `useUncontrolled`, `useControllableValue`        | `useControllableState`  |
-| `useDebounce`, `useDebounceValue`                                 | `useDebouncedValue`     |
-| `useDebounceCallback`, `useDebounceFn`                            | `useDebouncedCallback`  |
-| `useExternal`                                                     | `useScript`             |
-| `useIntersection`, `useIntersectionObserver`, `useInViewport`     | `useInView`             |
-| `useIsClient`, `useMounted`                                       | `useHydrated`           |
-| `useKey`, `useKeyPress`, `useHotkeys`                             | `useHotkey`             |
-| `useLocalStorageState`                                            | `useLocalStorage`       |
-| `useLockBodyScroll`                                               | `useScrollLock`         |
-| `useMeasure`, `useSize`, `useResizeObserver`                      | `useElementSize`        |
-| `useMedia`, `useBreakpoint`, `useResponsive`                      | `useMediaQuery`         |
-| `useMergeRefs`, `useForkRef`, `mergeRefs`                         | `useMergedRefs`         |
-| `useNetworkState`, `useNetwork`                                   | `useOnline`             |
-| `usePageVisibility`                                               | `useDocumentVisibility` |
-| `useRafLoop`                                                      | `useAnimationFrame`     |
-| `useRovingTabIndex`                                               | `useRovingFocus`        |
-| `useScroll`                                                       | `useElementScroll`      |
-| `useSessionStorageState`                                          | `useSessionStorage`     |
-| `useTimeoutFn`                                                    | `useTimeout`            |
+| Their name                                                        | Use                      |
+| ----------------------------------------------------------------- | ------------------------ |
+| `useAutoScroll`, `useChatScroll`                                  | `useStickToBottom`       |
+| `useActiveSection`, `useScrollspy`                                | `useScrollSpy`           |
+| `useTextareaAutosize`, `useAutoResize`, `react-textarea-autosize` | `useAutosizeTextarea`    |
+| `usePaste`, `useClipboardFiles`                                   | `usePasteFiles`          |
+| `useSticky`, `useStickyFixed`                                     | `useIsStuck`             |
+| `useBfcache`, `usePageShow`                                       | `usePageRestore`         |
+| `useDraggable`, `useGesture` (`onDrag`), `usePointerDrag`         | `useDrag`                |
+| `useAnnouncer`, `useLiveAnnouncer`, `LiveAnnouncer`               | `useAnnounce`            |
+| `useCaretCoordinates`, `textarea-caret`                           | `useCaretPosition`       |
+| `useRecorder`, `useAudioRecorder`, `react-media-recorder`         | `useMediaRecorder`       |
+| `useSpeech`, `useTextToSpeech`, `react-speech-kit`                | `useSpeechSynthesis`     |
+| `useRegisterSW`, `useServiceWorker`                               | `useServiceWorkerUpdate` |
+| `useReadingProgress`, `useScrollPercentage`                       | `useScrollProgress`      |
+| `useClickAway`, `useOnClickOutside`                               | `useClickOutside`        |
+| `useControlled`, `useUncontrolled`, `useControllableValue`        | `useControllableState`   |
+| `useDebounce`, `useDebounceValue`                                 | `useDebouncedValue`      |
+| `useDebounceCallback`, `useDebounceFn`                            | `useDebouncedCallback`   |
+| `useExternal`                                                     | `useScript`              |
+| `useIntersection`, `useIntersectionObserver`, `useInViewport`     | `useInView`              |
+| `useIsClient`, `useMounted`                                       | `useHydrated`            |
+| `useKey`, `useKeyPress`, `useHotkeys`                             | `useHotkey`              |
+| `useLocalStorageState`                                            | `useLocalStorage`        |
+| `useLockBodyScroll`                                               | `useScrollLock`          |
+| `useMeasure`, `useSize`, `useResizeObserver`                      | `useElementSize`         |
+| `useMedia`, `useBreakpoint`, `useResponsive`                      | `useMediaQuery`          |
+| `useMergeRefs`, `useForkRef`, `mergeRefs`                         | `useMergedRefs`          |
+| `useNetworkState`, `useNetwork`                                   | `useOnline`              |
+| `usePageVisibility`                                               | `useDocumentVisibility`  |
+| `useRafLoop`                                                      | `useAnimationFrame`      |
+| `useRovingTabIndex`                                               | `useRovingFocus`         |
+| `useScroll`                                                       | `useElementScroll`       |
+| `useSessionStorageState`                                          | `useSessionStorage`      |
+| `useTimeoutFn`                                                    | `useTimeout`             |
 
 ## Do not write these patterns
 

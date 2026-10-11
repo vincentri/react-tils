@@ -5,6 +5,8 @@ export type RovingFocusOptions = {
   orientation?: 'vertical' | 'horizontal' | 'both'
   /** Wrap from the last item to the first and back. Default `true`. */
   loop?: boolean
+  /** Typing letters moves to the next item whose text starts with them; repeating one letter cycles through matches. Default `true`. */
+  typeahead?: boolean
   /** Which elements inside the container are items. Default: buttons, links, and elements with an item role (`menuitem`, `option`, `tab`, `radio`, `treeitem`). */
   selector?: string
 }
@@ -30,6 +32,12 @@ function items(container: HTMLElement, selector: string): HTMLElement[] {
   )
 }
 
+// Typed letters must follow each other within this time to build one prefix.
+const TYPEAHEAD_MS = 500
+
+const label = (el: HTMLElement) =>
+  (el.getAttribute('aria-label') ?? el.textContent ?? '').trim().toLowerCase()
+
 const selected = (el: HTMLElement) =>
   el.getAttribute('aria-selected') === 'true' || el.getAttribute('aria-checked') === 'true'
 
@@ -40,7 +48,8 @@ const selected = (el: HTMLElement) =>
  *
  * Tab enters the group at the last focused item (or the selected one, else
  * the first) and Tab again leaves it. Arrow keys move between items, Home and
- * End jump to the ends. Left and Right swap in right-to-left content.
+ * End jump to the ends, and typing letters jumps to the item whose text
+ * starts with them. Left and Right swap in right-to-left content.
  * Disabled and hidden items are skipped. Items added later are included.
  *
  * Use when: a custom toolbar, menu, tab list, listbox, or segmented control.
@@ -51,7 +60,7 @@ const selected = (el: HTMLElement) =>
  *
  * Other libraries call this `useRovingTabIndex`.
  *
- * @param options - `orientation`, `loop`, `selector`. Optional.
+ * @param options - `orientation`, `loop`, `typeahead`, `selector`. Optional.
  * @returns A callback ref. Pass it to the container's `ref` prop.
  *
  * @example
@@ -67,7 +76,7 @@ const selected = (el: HTMLElement) =>
 export function useRovingFocus<T extends HTMLElement = HTMLElement>(
   options: RovingFocusOptions = {},
 ): (element: T | null) => void {
-  const { orientation = 'vertical', loop = true, selector = ITEMS } = options
+  const { orientation = 'vertical', loop = true, selector = ITEMS, typeahead = true } = options
   const [container, setContainer] = useState<T | null>(null)
 
   useEffect(() => {
@@ -90,11 +99,30 @@ export function useRovingFocus<T extends HTMLElement = HTMLElement>(
       sync()
     }
 
+    let typed = ''
+    let typedAt = 0
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return
+      if (event.altKey || event.ctrlKey || event.metaKey) return
       const list = items(container, selector)
       const index = list.indexOf(event.target as HTMLElement)
       if (index === -1) return
+      if (typeahead && event.key.length === 1 && event.key !== ' ') {
+        typed = (event.timeStamp - typedAt < TYPEAHEAD_MS ? typed : '') + event.key.toLowerCase()
+        typedAt = event.timeStamp
+        // The same letter again cycles through items starting with it; otherwise match the prefix,
+        // starting from the current item so typing more letters can stay on it.
+        const cycling = /^(.)\1+$/.test(typed)
+        const prefix = cycling ? typed[0]! : typed
+        const from = cycling || typed.length === 1 ? index + 1 : index
+        const ordered = [...list.slice(from), ...list.slice(0, from)]
+        const match = ordered.find((el) => label(el).startsWith(prefix))
+        if (match) {
+          event.preventDefault()
+          match.focus()
+        }
+        return
+      }
+      if (event.shiftKey) return
       const rtl = getComputedStyle(container).direction === 'rtl'
       const vertical = orientation !== 'horizontal'
       const horizontal = orientation !== 'vertical'
@@ -130,7 +158,7 @@ export function useRovingFocus<T extends HTMLElement = HTMLElement>(
       // Unfiltered: hidden or detached items had a tabindex set too.
       for (const el of container.querySelectorAll(selector)) el.removeAttribute('tabindex')
     }
-  }, [container, orientation, loop, selector])
+  }, [container, orientation, loop, selector, typeahead])
 
   return setContainer
 }

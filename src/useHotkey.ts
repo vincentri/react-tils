@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { useEventListener } from './useEventListener'
 
 export type HotkeyOptions = {
@@ -10,6 +11,10 @@ export type HotkeyOptions = {
 }
 
 const ALIASES: Record<string, string> = { esc: 'escape', space: ' ', plus: '+' }
+
+const MODIFIERS = new Set(['Shift', 'Control', 'Alt', 'Meta'])
+// Each step of a sequence must follow the previous one within this time.
+const SEQUENCE_MS = 1000
 
 const isMac = () => /Mac|iPhone|iPad|iPod/.test(navigator.platform)
 
@@ -54,6 +59,8 @@ function matches(hotkey: string, event: KeyboardEvent): boolean {
  * Other libraries call this `useKey`, `useKeyPress`, `useHotkeys`.
  *
  * @param hotkey - Modifiers and a key joined by `+`: `ctrl`, `alt`, `shift`, `meta`, `mod`.
+ * Separate steps with spaces for a sequence: `'g i'` fires after g then i,
+ * each within a second of the previous one.
  * @param handler - Called with the `KeyboardEvent`. Can change every render.
  * @param options - `enabled`, `preventDefault`, `enableInInputs`. All optional.
  *
@@ -67,11 +74,26 @@ export function useHotkey(
   options: HotkeyOptions = {},
 ): void {
   const { enabled = true, preventDefault = true, enableInInputs = false } = options
+  // Progress through a sequence like 'g i': the next step to match, and when the last one did.
+  const sequence = useRef({ step: 0, at: 0 })
 
   useEventListener(enabled ? 'document' : null, 'keydown', (event: Event) => {
     const keyEvent = event as KeyboardEvent
-    if (keyEvent.isComposing || !matches(hotkey, keyEvent)) return
+    if (keyEvent.isComposing) return
     if (!enableInInputs && keyEvent.key !== 'Escape' && isTyping(keyEvent.target)) return
+    const steps = hotkey.trim().split(/\s+/)
+    if (steps.length === 1) {
+      if (!matches(hotkey, keyEvent)) return
+    } else {
+      if (MODIFIERS.has(keyEvent.key)) return // pressing shift for the next step isn't a step
+      const state = sequence.current
+      if (keyEvent.timeStamp - state.at > SEQUENCE_MS) state.step = 0
+      if (matches(steps[state.step]!, keyEvent)) state.step++
+      else state.step = matches(steps[0]!, keyEvent) ? 1 : 0
+      state.at = keyEvent.timeStamp
+      if (state.step < steps.length) return
+      state.step = 0
+    }
     if (preventDefault) keyEvent.preventDefault()
     handler(keyEvent)
   })

@@ -467,3 +467,60 @@ test('useCaretPosition follows the caret and places the mention popup there', as
   await page.keyboard.press('Space')
   await expect(popup).toHaveCount(0)
 })
+
+test('useHotkey fires a "g i" sequence', async ({ page }) => {
+  await page.goto('/')
+  const sequence = page.getByTestId('sequence')
+  await expect(sequence).toHaveText('g i pressed: 0')
+  await page.keyboard.press('g')
+  await page.keyboard.press('i')
+  await expect(sequence).toHaveText('g i pressed: 1')
+  await page.keyboard.press('i') // i alone does nothing
+  await expect(sequence).toHaveText('g i pressed: 1')
+})
+
+test('useRovingFocus typeahead jumps to the button starting with the typed letter', async ({
+  page,
+}) => {
+  await page.goto('/')
+  const toolbar = page.getByTestId('toolbar')
+  await toolbar.getByRole('button', { name: 'Bold' }).focus()
+  await page.keyboard.press('u')
+  await expect(toolbar.getByRole('button', { name: 'Underline' })).toBeFocused()
+  await page.waitForTimeout(600) // typed quickly, "us" would be one prefix that matches nothing
+  await page.keyboard.press('s')
+  await expect(toolbar.getByRole('button', { name: 'Strike' })).toBeFocused()
+})
+
+test('useMediaRecorder records the microphone into a playable file', async ({
+  page,
+  browserName,
+}) => {
+  test.skip(browserName === 'webkit', 'WebKit in Playwright has no fake microphone device')
+  await page.goto('/')
+  const status = page.getByTestId('recording')
+  await expect(status).toHaveText('nothing recorded')
+  await page.getByTestId('record-mic').click()
+  await page.getByTestId('record-start').click()
+  await expect(status).toHaveText(/^recording \(audio\//)
+  await page.waitForTimeout(800)
+  await page.getByTestId('record-stop').click()
+  await expect(status).toHaveText(/^recorded \d+ bytes as audio\//)
+  const bytes = Number(/recorded (\d+)/.exec((await status.textContent())!)![1])
+  expect(bytes).toBeGreaterThan(0)
+  await expect(page.locator('audio[src^="blob:"]')).toHaveCount(1)
+})
+
+test('useSpeechSynthesis reads aloud and stops without errors', async ({ page }) => {
+  await page.goto('/')
+  const status = page.getByTestId('speech')
+  await expect(status).toHaveText(/voices|not supported/)
+  const start = page.getByTestId('speech-start')
+  if (await start.isEnabled()) {
+    await start.click()
+    // Headless browsers may have no voices; the point is that nothing throws or sticks.
+    if (await page.getByTestId('speech-stop').isVisible())
+      await page.getByTestId('speech-stop').click()
+    await expect(page.getByTestId('speech-start')).toBeVisible()
+  }
+})

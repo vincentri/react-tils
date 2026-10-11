@@ -37,6 +37,7 @@ import {
   useIsStuck,
   useLocalStorage,
   useLongPress,
+  useMediaRecorder,
   useMergedRefs,
   useMediaQuery,
   useNetworkInformation,
@@ -50,8 +51,11 @@ import {
   useScript,
   useScrollDirection,
   useScrollLock,
+  useScrollProgress,
   useScrollSpy,
+  useServiceWorkerUpdate,
   useSessionStorage,
+  useSpeechSynthesis,
   useShare,
   useStickToBottom,
   useSwipe,
@@ -330,9 +334,12 @@ function HotkeyDemo() {
   const [open, setOpen] = useState(false)
   useHotkey('mod+k', () => setOpen(true))
   useHotkey('Escape', () => setOpen(false), { enabled: open })
+  const [sequences, setSequences] = useState(0)
+  useHotkey('g i', () => setSequences((n) => n + 1))
   return (
-    <Card hook="useHotkey" hint="Press ⌘K / Ctrl+K, then Escape.">
+    <Card hook="useHotkey" hint="Press ⌘K / Ctrl+K, then Escape. Or press g, then i.">
       <Value id="palette">{open ? 'palette open' : 'palette closed'}</Value>
+      <Value id="sequence">g i pressed: {sequences}</Value>
     </Card>
   )
 }
@@ -793,7 +800,10 @@ function RovingFocusDemo() {
   const ref = useRovingFocus<HTMLDivElement>({ orientation: 'horizontal' })
   const [last, setLast] = useState('none')
   return (
-    <Card hook="useRovingFocus" hint="Tab into the toolbar, then use the arrow keys.">
+    <Card
+      hook="useRovingFocus"
+      hint="Tab into the toolbar, then use the arrow keys, or type a letter."
+    >
       <div ref={ref} role="toolbar" aria-label="Formatting" data-testid="toolbar">
         {['Bold', 'Italic', 'Underline', 'Strike'].map((name) => (
           <button key={name} type="button" onClick={() => setLast(name)}>
@@ -1061,6 +1071,105 @@ function AnnounceDemo() {
   )
 }
 
+function MediaRecorderDemo() {
+  const [on, setOn] = useState(false)
+  const { stream, error } = useUserMedia({ audio: true }, { enabled: on })
+  const recorder = useMediaRecorder(stream)
+  const [url, setUrl] = useState<string | null>(null)
+  useEffect(() => () => void (url && URL.revokeObjectURL(url)), [url])
+  const stop = async () => {
+    const blob = await recorder.stop()
+    if (blob) setUrl(URL.createObjectURL(blob))
+    setOn(false)
+  }
+  return (
+    <Card
+      hook="useMediaRecorder"
+      hint="Record a few seconds from your microphone, then play it back."
+    >
+      {recorder.recording ? (
+        <button type="button" data-testid="record-stop" onClick={stop}>
+          Stop
+        </button>
+      ) : stream ? (
+        <button type="button" data-testid="record-start" onClick={recorder.start}>
+          Record
+        </button>
+      ) : (
+        <button type="button" data-testid="record-mic" onClick={() => setOn(true)}>
+          Use microphone
+        </button>
+      )}
+      <Value id="recording">
+        {error
+          ? `error: ${error.name}`
+          : recorder.recording
+            ? `recording (${recorder.mimeType})`
+            : recorder.blob
+              ? `recorded ${recorder.blob.size} bytes as ${recorder.blob.type}`
+              : 'nothing recorded'}
+      </Value>
+      {url && <audio controls src={url} />}
+    </Card>
+  )
+}
+
+const READ_ALOUD =
+  'React tils renders the right first frame. Hooks read browser state without hydration mismatches, and clean up after themselves.'
+
+function SpeechDemo() {
+  const { supported, voices, speaking, speak, cancel } = useSpeechSynthesis()
+  return (
+    <Card hook="useSpeechSynthesis" hint="Reads the sentence below aloud.">
+      <p className="quote">{READ_ALOUD}</p>
+      {speaking ? (
+        <button type="button" data-testid="speech-stop" onClick={cancel}>
+          Stop
+        </button>
+      ) : (
+        <button
+          type="button"
+          data-testid="speech-start"
+          disabled={!supported}
+          onClick={() => speak(READ_ALOUD)}
+        >
+          Read aloud
+        </button>
+      )}
+      <Value id="speech">
+        {supported
+          ? `${voices.length} voices · ${speaking ? 'speaking' : 'quiet'}`
+          : 'not supported'}
+      </Value>
+    </Card>
+  )
+}
+
+function ServiceWorkerDemo() {
+  const { updateAvailable, update } = useServiceWorkerUpdate()
+  return (
+    <Card
+      hook="useServiceWorkerUpdate"
+      hint="This demo has no service worker, so there is never an update."
+    >
+      <Value id="sw-update">update available: {updateAvailable ? 'yes' : 'no'}</Value>
+      {updateAvailable && (
+        <button type="button" onClick={update}>
+          Reload
+        </button>
+      )}
+    </Card>
+  )
+}
+
+function ScrollProgressDemo({ progress }: { progress: number }) {
+  return (
+    <Card hook="useScrollProgress" hint="Scroll the page: the bar in the status bar fills up.">
+      <Value id="progress">read: {Math.round(progress * 100)}%</Value>
+    </Card>
+  )
+}
+
 // Sidebar and page order. Each card lists its hooks; most show one, a few show two together.
 const CATEGORIES: { title: string; cards: string[][] }[] = [
   {
@@ -1072,6 +1181,7 @@ const CATEGORIES: { title: string; cards: string[][] }[] = [
       ['useWindowScroll'],
       ['useScrollDirection'],
       ['useScrollSpy'],
+      ['useScrollProgress'],
     ],
   },
   {
@@ -1139,7 +1249,10 @@ const CATEGORIES: { title: string; cards: string[][] }[] = [
       ['useFullscreen'],
       ['useWakeLock'],
       ['useUserMedia'],
+      ['useMediaRecorder'],
+      ['useSpeechSynthesis'],
       ['useScript'],
+      ['useServiceWorkerUpdate'],
       ['useScrollLock'],
       ['useBeforeUnload'],
     ],
@@ -1154,6 +1267,7 @@ export function App() {
   const [stuckRef, stuck] = useIsStuck<HTMLParagraphElement>()
   // Below the sticky status bar.
   const active = useScrollSpy(IDS, { offset: 80 })
+  const [mainRef, progress] = useScrollProgress<HTMLElement>()
 
   // Each card's demo, keyed by its first hook.
   const demos: Record<string, ReactNode> = {
@@ -1163,6 +1277,7 @@ export function App() {
     useWindowScroll: <WindowScrollDemo />,
     useScrollDirection: <ScrollDirectionCard direction={direction} />,
     useScrollSpy: <ScrollSpyDemo active={active} />,
+    useScrollProgress: <ScrollProgressDemo progress={progress} />,
     useElementSize: <ElementSizeDemo />,
     useElementScroll: <ElementScrollDemo />,
     useInView: <InViewCard inView={inView} />,
@@ -1204,7 +1319,10 @@ export function App() {
     useFullscreen: <FullscreenDemo />,
     useWakeLock: <WakeLockDemo />,
     useUserMedia: <UserMediaDemo />,
+    useMediaRecorder: <MediaRecorderDemo />,
+    useSpeechSynthesis: <SpeechDemo />,
     useScript: <ScriptDemo />,
+    useServiceWorkerUpdate: <ServiceWorkerDemo />,
     useScrollLock: <ScrollLockDemo />,
     useBeforeUnload: <BeforeUnloadDemo />,
     useControllableState: <ControllableDemo />,
@@ -1238,7 +1356,7 @@ export function App() {
           ))}
         </nav>
       </aside>
-      <main id="top">
+      <main id="top" ref={mainRef}>
         <header>
           <h1>react-tils</h1>
           <p>
@@ -1249,6 +1367,7 @@ export function App() {
         <p ref={stuckRef} className={stuck ? 'sticky-status stuck' : 'sticky-status'}>
           Scrolling <Value id="scroll-direction">{direction}</Value> · bottom of page in view:{' '}
           <Value id="inview">{inView ? 'yes' : 'no'}</Value>
+          <span className="read-progress" style={{ transform: `scaleX(${progress})` }} />
         </p>
         {CATEGORIES.map((category) => (
           <section key={category.title} className="category">

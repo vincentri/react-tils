@@ -129,7 +129,7 @@
     "name": "useHotkey",
     "path": "dist/useHotkey.js",
     "import": "{ useHotkey }",
-    "limit": "700 B"
+    "limit": "800 B"
   },
   {
     "name": "useHydrated",
@@ -178,6 +178,12 @@
     "path": "dist/useMediaQuery.js",
     "import": "{ useMediaQuery }",
     "limit": "300 B"
+  },
+  {
+    "name": "useMediaRecorder",
+    "path": "dist/useMediaRecorder.js",
+    "import": "{ useMediaRecorder }",
+    "limit": "750 B"
   },
   {
     "name": "useMergedRefs",
@@ -231,7 +237,7 @@
     "name": "useRovingFocus",
     "path": "dist/useRovingFocus.js",
     "import": "{ useRovingFocus }",
-    "limit": "750 B"
+    "limit": "900 B"
   },
   {
     "name": "useScript",
@@ -252,10 +258,22 @@
     "limit": "350 B"
   },
   {
+    "name": "useScrollProgress",
+    "path": "dist/useScrollProgress.js",
+    "import": "{ useScrollProgress }",
+    "limit": "350 B"
+  },
+  {
     "name": "useScrollSpy",
     "path": "dist/useScrollSpy.js",
     "import": "{ useScrollSpy }",
     "limit": "300 B"
+  },
+  {
+    "name": "useServiceWorkerUpdate",
+    "path": "dist/useServiceWorkerUpdate.js",
+    "import": "{ useServiceWorkerUpdate }",
+    "limit": "500 B"
   },
   {
     "name": "useSessionStorage",
@@ -268,6 +286,12 @@
     "path": "dist/useShare.js",
     "import": "{ useShare }",
     "limit": "300 B"
+  },
+  {
+    "name": "useSpeechSynthesis",
+    "path": "dist/useSpeechSynthesis.js",
+    "import": "{ useSpeechSynthesis }",
+    "limit": "750 B"
   },
   {
     "name": "useStickToBottom",
@@ -333,6 +357,6 @@
     "name": "everything",
     "path": "dist/index.js",
     "import": "*",
-    "limit": "10 kB"
+    "limit": "12 kB"
   }
 ]

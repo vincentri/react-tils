@@ -221,3 +221,23 @@ test('useIsStuck: the status bar reports when it sticks', async ({ page }) => {
   await page.evaluate(() => window.scrollTo(0, 0))
   await expect(stuck).toHaveText('status bar stuck: no')
 })
+
+test('useScrollProgress fills the status bar from 0% to 100% of the page', async ({ page }) => {
+  await page.goto('/')
+  const progress = page.getByTestId('progress')
+  await expect(progress).toHaveText('read: 0%')
+  await page.mouse.move(700, 400)
+  await page.mouse.wheel(0, 3000)
+  await expect
+    .poll(async () => Number(/(\d+)%/.exec((await progress.textContent())!)![1]))
+    .toBeGreaterThan(0)
+  await page.getByTestId('inview-target').scrollIntoViewIfNeeded()
+  await expect(progress).toHaveText('read: 100%')
+})
+
+test('useServiceWorkerUpdate reports no update on a site without a service worker', async ({
+  page,
+}) => {
+  await page.goto('/')
+  await expect(page.getByTestId('sw-update')).toHaveText('update available: no')
+})

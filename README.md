@@ -2,7 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/@vincent.ri/react-tils)](https://www.npmjs.com/package/@vincent.ri/react-tils)
 [![CI](https://github.com/vincentri/react-tils/actions/workflows/ci.yml/badge.svg)](https://github.com/vincentri/react-tils/actions/workflows/ci.yml)
-[![size](https://img.shields.io/badge/all%2055%20hooks-8.9%20kB-blue)](#hooks)
+[![size](https://img.shields.io/badge/all%2059%20hooks-10.5%20kB-blue)](#hooks)
 [![license](https://img.shields.io/npm/l/@vincent.ri/react-tils)](LICENSE)
 
 React hooks for browser state and interaction that are correct on the first frame: they render on the server, hydrate without mismatches, clean up every listener, and work with React Compiler. Documented so AI coding agents pick the right hook and use it correctly.
@@ -39,7 +39,7 @@ The usual way to read browser state in React is `useState` plus `useEffect`. It 
 - **No leaks.** Every listener, observer, and timer is removed on unmount, including under StrictMode.
 - **Tested for real.** Every hook passes a server-render, hydration, and leak check on React 18, 19, and canary, plus browser tests in Chromium, Firefox, WebKit, and a Next.js app.
 - **React Compiler safe.** Every hook compiles with zero bailouts, and the full test suite runs again on compiled code.
-- **Small.** No dependencies, one file per hook, tree-shakeable. All 55 hooks together are 8.9 kB (brotli).
+- **Small.** No dependencies, one file per hook, tree-shakeable. All 59 hooks together are 10.5 kB (brotli).
 - **Made for agents.** Every hook's JSDoc says when to use it and when not to, with examples. `AGENTS.md` maps everyday tasks to hooks and lists the patterns to avoid.
 
 ## Setup for AI agents
@@ -86,6 +86,7 @@ Every hook is documented in its type declarations, so your editor shows the full
 | `useWindowScroll(serverValue?)`      | Page scroll position: back-to-top buttons, progress bars   | 169 B |
 | `useScrollDirection(threshold?)`     | Hiding the header while scrolling down                     | 190 B |
 | `useScrollSpy(ids, options?)`        | Highlighting the current section in a table of contents    | 266 B |
+| `useScrollProgress()`                | Reading-progress bars for articles                         | 288 B |
 
 ### Elements
 
@@ -125,21 +126,21 @@ Every hook is documented in its type declarations, so your editor shows the full
 
 ### Events and input
 
-| Hook                                                | For                                                    | Size  |
-| --------------------------------------------------- | ------------------------------------------------------ | ----- |
-| `useEventListener(target, type, handler, options?)` | Any window, document, or element event                 | 274 B |
-| `useClickOutside(handler, enabled?)`                | Closing menus and popovers on an outside press         | 322 B |
-| `useHotkey(hotkey, handler, options?)`              | Keyboard shortcuts like `mod+k` and Escape             | 611 B |
-| `useLongPress(onLongPress, options?)`               | Press and hold on touch and mouse                      | 381 B |
-| `useSwipe(onSwipe, options?)`                       | Swiping between slides, swipe to dismiss               | 401 B |
-| `useDrag(onDrag, options?)`                         | Resizable panels, splitters, custom sliders            | 515 B |
-| `useFileDrop(onDrop, options?)`                     | Drag-and-drop file upload areas                        | 348 B |
-| `usePasteFiles(onFiles, options?)`                  | Pasting screenshots and files into a chat or editor    | 347 B |
-| `useTextSelection()`                                | Floating toolbars for selected text                    | 351 B |
-| `useRovingFocus(options?)`                          | Arrow-key navigation in toolbars, menus, and tab lists | 688 B |
-| `useFocusTrap(active?)`                             | Keeping focus inside a custom modal or drawer          | 512 B |
-| `useAutosizeTextarea(options?)`                     | Chat inputs that grow with their text                  | 474 B |
-| `useCaretPosition()`                                | `@mention` and `/command` popups at the caret          | 722 B |
+| Hook                                                | For                                                           | Size  |
+| --------------------------------------------------- | ------------------------------------------------------------- | ----- |
+| `useEventListener(target, type, handler, options?)` | Any window, document, or element event                        | 274 B |
+| `useClickOutside(handler, enabled?)`                | Closing menus and popovers on an outside press                | 322 B |
+| `useHotkey(hotkey, handler, options?)`              | Keyboard shortcuts: `mod+k`, Escape, and sequences like `g i` | 748 B |
+| `useLongPress(onLongPress, options?)`               | Press and hold on touch and mouse                             | 381 B |
+| `useSwipe(onSwipe, options?)`                       | Swiping between slides, swipe to dismiss                      | 401 B |
+| `useDrag(onDrag, options?)`                         | Resizable panels, splitters, custom sliders                   | 515 B |
+| `useFileDrop(onDrop, options?)`                     | Drag-and-drop file upload areas                               | 348 B |
+| `usePasteFiles(onFiles, options?)`                  | Pasting screenshots and files into a chat or editor           | 347 B |
+| `useTextSelection()`                                | Floating toolbars for selected text                           | 351 B |
+| `useRovingFocus(options?)`                          | Arrow keys and typeahead in toolbars, menus, and tab lists    | 863 B |
+| `useFocusTrap(active?)`                             | Keeping focus inside a custom modal or drawer                 | 512 B |
+| `useAutosizeTextarea(options?)`                     | Chat inputs that grow with their text                         | 474 B |
+| `useCaretPosition()`                                | `@mention` and `/command` popups at the caret                 | 722 B |
 
 ### Timers
 
@@ -153,16 +154,19 @@ Every hook is documented in its type declarations, so your editor shows the full
 
 ### Browser APIs
 
-| Hook                                  | For                                             | Size  |
-| ------------------------------------- | ----------------------------------------------- | ----- |
-| `useCopyToClipboard(resetMs?)`        | Copy buttons with a "Copied!" label             | 177 B |
-| `useShare()`                          | The native share sheet                          | 196 B |
-| `useFullscreen()`                     | Fullscreen for players, viewers, and slideshows | 292 B |
-| `useWakeLock(enabled?)`               | Keeping the screen on                           | 313 B |
-| `useUserMedia(constraints, options?)` | Camera and microphone                           | 313 B |
-| `useScript(src, options?)`            | Loading a third-party script once, on demand    | 456 B |
-| `useScrollLock(locked?)`              | Stopping the page scrolling behind a modal      | 270 B |
-| `useBeforeUnload(when?)`              | Warning before leaving with unsaved changes     | 105 B |
+| Hook                                  | For                                                               | Size  |
+| ------------------------------------- | ----------------------------------------------------------------- | ----- |
+| `useCopyToClipboard(resetMs?)`        | Copy buttons with a "Copied!" label                               | 177 B |
+| `useShare()`                          | The native share sheet                                            | 196 B |
+| `useFullscreen()`                     | Fullscreen for players, viewers, and slideshows                   | 292 B |
+| `useWakeLock(enabled?)`               | Keeping the screen on                                             | 313 B |
+| `useUserMedia(constraints, options?)` | Camera and microphone                                             | 313 B |
+| `useMediaRecorder(stream, options?)`  | Voice notes and voice input, in a format every browser can record | 709 B |
+| `useSpeechSynthesis()`                | "Read aloud" buttons                                              | 651 B |
+| `useScript(src, options?)`            | Loading a third-party script once, on demand                      | 456 B |
+| `useServiceWorkerUpdate(options?)`    | "New version available" banners in PWAs                           | 418 B |
+| `useScrollLock(locked?)`              | Stopping the page scrolling behind a modal                        | 270 B |
+| `useBeforeUnload(when?)`              | Warning before leaving with unsaved changes                       | 105 B |
 
 ### Component helpers
 

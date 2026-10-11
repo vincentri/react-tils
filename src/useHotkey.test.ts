@@ -24,6 +24,14 @@ const press = (init: KeyboardEventInit, target: EventTarget = document.body) => 
   return event
 }
 
+// A keydown at a given time, as the sequence timer reads event.timeStamp.
+const at = (key: string, time: number, init: KeyboardEventInit = {}) => {
+  const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true, ...init })
+  Object.defineProperty(event, 'timeStamp', { value: time })
+  document.body.dispatchEvent(event)
+  return event
+}
+
 describe('useHotkey', () => {
   hookMatrix(() => useHotkey('mod+k', () => {}))
 
@@ -79,5 +87,30 @@ describe('useHotkey', () => {
     expect(press({ key: 'a' }).defaultPrevented).toBe(false)
     expect(noPrevent.onKey).toHaveBeenCalledTimes(1)
     await noPrevent.unmount()
+  })
+
+  it('fires a sequence like "g i" only for the keys in order, each within a second', async () => {
+    const view = await mount('g i')
+    const first = at('g', 1000)
+    expect(first.defaultPrevented).toBe(false) // a step on its way isn't a shortcut yet
+    const last = at('i', 1500)
+    expect(view.onKey).toHaveBeenCalledTimes(1)
+    expect(last.defaultPrevented).toBe(true)
+
+    at('g', 2000)
+    at('x', 2100) // wrong key: starts over
+    at('i', 2200)
+    expect(view.onKey).toHaveBeenCalledTimes(1)
+
+    at('g', 3000)
+    at('i', 4200) // too slow
+    expect(view.onKey).toHaveBeenCalledTimes(1)
+
+    at('g', 5000)
+    at('g', 5100) // a repeated first key restarts the sequence
+    at('Shift', 5150) // a modifier alone isn't a step
+    at('i', 5200)
+    expect(view.onKey).toHaveBeenCalledTimes(2)
+    await view.unmount()
   })
 })

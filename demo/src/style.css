@@ -493,3 +493,19 @@ input {
 .mentions li {
   padding: 2px 8px;
 }
+
+.read-progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--accent);
+  transform-origin: left;
+}
+
+.quote {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}

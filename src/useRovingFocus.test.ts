@@ -58,6 +58,24 @@ async function setup(props: Props = {}) {
   }
 }
 
+const Fruits = ({ typeahead }: { typeahead?: boolean | undefined }) =>
+  createElement(
+    'div',
+    { ref: useRovingFocus<HTMLDivElement>({ typeahead: typeahead ?? true }), role: 'menu' },
+    ...['Apple', 'Banana', 'Blueberry', 'Cherry'].map((name) =>
+      createElement('button', { key: name, id: name, role: 'menuitem' }, name),
+    ),
+  )
+
+// A keydown at a given time, as typeahead reads event.timeStamp.
+const type = (key: string, time: number) =>
+  act(async () => {
+    const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true })
+    Object.defineProperty(event, 'timeStamp', { value: time })
+    document.activeElement!.dispatchEvent(event)
+  })
+const focused = () => document.activeElement?.id
+
 describe('useRovingFocus', () => {
   componentMatrix(Default)
 
@@ -109,5 +127,36 @@ describe('useRovingFocus', () => {
     const a = view.el('a')
     await view.cleanup()
     expect(a.hasAttribute('tabindex')).toBe(false)
+  })
+
+  it('jumps by typed letters: prefixes, cycling on a repeated letter, and off with typeahead: false', async () => {
+    const container = document.createElement('div')
+    document.body.append(container)
+    const root = createRoot(container)
+    const render = (typeahead?: boolean) =>
+      act(async () => root.render(createElement(Fruits, { typeahead })))
+    await render()
+
+    document.getElementById('Apple')!.focus()
+    await type('b', 1000)
+    expect(focused()).toBe('Banana')
+    await type('b', 1100) // same letter again: the next item starting with it
+    expect(focused()).toBe('Blueberry')
+    await type('b', 1200)
+    expect(focused()).toBe('Banana')
+
+    await type('b', 3000) // a pause starts a new prefix
+    await type('l', 3100)
+    expect(focused()).toBe('Blueberry')
+    await type('c', 5000)
+    expect(focused()).toBe('Cherry')
+    await type('z', 7000) // no match: stays
+    expect(focused()).toBe('Cherry')
+
+    await render(false)
+    await type('a', 9000)
+    expect(focused()).toBe('Cherry')
+    await act(async () => root.unmount())
+    container.remove()
   })
 })
