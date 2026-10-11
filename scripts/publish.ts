@@ -19,6 +19,8 @@ try {
   // Not published yet.
 }
 
+// Trusted publishing needs npm 11.5.1 or newer.
+console.log(`npm ${execSync('npm --version', { encoding: 'utf8' }).trim()}`)
 execSync('npm publish --provenance --access public --ignore-scripts', { stdio: 'inherit' })
 
 // A publish can report success without reaching npm; check the registry for the version and

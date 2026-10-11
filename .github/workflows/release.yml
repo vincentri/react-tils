@@ -1,9 +1,9 @@
 name: Release
 
 # On main: opens a "Version Packages" PR from pending changesets. Merging that PR
-# publishes to npm with provenance and creates a git tag.
-# Setup: add an NPM_TOKEN repo secret (an npm automation token), or configure npm
-# trusted publishing for this workflow and remove NODE_AUTH_TOKEN below.
+# publishes to npm with provenance and creates a git tag (scripts/publish.ts).
+# Auth: npm trusted publishing (OIDC) for this workflow, set up on npmjs.com.
+# No token is stored; the id-token permission below lets npm verify this workflow.
 
 on:
   push:
@@ -14,7 +14,7 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 permissions:
   contents: write
   pull-requests: write
-  id-token: write # npm provenance
+  id-token: write # npm trusted publishing and provenance
 
 jobs:
   release:
@@ -35,7 +35,3 @@ jobs:
           publish: pnpm run release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # changesets/action reads NPM_TOKEN; without it, it switches to trusted publishing.
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_CONFIG_PROVENANCE: 'true'

@@ -180,7 +180,7 @@ pnpm eval:selftest                            # scorer sanity check on known-goo
 
 ## Releasing
 
-Add a changeset with `pnpm changeset` in each PR that changes the package. On `main`, `.github/workflows/release.yml` opens a "Version Packages" PR; merging it publishes to npm with provenance (`scripts/publish.ts`), and the job fails unless npm really has the new version with its provenance attestation. Needs an `NPM_TOKEN` repo secret, or npm trusted publishing. `pnpm check` also runs `publint` and `arethetypeswrong` on the packed package.
+Add a changeset with `pnpm changeset` in each PR that changes the package. On `main`, `.github/workflows/release.yml` opens a "Version Packages" PR; merging it publishes to npm with provenance (`scripts/publish.ts`), and the job fails unless npm really has the new version with its provenance attestation. Auth is npm trusted publishing: npm verifies the workflow itself, so no token is stored. `pnpm check` also runs `publint` and `arethetypeswrong` on the packed package.
 
 ## Adding a hook
 
