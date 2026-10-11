@@ -11,17 +11,9 @@ export type RovingFocusOptions = {
   selector?: string
 }
 
-const ITEMS = [
-  '[role="menuitem"]',
-  '[role="menuitemcheckbox"]',
-  '[role="menuitemradio"]',
-  '[role="option"]',
-  '[role="tab"]',
-  '[role="radio"]',
-  '[role="treeitem"]',
-  'button',
-  'a[href]',
-].join(',')
+// `^=menuitem` also covers menuitemcheckbox and menuitemradio.
+const ITEMS =
+  '[role^=menuitem],[role=option],[role=tab],[role=radio],[role=treeitem],button,a[href]'
 
 function items(container: HTMLElement, selector: string): HTMLElement[] {
   return Array.from(container.querySelectorAll<HTMLElement>(selector)).filter(
@@ -141,9 +133,8 @@ export function useRovingFocus<T extends HTMLElement = HTMLElement>(
         next = index - 1
       else return
       event.preventDefault()
-      if (loop) next = (next + list.length) % list.length
-      else next = Math.min(Math.max(next, 0), list.length - 1)
-      list[next]!.focus()
+      const count = list.length
+      list[loop ? (next + count) % count : Math.min(Math.max(next, 0), count - 1)]!.focus()
     }
 
     // Re-apply when items are added or removed; tabindex changes don't trigger it.

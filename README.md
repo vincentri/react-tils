@@ -106,7 +106,7 @@ Every hook is documented in its type declarations, so your editor shows the full
 | `useLocalStorage(key, serverValue)`     | State that survives reloads, synced across tabs      | 368 B |
 | `useSessionStorage(key, serverValue)`   | State for this tab only                              | 370 B |
 | `useHash(serverValue?)`                 | Tabs or panels linkable through the URL hash         | 159 B |
-| `useBroadcastChannel(name, onMessage?)` | Telling other tabs about an event (logged out, cart) | 228 B |
+| `useBroadcastChannel(name, onMessage?)` | Telling other tabs about an event (logged out, cart) | 214 B |
 
 ### Page, device, and user
 
@@ -122,22 +122,22 @@ Every hook is documented in its type declarations, so your editor shows the full
 | `useGeolocation(options?)`            | The user's location, after they ask for it                   | 305 B |
 | `useHydrated()`                       | Rendering something only in the browser                      | 77 B  |
 | `useNow(intervalMs, serverValue?)`    | Clocks, countdowns, "5 minutes ago"                          | 153 B |
-| `usePageRestore(callback)`            | Refreshing stale data after the Back button                  | 283 B |
+| `usePageRestore(callback)`            | Refreshing stale data after the Back button                  | 150 B |
 
 ### Events and input
 
 | Hook                                                | For                                                           | Size  |
 | --------------------------------------------------- | ------------------------------------------------------------- | ----- |
-| `useEventListener(target, type, handler, options?)` | Any window, document, or element event                        | 274 B |
-| `useClickOutside(handler, enabled?)`                | Closing menus and popovers on an outside press                | 322 B |
-| `useHotkey(hotkey, handler, options?)`              | Keyboard shortcuts: `mod+k`, Escape, and sequences like `g i` | 748 B |
-| `useLongPress(onLongPress, options?)`               | Press and hold on touch and mouse                             | 381 B |
-| `useSwipe(onSwipe, options?)`                       | Swiping between slides, swipe to dismiss                      | 401 B |
-| `useDrag(onDrag, options?)`                         | Resizable panels, splitters, custom sliders                   | 515 B |
-| `useFileDrop(onDrop, options?)`                     | Drag-and-drop file upload areas                               | 348 B |
-| `usePasteFiles(onFiles, options?)`                  | Pasting screenshots and files into a chat or editor           | 347 B |
+| `useEventListener(target, type, handler, options?)` | Any window, document, or element event                        | 220 B |
+| `useClickOutside(handler, enabled?)`                | Closing menus and popovers on an outside press                | 187 B |
+| `useHotkey(hotkey, handler, options?)`              | Keyboard shortcuts: `mod+k`, Escape, and sequences like `g i` | 586 B |
+| `useLongPress(onLongPress, options?)`               | Press and hold on touch and mouse                             | 364 B |
+| `useSwipe(onSwipe, options?)`                       | Swiping between slides, swipe to dismiss                      | 388 B |
+| `useDrag(onDrag, options?)`                         | Resizable panels, splitters, custom sliders                   | 495 B |
+| `useFileDrop(onDrop, options?)`                     | Drag-and-drop file upload areas                               | 336 B |
+| `usePasteFiles(onFiles, options?)`                  | Pasting screenshots and files into a chat or editor           | 333 B |
 | `useTextSelection()`                                | Floating toolbars for selected text                           | 351 B |
-| `useRovingFocus(options?)`                          | Arrow keys and typeahead in toolbars, menus, and tab lists    | 863 B |
+| `useRovingFocus(options?)`                          | Arrow keys and typeahead in toolbars, menus, and tab lists    | 845 B |
 | `useFocusTrap(active?)`                             | Keeping focus inside a custom modal or drawer                 | 512 B |
 | `useAutosizeTextarea(options?)`                     | Chat inputs that grow with their text                         | 474 B |
 | `useCaretPosition()`                                | `@mention` and `/command` popups at the caret                 | 722 B |
@@ -146,11 +146,11 @@ Every hook is documented in its type declarations, so your editor shows the full
 
 | Hook                                               | For                                                   | Size  |
 | -------------------------------------------------- | ----------------------------------------------------- | ----- |
-| `useInterval(callback, delayMs \| null, options?)` | Polling, carousels; can pause while the tab is hidden | 260 B |
-| `useTimeout(callback, delayMs \| null)`            | Auto-dismissing toasts, "Saved" labels                | 204 B |
-| `useDebouncedCallback(fn, delayMs, options?)`      | Search as you type, autosave                          | 296 B |
+| `useInterval(callback, delayMs \| null, options?)` | Polling, carousels; can pause while the tab is hidden | 243 B |
+| `useTimeout(callback, delayMs \| null)`            | Auto-dismissing toasts, "Saved" labels                | 188 B |
+| `useDebouncedCallback(fn, delayMs, options?)`      | Search as you type, autosave                          | 281 B |
 | `useDebouncedValue(value, delayMs)`                | A debounced copy of state, such as a query to fetch   | 99 B  |
-| `useAnimationFrame(callback, active?)`             | Canvas drawing and game loops                         | 190 B |
+| `useAnimationFrame(callback, active?)`             | Canvas drawing and game loops                         | 173 B |
 
 ### Browser APIs
 
@@ -163,7 +163,7 @@ Every hook is documented in its type declarations, so your editor shows the full
 | `useUserMedia(constraints, options?)` | Camera and microphone                                             | 313 B |
 | `useMediaRecorder(stream, options?)`  | Voice notes and voice input, in a format every browser can record | 709 B |
 | `useSpeechSynthesis()`                | "Read aloud" buttons                                              | 651 B |
-| `useScript(src, options?)`            | Loading a third-party script once, on demand                      | 456 B |
+| `useScript(src, options?)`            | Loading a third-party script once, on demand                      | 437 B |
 | `useServiceWorkerUpdate(options?)`    | "New version available" banners in PWAs                           | 418 B |
 | `useScrollLock(locked?)`              | Stopping the page scrolling behind a modal                        | 270 B |
 | `useBeforeUnload(when?)`              | Warning before leaving with unsaved changes                       | 105 B |
@@ -172,7 +172,7 @@ Every hook is documented in its type declarations, so your editor shows the full
 
 | Hook                                                   | For                                                   | Size  |
 | ------------------------------------------------------ | ----------------------------------------------------- | ----- |
-| `useControllableState(value, defaultValue, onChange?)` | Components that work both controlled and uncontrolled | 216 B |
+| `useControllableState(value, defaultValue, onChange?)` | Components that work both controlled and uncontrolled | 204 B |
 | `useAnnounce()`                                        | Announcing "Copied" or "3 results" to screen readers  | 346 B |
 
 Coming from react-use, ahooks, usehooks-ts, or similar? [`AGENTS.md`](AGENTS.md#coming-from-another-library) maps their hook names to these.

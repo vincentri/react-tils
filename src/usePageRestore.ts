@@ -1,4 +1,5 @@
-import { useEventListener } from './useEventListener'
+import { useEffect } from 'react'
+import { useLatest } from './internal/useLatest'
 
 /**
  * Calls `callback` when the browser restores the page from its back/forward
@@ -28,7 +29,12 @@ import { useEventListener } from './useEventListener'
  * usePageRestore(() => setSubmitting(false))
  */
 export function usePageRestore(callback: (event: PageTransitionEvent) => void): void {
-  useEventListener('window', 'pageshow', (event) => {
-    if (event.persisted) callback(event)
-  })
+  const callbackRef = useLatest(callback)
+  useEffect(() => {
+    const listener = (event: PageTransitionEvent) => {
+      if (event.persisted) callbackRef.current(event)
+    }
+    window.addEventListener('pageshow', listener)
+    return () => window.removeEventListener('pageshow', listener)
+  }, [callbackRef])
 }

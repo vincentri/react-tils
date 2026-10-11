@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useEventListener } from './useEventListener'
+import { useEffect, useState } from 'react'
+import { useLatest } from './internal/useLatest'
 
 /**
  * Calls `handler` when the user presses outside an element: mouse, touch, or
@@ -40,10 +40,16 @@ export function useClickOutside<T extends Element = HTMLElement>(
   enabled = true,
 ): (element: T | null) => void {
   const [element, setElement] = useState<T | null>(null)
+  const handlerRef = useLatest(handler)
 
-  useEventListener(enabled ? 'document' : null, 'pointerdown', (event: Event) => {
-    if (element && !event.composedPath().includes(element)) handler(event as PointerEvent)
-  })
+  useEffect(() => {
+    if (!enabled || !element) return
+    const listener = (event: PointerEvent) => {
+      if (!event.composedPath().includes(element)) handlerRef.current(event)
+    }
+    document.addEventListener('pointerdown', listener)
+    return () => document.removeEventListener('pointerdown', listener)
+  }, [enabled, element, handlerRef])
 
   return setElement
 }

@@ -74,9 +74,8 @@ export function useEventListener<
     const element = resolve(target)
     if (!element) return
     const listener = (event: Event) => handlerRef.current(event as EventFor<T, K>)
-    const listenerOptions: AddEventListenerOptions = { capture, once }
-    if (passive !== undefined) listenerOptions.passive = passive
-    element.addEventListener(type, listener, listenerOptions)
+    // An undefined `passive` counts as not given, so the browser default still applies.
+    element.addEventListener(type, listener, { capture, once, passive } as AddEventListenerOptions)
     return () => element.removeEventListener(type, listener, { capture })
   }, [target, type, capture, passive, once, handlerRef])
 }

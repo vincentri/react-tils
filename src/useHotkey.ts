@@ -1,5 +1,5 @@
-import { useRef } from 'react'
-import { useEventListener } from './useEventListener'
+import { useEffect } from 'react'
+import { useLatest } from './internal/useLatest'
 
 export type HotkeyOptions = {
   /** Listen only while `true`. Default `true`. */
@@ -12,19 +12,15 @@ export type HotkeyOptions = {
 
 const ALIASES: Record<string, string> = { esc: 'escape', space: ' ', plus: '+' }
 
-const MODIFIERS = new Set(['Shift', 'Control', 'Alt', 'Meta'])
 // Each step of a sequence must follow the previous one within this time.
 const SEQUENCE_MS = 1000
 
 const isMac = () => /Mac|iPhone|iPad|iPod/.test(navigator.platform)
 
 function isTyping(target: EventTarget | null): boolean {
-  if (!(target instanceof HTMLElement)) return false
   return (
-    target.isContentEditable ||
-    target instanceof HTMLInputElement ||
-    target instanceof HTMLTextAreaElement ||
-    target instanceof HTMLSelectElement
+    target instanceof HTMLElement &&
+    (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName))
   )
 }
 
@@ -74,27 +70,28 @@ export function useHotkey(
   options: HotkeyOptions = {},
 ): void {
   const { enabled = true, preventDefault = true, enableInInputs = false } = options
-  // Progress through a sequence like 'g i': the next step to match, and when the last one did.
-  const sequence = useRef({ step: 0, at: 0 })
+  const handlerRef = useLatest(handler)
 
-  useEventListener(enabled ? 'document' : null, 'keydown', (event: Event) => {
-    const keyEvent = event as KeyboardEvent
-    if (keyEvent.isComposing) return
-    if (!enableInInputs && keyEvent.key !== 'Escape' && isTyping(keyEvent.target)) return
+  useEffect(() => {
+    if (!enabled) return
+    // A single hotkey is a sequence of one step. `step` is the next step to match.
     const steps = hotkey.trim().split(/\s+/)
-    if (steps.length === 1) {
-      if (!matches(hotkey, keyEvent)) return
-    } else {
-      if (MODIFIERS.has(keyEvent.key)) return // pressing shift for the next step isn't a step
-      const state = sequence.current
-      if (keyEvent.timeStamp - state.at > SEQUENCE_MS) state.step = 0
-      if (matches(steps[state.step]!, keyEvent)) state.step++
-      else state.step = matches(steps[0]!, keyEvent) ? 1 : 0
-      state.at = keyEvent.timeStamp
-      if (state.step < steps.length) return
-      state.step = 0
+    let step = 0
+    let at = 0
+    const listener = (event: KeyboardEvent) => {
+      if (event.isComposing) return
+      if (!enableInInputs && event.key !== 'Escape' && isTyping(event.target)) return
+      // Pressing shift for the next step of a sequence isn't a step.
+      if (steps.length > 1 && /^(Shift|Control|Alt|Meta)$/.test(event.key)) return
+      if (event.timeStamp - at > SEQUENCE_MS) step = 0
+      at = event.timeStamp
+      step = matches(steps[step]!, event) ? step + 1 : matches(steps[0]!, event) ? 1 : 0
+      if (step < steps.length) return
+      step = 0
+      if (preventDefault) event.preventDefault()
+      handlerRef.current(event)
     }
-    if (preventDefault) keyEvent.preventDefault()
-    handler(keyEvent)
-  })
+    document.addEventListener('keydown', listener)
+    return () => document.removeEventListener('keydown', listener)
+  }, [enabled, hotkey, preventDefault, enableInInputs, handlerRef])
 }
