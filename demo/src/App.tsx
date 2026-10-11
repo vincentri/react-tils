@@ -1564,6 +1564,7 @@ function HookPage({ hook, demo }: { hook: string; demo: ReactNode }) {
       <p className="meta">
         {doc.size && <span data-testid="hook-size">{doc.size} minified and brotlied</span>}
         <a href={`${REPO}/blob/main/src/${hook}.ts`}>Source</a>
+        <a href={`${BASE}hooks/${hook}.md`}>Markdown</a>
         <SupportBadge hook={hook} />
       </p>
       {doc.description.map((paragraph) => (

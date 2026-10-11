@@ -54,7 +54,7 @@ for (const file of files.toSorted()) {
     const [, doc, name, signature] = match
     const entry = file === 'testing.d.ts' ? `${pkg.name}/testing` : pkg.name
     const page = name.startsWith('use')
-      ? `${supportLine(name)}\n\nDocs: ${pkg.homepage}hooks/${name}/`
+      ? `${supportLine(name)}\n\nDocs: ${pkg.homepage}hooks/${name}.md`
       : ''
     sections.push(
       `## ${name}\n\n\`\`\`ts\nimport { ${name} } from '${entry}'\nfunction ${name}${signature!.trim()}\n\`\`\`\n\n${unJsdoc(doc!)}${page}`,

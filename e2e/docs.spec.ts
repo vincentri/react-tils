@@ -172,6 +172,41 @@ test('each hook page says which browsers support it, from MDN data', async ({ pa
   await expect(page.getByTestId('browser-support')).toContainText('works wherever React does')
 })
 
+test("every hook page's docs are also on its markdown URL", async ({
+  page,
+  request,
+  browserName,
+}) => {
+  test.skip(browserName !== 'chromium', 'One engine is enough to walk all pages')
+
+  await page.goto('/hooks/useHash/')
+  await expect(page.getByRole('link', { name: 'Markdown' })).toHaveAttribute(
+    'href',
+    '/hooks/useHash.md',
+  )
+
+  // Prerendered next to the HTML, so no server is needed to serve them.
+  const home = await (await request.get('/')).text()
+  const hooks = [...home.matchAll(/data-testid="nav-(\w+)"/g)].map((match) => match[1]!)
+  expect(hooks.length).toBeGreaterThan(60)
+  for (const hook of hooks) {
+    const md = await request.get(`/hooks/${hook}.md`)
+    expect(md.status(), hook).toBe(200)
+    expect(md.headers()['content-type'], hook).toMatch(/^text\/markdown/)
+    const text = await md.text()
+    expect(text, hook).toContain(`# ${hook}`)
+    expect(text, hook).toContain(`function ${hook}`)
+    expect(text, hook).toContain(`Docs page: https://vincentri.github.io/react-tils/hooks/${hook}/`)
+  }
+
+  // A hook that is not everywhere: the support line is in the markdown too.
+  const speech = await (await request.get('/hooks/useSpeechRecognition.md')).text()
+  expect(speech).toContain('## Browser support\n\nNot available in Firefox.')
+  expect(speech).toContain(
+    'Where neither exists (Firefox), `supported` is `false` and `start` does nothing.',
+  )
+})
+
 test('compare page: measured checks and sizes against other hook libraries', async ({ page }) => {
   await page.goto('/')
   await page.getByTestId('link-compare').click()

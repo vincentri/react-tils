@@ -9,6 +9,8 @@ React hooks for browser state and interaction that are correct on the first fram
 
 **[Docs and live demo](https://vincentri.github.io/react-tils/)** · **[Installation guide](https://vincentri.github.io/react-tils/getting-started/)** · **[Compare](https://vincentri.github.io/react-tils/compare/)** · **[llms.txt](https://vincentri.github.io/react-tils/llms.txt)** · **[Agent guide](AGENTS.md)**
 
+Every hook's docs are on one URL, as a page or as markdown: `…/hooks/useMediaQuery/` and `…/hooks/useMediaQuery.md`.
+
 ```sh
 npm install @vincent.ri/react-tils
 ```

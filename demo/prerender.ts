@@ -1,14 +1,16 @@
 // Renders the site on the server at build time: dist/index.html (every demo) and one page per hook
-// at dist/hooks/<name>/index.html, plus sitemap.xml. The static site then hydrates exactly like
-// an SSR app. Run after: vite build (client) and vite build --ssr src/entry-server.tsx (server).
+// at dist/hooks/<name>/index.html, plus the same docs as markdown at dist/hooks/<name>.md, and
+// sitemap.xml. The static site then hydrates exactly like an SSR app. Run after: vite build
+// (client) and vite build --ssr src/entry-server.tsx (server).
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 
 type Page = { path: string; title: string; description: string }
 const dist = new URL('./dist/', import.meta.url)
 const server = new URL('./dist-server/entry-server.js', import.meta.url)
-const { render, pages } = (await import(server.href)) as {
+const { render, pages, markdown } = (await import(server.href)) as {
   render: (path: string) => string
   pages: Page[]
+  markdown: (path: string) => string | null
 }
 const { homepage } = JSON.parse(
   readFileSync(new URL('../package.json', import.meta.url), 'utf8'),
@@ -23,6 +25,7 @@ const escape = (text: string) =>
   text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;')
 
 writeFileSync(new URL('index.html', dist), template.replace('<!--app-->', render('')))
+let count = 0
 for (const page of pages) {
   const html = template
     .replace('<!--app-->', render(page.path))
@@ -34,6 +37,12 @@ for (const page of pages) {
   const dir = new URL(page.path, dist)
   mkdirSync(dir, { recursive: true })
   writeFileSync(new URL('index.html', dir), html)
+  // `hooks/useHash/` → `hooks/useHash.md`: the docs as markdown, one URL next to the page.
+  const md = markdown(page.path)
+  if (md !== null) {
+    writeFileSync(new URL(page.path.replace(/\/$/, '.md'), dist), md)
+    count++
+  }
 }
 const urls = ['', ...pages.map((page) => page.path)].map(
   (path) => `  <url><loc>${homepage}${path}</loc></url>`,
@@ -43,4 +52,6 @@ writeFileSync(
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`,
 )
 rmSync(new URL('./dist-server/', import.meta.url), { recursive: true, force: true })
-console.log(`prerendered demo/dist: home and ${pages.length} pages, sitemap.xml`)
+console.log(
+  `prerendered demo/dist: home and ${pages.length} pages, ${count} markdown docs, sitemap.xml`,
+)
