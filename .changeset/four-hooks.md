@@ -1,5 +1,5 @@
 ---
-'@vincent.ri/react-tils': minor
+'@vincent.ri/react-tils': patch
 ---
 
 New hooks: `useScrollSpy` (highlight the section being read), `useAutosizeTextarea` (chat inputs that grow with their text), `usePasteFiles` (paste screenshots and files), and `useIsStuck` (style a sticky header once it sticks).
