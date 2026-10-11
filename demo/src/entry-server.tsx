@@ -12,9 +12,17 @@ export function render(path: string): string {
   )
 }
 
-/** Every hook's page, for prerendering: its path, title, and meta description. */
-export const pages = IDS.map((hook) => ({
-  path: `hooks/${hook}/`,
-  title: `${hook} — react-tils`,
-  description: summary(hookDoc(hook)),
-}))
+/** The tutorial and every hook's page, for prerendering: its path, title, and meta description. */
+export const pages = [
+  {
+    path: 'getting-started/',
+    title: 'Installation — react-tils',
+    description:
+      'Install react-tils, use your first hook, and set up server rendering, Next.js, AI agents, and tests.',
+  },
+  ...IDS.map((hook) => ({
+    path: `hooks/${hook}/`,
+    title: `${hook} — react-tils`,
+    description: summary(hookDoc(hook)),
+  })),
+]

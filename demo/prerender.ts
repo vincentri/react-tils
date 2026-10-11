@@ -43,4 +43,4 @@ writeFileSync(
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`,
 )
 rmSync(new URL('./dist-server/', import.meta.url), { recursive: true, force: true })
-console.log(`prerendered demo/dist: home and ${pages.length} hook pages, sitemap.xml`)
+console.log(`prerendered demo/dist: home and ${pages.length} pages, sitemap.xml`)

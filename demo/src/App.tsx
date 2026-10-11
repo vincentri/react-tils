@@ -80,7 +80,10 @@ import {
   useWindowScroll,
   useWindowSize,
 } from '@vincent.ri/react-tils'
-import { hookDoc, PACKAGE, REPO } from './docs'
+import { Code, Search, type SearchEntry, ThemeToggle } from './chrome'
+import { hookDoc, PACKAGE, REPO, summary } from './docs'
+import { GettingStarted, gettingStartedEntries } from './GettingStarted'
+import pkg from '../../package.json'
 
 const BASE = import.meta.env.BASE_URL
 export const hookUrl = (hook: string) => `${BASE}hooks/${hook}/`
@@ -136,11 +139,7 @@ function Card({ hook, hint, children }: { hook: string; hint: string; children: 
           <p className="hint">{hint}</p>
           <div className="body">{children}</div>
         </div>
-        {examples && (
-          <pre className="code">
-            <code>{examples}</code>
-          </pre>
-        )}
+        {examples && <Code>{examples}</Code>}
       </div>
     </section>
   )
@@ -1581,14 +1580,10 @@ function HookPage({ hook, demo }: { hook: string; demo: ReactNode }) {
       ))}
 
       <h2>Import</h2>
-      <pre className="code">
-        <code>{`import { ${hook} } from '${PACKAGE}'\n// or only this hook\nimport { ${hook} } from '${PACKAGE}/${hook}'`}</code>
-      </pre>
+      <Code>{`import { ${hook} } from '${PACKAGE}'\n// or only this hook\nimport { ${hook} } from '${PACKAGE}/${hook}'`}</Code>
 
       <h2>Usage</h2>
-      <pre className="code" data-testid="hook-example">
-        <code>{doc.example}</code>
-      </pre>
+      <Code testId="hook-example">{doc.example}</Code>
 
       <h2>Live demo</h2>
       <OnHookPage.Provider value>{demo}</OnHookPage.Provider>
@@ -1607,9 +1602,9 @@ function HookPage({ hook, demo }: { hook: string; demo: ReactNode }) {
       )}
 
       <h2>API</h2>
-      <pre className="code signature" data-testid="hook-signature">
-        <code>{doc.signature}</code>
-      </pre>
+      <Code testId="hook-signature" className="signature">
+        {doc.signature}
+      </Code>
       {doc.params.length > 0 && (
         <table className="params">
           <thead>
@@ -1640,9 +1635,7 @@ function HookPage({ hook, demo }: { hook: string; demo: ReactNode }) {
       {doc.types && (
         <>
           <h3>Types</h3>
-          <pre className="code">
-            <code>{doc.types}</code>
-          </pre>
+          <Code>{doc.types}</Code>
         </>
       )}
 
@@ -1663,8 +1656,30 @@ function HookPage({ hook, demo }: { hook: string; demo: ReactNode }) {
   )
 }
 
+// What search looks through: the tutorial's sections, then every hook.
+const SEARCH: SearchEntry[] = [
+  ...gettingStartedEntries(BASE),
+  ...IDS.map((hook) => {
+    const doc = hookDoc(hook)
+    const category = CATEGORIES.find((c) => c.cards.flat().includes(hook))!.title
+    return {
+      title: hook,
+      href: hookUrl(hook),
+      summary: summary(doc),
+      keywords: `${doc.aliases} ${doc.useWhen} ${category}`,
+    }
+  }),
+]
+
+const GitHubIcon = () => (
+  <svg viewBox="0 0 16 16" width="18" height="18" fill="currentColor" aria-hidden="true">
+    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z" />
+  </svg>
+)
+
 export function App({ path }: { path: string }) {
   const current = pageHook(path)
+  const tutorial = /^getting-started\/?$/.test(path)
   const [inViewRef, inView] = useInView<HTMLDivElement>()
   const direction = useScrollDirection()
   const [stuckRef, stuck] = useIsStuck<HTMLParagraphElement>()
@@ -1744,10 +1759,38 @@ export function App({ path }: { path: string }) {
   return (
     <div className="layout">
       <aside className="sidebar">
-        <a className="brand" href={BASE}>
-          react-tils
-        </a>
+        <div className="sidebar-top">
+          <a className="brand" href={BASE}>
+            <span className="logo" aria-hidden="true" />
+            react-tils
+            <span className="version">v{pkg.version}</span>
+          </a>
+          <a className="icon-button" href={REPO} aria-label="GitHub repository">
+            <GitHubIcon />
+          </a>
+          <ThemeToggle />
+        </div>
+        <Search entries={SEARCH} />
         <nav aria-label="Hooks">
+          <div className="nav-group">
+            <h2>Get started</h2>
+            <ul>
+              <li>
+                <a
+                  href={`${BASE}getting-started/`}
+                  data-testid="link-getting-started"
+                  aria-current={tutorial ? 'page' : undefined}
+                >
+                  Installation
+                </a>
+              </li>
+              <li>
+                <a href={BASE} aria-current={!current && !tutorial ? 'page' : undefined}>
+                  All hooks
+                </a>
+              </li>
+            </ul>
+          </div>
           {CATEGORIES.map((category) => (
             <div key={category.title} className="nav-group">
               <h2>{category.title}</h2>
@@ -1760,7 +1803,7 @@ export function App({ path }: { path: string }) {
                       aria-current={
                         current === hook
                           ? 'page'
-                          : !current && active === hook
+                          : !current && !tutorial && active === hook
                             ? 'location'
                             : undefined
                       }
@@ -1775,24 +1818,35 @@ export function App({ path }: { path: string }) {
         </nav>
       </aside>
       <main id="top" ref={mainRef}>
-        {!current && (
-          <header>
-            <h1>react-tils</h1>
+        {!current && !tutorial && (
+          <header className="hero">
+            <h1>
+              React hooks for browser state,{' '}
+              <span className="accent">right on the first frame.</span>
+            </h1>
             <p>
-              {IDS.length} React hooks for browser state, correct on the first frame. Every example
-              below is server-rendered at build time and hydrated in your browser. Click a hook's
-              name for its full documentation.
+              {IDS.length} small, tested hooks that render on the server, hydrate without
+              mismatches, clean up after themselves, and compile with React Compiler. Every demo
+              below is server-rendered at build time and hydrated in your browser.
             </p>
+            <div className="hero-actions">
+              <a className="button primary" href={`${BASE}getting-started/`}>
+                Get started
+              </a>
+              <code className="install">npm i {PACKAGE}</code>
+            </div>
           </header>
         )}
-        {(!current || PAGE_DEMOS.has(current)) && (
+        {((!current && !tutorial) || (current && PAGE_DEMOS.has(current))) && (
           <p ref={stuckRef} className={stuck ? 'sticky-status stuck' : 'sticky-status'}>
             Scrolling <Value id="scroll-direction">{direction}</Value> · bottom of page in view:{' '}
             <Value id="inview">{inView ? 'yes' : 'no'}</Value>
             <span className="read-progress" style={{ transform: `scaleX(${progress})` }} />
           </p>
         )}
-        {current ? (
+        {tutorial ? (
+          <GettingStarted base={BASE} />
+        ) : current ? (
           <HookPage
             hook={current}
             demo={
@@ -1809,7 +1863,7 @@ export function App({ path }: { path: string }) {
             </section>
           ))
         )}
-        {(!current || PAGE_DEMOS.has(current)) && (
+        {((!current && !tutorial) || (current && PAGE_DEMOS.has(current))) && (
           <footer>
             <div ref={inViewRef} className="sentinel" data-testid="inview-target" />
             <p>

@@ -518,10 +518,15 @@ test('useSpeechSynthesis reads aloud and stops without errors', async ({ page })
   const start = page.getByTestId('speech-start')
   if (await start.isEnabled()) {
     await start.click()
-    // Headless browsers may have no voices; the point is that nothing throws or sticks.
-    if (await page.getByTestId('speech-stop').isVisible())
-      await page.getByTestId('speech-stop').click()
-    await expect(page.getByTestId('speech-start')).toBeVisible()
+    // Headless browsers may have no voices; the point is that nothing throws or sticks. Speaking
+    // can start a moment after the click, so press Stop whenever it shows until Start is back.
+    const stop = page.getByTestId('speech-stop')
+    await expect
+      .poll(async () => {
+        if (await stop.isVisible()) await stop.click()
+        return start.isVisible()
+      })
+      .toBe(true)
   }
 })
 
