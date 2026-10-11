@@ -1,8 +1,8 @@
 // Release step for changesets/action: publishes with the npm CLI, which attaches provenance in
-// GitHub Actions (pnpm publish ignored it), skips versions already on npm so ordinary pushes to
-// main don't fail, then tags the release so changesets/action pushes the tag and creates a
-// GitHub release. Fails unless npm really has the version with provenance. The build already
-// ran in `pnpm check`, so publish skips lifecycle scripts.
+// GitHub Actions (pnpm publish ignored it), and skips versions already on npm so ordinary pushes
+// to main don't fail. Fails unless npm really has the version with provenance, then creates the
+// git tag and GitHub release. The build already ran in `pnpm check`, so publish skips lifecycle
+// scripts.
 import { execSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 
@@ -43,4 +43,12 @@ for (let i = 0; i < 12 && !found; i++) {
 if (!found) throw new Error(`${name}@${version} is not on npm with provenance`)
 console.log(`${name}@${version} is on npm with provenance (${found})`)
 
-execSync('pnpm exec changeset tag', { stdio: 'inherit' })
+// Tag and GitHub release, with this version's changelog section as notes. (`changeset tag`
+// only shows a spinner, so changesets/action never saw a new tag and made no release.)
+const changelog = readFileSync('CHANGELOG.md', 'utf8')
+const notes = changelog.split(`## ${version}\n`)[1]?.split('\n## ')[0]?.trim() ?? ''
+const tag = `${name}@${version}`
+execSync(
+  `gh release create ${tag} --target ${process.env.GITHUB_SHA} --title ${tag} --notes-file -`,
+  { input: `${notes}\n\nInstall: \`npm install ${name}\``, stdio: ['pipe', 'inherit', 'inherit'] },
+)
