@@ -1,200 +1,214 @@
 # react-tils
 
-React hooks for browser state, built for AI coding agents. Agents writing this code themselves often show the wrong value on the first frame. With this library and one line of setup, they don't.
+[![npm](https://img.shields.io/npm/v/@vincent.ri/react-tils)](https://www.npmjs.com/package/@vincent.ri/react-tils)
+[![CI](https://github.com/vincentri/react-tils/actions/workflows/ci.yml/badge.svg)](https://github.com/vincentri/react-tils/actions/workflows/ci.yml)
+[![size](https://img.shields.io/badge/all%2047%20hooks-7.2%20kB-blue)](#hooks)
+[![license](https://img.shields.io/npm/l/@vincent.ri/react-tils)](LICENSE)
 
-| Agent (7 browser-state tasks × 3 runs) | Wrong first frame, no library | Wrong first frame, with library |
-| -------------------------------------- | ----------------------------- | ------------------------------- |
-| Claude Haiku                           | 15/21                         | **0/21**                        |
-| Claude Sonnet                          | 7/21                          | **0/21**                        |
+React hooks for browser state and interaction that are correct on the first frame: they render on the server, hydrate without mismatches, clean up every listener, and work with React Compiler. Documented so AI coding agents pick the right hook and use it correctly.
 
-See [Evaluation](#evaluation) for the method and caveats.
-
-## Setup for AI agents
-
-Install, then add one line so your agent reads the guide. Without it, agents almost never use an installed library (2 of 42 runs in the evaluation).
+**[Live demo](https://vincentri.github.io/react-tils/)** · **[llms.txt](https://vincentri.github.io/react-tils/llms.txt)** · **[Agent guide](AGENTS.md)**
 
 ```sh
 npm install @vincent.ri/react-tils
-npx react-tils init   # adds the pointer line to CLAUDE.md / AGENTS.md, and a Cursor rule if .cursor/ exists
 ```
 
-`AGENTS.md` covers which hook fits each task, the patterns to replace, how to verify a custom hook, and the API rules.
+```tsx
+'use client'
+import { useLocalStorage, useMediaQuery, useOnline } from '@vincent.ri/react-tils'
 
-ESM only. Works with any bundler, Next.js, and Vitest. Jest needs its ESM mode, or `transformIgnorePatterns` set so it transforms `@vincent.ri/react-tils`.
+export function Sidebar() {
+  const isDesktop = useMediaQuery('(min-width: 1024px)')
+  const [collapsed, setCollapsed] = useLocalStorage('sidebar-collapsed', false)
+  const online = useOnline()
+
+  return (
+    <aside data-collapsed={collapsed || !isDesktop}>
+      {!online && <p>You're offline. Changes will sync later.</p>}
+      <button onClick={() => setCollapsed((c) => !c)}>Toggle</button>
+    </aside>
+  )
+}
+```
 
 ## Why
 
-- **Correct first frame.** Built on `useSyncExternalStore`: a client-side mount renders the real value immediately, and hydration renders `serverValue` with no mismatch.
-- **Made for agents.** Full JSDoc with "Use when / Don't use when" and examples in every `.d.ts`, and an API agents can guess. CI fails if any hook is missing docs.
-- **Verify any hook or component.** `hookMatrix` and `componentMatrix` from `@vincent.ri/react-tils/testing` run the same checks on your own code, so an agent can prove what it just wrote is safe.
-- **Proven.** CI runs every hook through the same checks against React 18, 19, and canary.
-- **React Compiler safe.** Every hook compiles with React Compiler with zero bailouts, and CI runs all unit tests and the browser tests again on compiled code: the library, the demo app, and a Next.js app.
-- **Small.** Zero dependencies, one file per hook, 7.22 kB for everything, size budget enforced in CI.
+The usual way to read browser state in React is `useState` plus `useEffect`. It works, but every client-side mount renders a wrong value first and corrects it a frame later. Reading `window` during render instead crashes on the server, and guessing on the server causes hydration mismatches. These bugs are easy to write and easy to miss, especially for AI agents.
+
+- **Right on the first frame.** Hooks are built on `useSyncExternalStore`. A client-side mount shows the real value immediately; server rendering and hydration use a `serverValue` you control, with no mismatch.
+- **No leaks.** Every listener, observer, and timer is removed on unmount, including under StrictMode.
+- **Tested for real.** Every hook passes a server-render, hydration, and leak check on React 18, 19, and canary, plus browser tests in Chromium, Firefox, WebKit, and a Next.js app.
+- **React Compiler safe.** Every hook compiles with zero bailouts, and the full test suite runs again on compiled code.
+- **Small.** No dependencies, one file per hook, tree-shakeable. All 47 hooks together are 7.2 kB (brotli).
+- **Made for agents.** Every hook's JSDoc says when to use it and when not to, with examples. `AGENTS.md` maps everyday tasks to hooks and lists the patterns to avoid.
+
+## Setup for AI agents
+
+Agents rarely use an installed library unless something points them to it. One command adds that pointer:
+
+```sh
+npx react-tils init
+```
+
+It adds one line to your `CLAUDE.md` and `AGENTS.md` (creating them if needed), plus a Cursor rule if you use Cursor, pointing the agent at `node_modules/@vincent.ri/react-tils/AGENTS.md`. Running it again changes nothing.
+
+In our evaluation, that one line took the share of agent solutions with a wrong first frame from 15/21 (Claude Haiku) and 7/21 (Claude Sonnet) to 0/21 for both. See [Evaluation](#evaluation).
+
+## How server rendering works
+
+Hooks that read browser state take an optional `serverValue`: what to render on the server and during hydration, where the browser state is unknown. After hydration the hook switches to the real value. On a client-side mount, such as after navigation, there is nothing to hydrate, so the real value renders immediately.
+
+```tsx
+const isDesktop = useMediaQuery('(min-width: 1024px)', true) // assume desktop on the server
+const now = useNow(1000) // null on the server, then the current time every second
+```
+
+Pick the `serverValue` most of your visitors will have, so the switch after hydration is rare. For anything that must never show a default, render it only after hydration with `useHydrated()`.
 
 ## Hooks
 
-### Browser state
+Import from the root or from a hook's own path; both tree-shake:
 
-| Hook                                                                                 | Size (brotli) |
-| ------------------------------------------------------------------------------------ | ------------- |
-| `useDocumentVisibility(serverValue = 'visible')`                                     | 101 B         |
-| `useElementSize({ box? })` → `[ref, { width, height }]`                              | 322 B         |
-| `useElementScroll()` → `[ref, { x, y, atTop, atBottom, atLeft, atRight }]`           | 451 B         |
-| `useGeolocation({ enabled?, enableHighAccuracy?, maximumAge?, timeout? })`           | 305 B         |
-| `useHash(serverValue = '')` → `[hash, setHash]`                                      | 159 B         |
-| `useHydrated()`                                                                      | 77 B          |
-| `useIdle(timeoutMs = 60_000)`                                                        | 238 B         |
-| `useInView({ rootMargin?, threshold?, once? })` → `[ref, inView]`                    | 252 B         |
-| `useLocalStorage(key, serverValue)`                                                  | 368 B         |
-| `useMediaQuery(query, serverValue = false)`                                          | 126 B         |
-| `useNetworkInformation(serverValue?)` → `{ saveData, effectiveType, downlink, rtt }` | 228 B         |
-| `useNow(intervalMs, serverValue = null)` → timestamp                                 | 153 B         |
-| `useOnline(serverValue = true)`                                                      | 112 B         |
-| `usePermission(name)`                                                                | 319 B         |
-| `usePreferredLanguages(serverValue = ['en'])`                                        | 159 B         |
-| `useScrollDirection(threshold = 10)` → `'up' \| 'down'`                              | 190 B         |
-| `useSessionStorage(key, serverValue)`                                                | 370 B         |
-| `useVisualViewport(serverValue?)` → `{ width, height, bottomInset, … }`              | 285 B         |
-| `useWindowFocus(serverValue = true)`                                                 | 113 B         |
-| `useWindowScroll(serverValue?)`                                                      | 169 B         |
-| `useWindowSize(serverValue?)`                                                        | 168 B         |
-
-### Events and interaction
-
-| Hook                                                                                                 | Size (brotli) |
-| ---------------------------------------------------------------------------------------------------- | ------------- |
-| `useBeforeUnload(when = true)`                                                                       | 105 B         |
-| `useAnimationFrame(callback, active = true)`                                                         | 190 B         |
-| `useBroadcastChannel(name, onMessage?)` → `post`                                                     | 228 B         |
-| `useClickOutside(handler, enabled = true)` → `ref`                                                   | 322 B         |
-| `useControllableState(value, defaultValue, onChange?)` → `[value, setValue]`                         | 216 B         |
-| `useCopyToClipboard(resetMs = 2000)` → `[copy, copied]`                                              | 177 B         |
-| `useDebouncedCallback(fn, delayMs, { maxWaitMs? })` → debounced fn with `cancel`, `flush`, `pending` | 296 B         |
-| `useDebouncedValue(value, delayMs)`                                                                  | 99 B          |
-| `useEventListener(target, type, handler, options?)`                                                  | 274 B         |
-| `useFileDrop(onDrop, { enabled? })` → `[ref, isOver]`                                                | 348 B         |
-| `useFocusTrap(active = true)` → `ref`                                                                | 512 B         |
-| `useFullscreen()` → `[ref, { supported, active, enter, exit, toggle }]`                              | 292 B         |
-| `useHotkey(hotkey, handler, { enabled?, preventDefault?, enableInInputs? })`                         | 611 B         |
-| `useInterval(callback, delayMs \| null, { pauseWhenHidden? })`                                       | 260 B         |
-| `useLongPress(onLongPress, { delayMs?, moveTolerance? })` → handlers                                 | 381 B         |
-| `useMergedRefs(...refs)` → `ref`                                                                     | 315 B         |
-| `useRovingFocus({ orientation?, loop?, selector? })` → `ref`                                         | 688 B         |
-| `useScript(src, { enabled?, attributes? })` → status                                                 | 456 B         |
-| `useScrollLock(locked = true)`                                                                       | 270 B         |
-| `useShare()` → `{ supported, share }`                                                                | 196 B         |
-| `useStickToBottom()` → `[ref, { atBottom, scrollToBottom }]`                                         | 589 B         |
-| `useSwipe(onSwipe, { threshold?, maxDurationMs? })` → `ref`                                          | 401 B         |
-| `useTextSelection()` → `[ref, { text, rect, range } \| null]`                                        | 351 B         |
-| `useTimeout(callback, delayMs \| null)` → `restart`                                                  | 204 B         |
-| `useUserMedia(constraints, { enabled? })` → `{ stream, error, loading }`                             | 313 B         |
-| `useWakeLock(enabled = true)` → `{ supported, active }`                                              | 313 B         |
-
-All 47 together: 7.22 kB. Hooks share internals, so importing several costs less than the sum.
-
-## Demo
-
-Live at **https://vincentri.github.io/react-tils/**, with the hook reference for agents at [`llms.txt`](https://vincentri.github.io/react-tils/llms.txt).
-
-Every hook has a live card in `demo/`, a Vite + React app that is server-rendered at build time and hydrated in the browser, like an SSR app. It deploys to GitHub Pages on every push to `main` (`.github/workflows/demo.yml`; enable Pages with source "GitHub Actions" once).
-
-```sh
-pnpm demo          # dev server
-pnpm demo:build    # prerendered static site in demo/dist, plus demo/dist/llms.txt
+```ts
+import { useMediaQuery } from '@vincent.ri/react-tils'
+import { useMediaQuery } from '@vincent.ri/react-tils/useMediaQuery'
 ```
 
-The site also serves `llms.txt`: every hook's signature, import, and docs, generated from the built type declarations so it can't drift from the package.
+Every hook is documented in its type declarations, so your editor shows the full docs and examples on hover.
 
-## End-to-end tests
+### Viewport and media
 
-`e2e/` runs the built demo in Chromium, Firefox, and WebKit (Safari) with Playwright: real viewport changes, color scheme, scrolling, ResizeObserver, IntersectionObserver, offline mode, reloads, a second tab, locale, geolocation and permissions, keyboard shortcuts, clipboard, scroll lock, `beforeunload` dialogs, fullscreen, messages between tabs, file drops, long press, and a fake camera. Every test also fails on any console error, which includes React hydration mismatches.
+| Hook                                 | For                                                        | Size  |
+| ------------------------------------ | ---------------------------------------------------------- | ----- |
+| `useMediaQuery(query, serverValue?)` | Breakpoints, dark mode, reduced motion, pointer type in JS | 126 B |
+| `useWindowSize(serverValue?)`        | Exact window width and height in pixels                    | 168 B |
+| `useVisualViewport(serverValue?)`    | Keeping a bottom bar above the mobile keyboard             | 285 B |
+| `useWindowScroll(serverValue?)`      | Page scroll position: back-to-top buttons, progress bars   | 169 B |
+| `useScrollDirection(threshold?)`     | Hiding the header while scrolling down                     | 190 B |
 
-```sh
-pnpm exec playwright install chromium firefox webkit   # once
-pnpm e2e
+### Elements
+
+| Hook                       | For                                                         | Size  |
+| -------------------------- | ----------------------------------------------------------- | ----- |
+| `useElementSize({ box? })` | An element's pixel size, for canvases and charts            | 322 B |
+| `useElementScroll()`       | Scroll position and edges of a scroll container             | 451 B |
+| `useInView(options?)`      | Lazy loading, infinite lists, play when visible             | 252 B |
+| `useStickToBottom()`       | Chats and logs that follow new messages until you scroll up | 589 B |
+| `useMergedRefs(...refs)`   | Putting several refs on one element                         | 315 B |
+
+### Storage and URL
+
+| Hook                                    | For                                                  | Size  |
+| --------------------------------------- | ---------------------------------------------------- | ----- |
+| `useLocalStorage(key, serverValue)`     | State that survives reloads, synced across tabs      | 368 B |
+| `useSessionStorage(key, serverValue)`   | State for this tab only                              | 370 B |
+| `useHash(serverValue?)`                 | Tabs or panels linkable through the URL hash         | 159 B |
+| `useBroadcastChannel(name, onMessage?)` | Telling other tabs about an event (logged out, cart) | 228 B |
+
+### Page, device, and user
+
+| Hook                                  | For                                                          | Size  |
+| ------------------------------------- | ------------------------------------------------------------ | ----- |
+| `useOnline(serverValue?)`             | Offline banners, disabling network actions                   | 112 B |
+| `useNetworkInformation(serverValue?)` | Skipping autoplay on data saver or slow connections          | 228 B |
+| `useDocumentVisibility(serverValue?)` | Pausing work while the tab is hidden                         | 101 B |
+| `useWindowFocus(serverValue?)`        | Whether the window has focus                                 | 113 B |
+| `useIdle(timeoutMs?)`                 | "Are you still there?", away status                          | 238 B |
+| `usePreferredLanguages(serverValue?)` | The user's languages, for a default locale                   | 159 B |
+| `usePermission(name)`                 | Showing the right button for a permission, without prompting | 319 B |
+| `useGeolocation(options?)`            | The user's location, after they ask for it                   | 305 B |
+| `useHydrated()`                       | Rendering something only in the browser                      | 77 B  |
+| `useNow(intervalMs, serverValue?)`    | Clocks, countdowns, "5 minutes ago"                          | 153 B |
+
+### Events and input
+
+| Hook                                                | For                                                    | Size  |
+| --------------------------------------------------- | ------------------------------------------------------ | ----- |
+| `useEventListener(target, type, handler, options?)` | Any window, document, or element event                 | 274 B |
+| `useClickOutside(handler, enabled?)`                | Closing menus and popovers on an outside press         | 322 B |
+| `useHotkey(hotkey, handler, options?)`              | Keyboard shortcuts like `mod+k` and Escape             | 611 B |
+| `useLongPress(onLongPress, options?)`               | Press and hold on touch and mouse                      | 381 B |
+| `useSwipe(onSwipe, options?)`                       | Swiping between slides, swipe to dismiss               | 401 B |
+| `useFileDrop(onDrop, options?)`                     | Drag-and-drop file upload areas                        | 348 B |
+| `useTextSelection()`                                | Floating toolbars for selected text                    | 351 B |
+| `useRovingFocus(options?)`                          | Arrow-key navigation in toolbars, menus, and tab lists | 688 B |
+| `useFocusTrap(active?)`                             | Keeping focus inside a custom modal or drawer          | 512 B |
+
+### Timers
+
+| Hook                                               | For                                                   | Size  |
+| -------------------------------------------------- | ----------------------------------------------------- | ----- |
+| `useInterval(callback, delayMs \| null, options?)` | Polling, carousels; can pause while the tab is hidden | 260 B |
+| `useTimeout(callback, delayMs \| null)`            | Auto-dismissing toasts, "Saved" labels                | 204 B |
+| `useDebouncedCallback(fn, delayMs, options?)`      | Search as you type, autosave                          | 296 B |
+| `useDebouncedValue(value, delayMs)`                | A debounced copy of state, such as a query to fetch   | 99 B  |
+| `useAnimationFrame(callback, active?)`             | Canvas drawing and game loops                         | 190 B |
+
+### Browser APIs
+
+| Hook                                  | For                                             | Size  |
+| ------------------------------------- | ----------------------------------------------- | ----- |
+| `useCopyToClipboard(resetMs?)`        | Copy buttons with a "Copied!" label             | 177 B |
+| `useShare()`                          | The native share sheet                          | 196 B |
+| `useFullscreen()`                     | Fullscreen for players, viewers, and slideshows | 292 B |
+| `useWakeLock(enabled?)`               | Keeping the screen on                           | 313 B |
+| `useUserMedia(constraints, options?)` | Camera and microphone                           | 313 B |
+| `useScript(src, options?)`            | Loading a third-party script once, on demand    | 456 B |
+| `useScrollLock(locked?)`              | Stopping the page scrolling behind a modal      | 270 B |
+| `useBeforeUnload(when?)`              | Warning before leaving with unsaved changes     | 105 B |
+
+### Component helpers
+
+| Hook                                                   | For                                                   | Size  |
+| ------------------------------------------------------ | ----------------------------------------------------- | ----- |
+| `useControllableState(value, defaultValue, onChange?)` | Components that work both controlled and uncontrolled | 216 B |
+
+Coming from react-use, ahooks, usehooks-ts, or similar? [`AGENTS.md`](AGENTS.md#coming-from-another-library) maps their hook names to these.
+
+## Testing your own hooks
+
+The checks every hook here passes are exported, so you can run them on your own hooks and components with Vitest (in a `happy-dom` or `jsdom` environment):
+
+```ts
+import { describe } from 'vitest'
+import { componentMatrix, hookMatrix } from '@vincent.ri/react-tils/testing'
+import { Sidebar } from './Sidebar'
+import { useScrollY } from './useScrollY'
+
+describe('useScrollY', () => {
+  hookMatrix(() => useScrollY())
+})
+
+describe('Sidebar', () => {
+  componentMatrix(Sidebar)
+})
 ```
 
-`e2e-next/` runs `examples/nextjs`, a Next.js App Router app, and checks the core claim directly: after a client-side navigation, a `react-tils` component shows the real window width from its first frame, while a hand-written `useEffect` version on the same page shows `0` first.
+They fail if the code touches the DOM during server render, causes a hydration mismatch, or leaks a listener after a StrictMode mount and unmount.
 
-Not covered by e2e (headless browsers can't drive them): tab visibility, window focus, wake lock, and the share sheet. Unit tests cover their logic.
+## Compatibility
 
-## Install test
-
-`pnpm test:install` packs the real tarball and installs it into fresh projects outside the repo, the way users get it:
-
-- the tarball has `dist`, types, `AGENTS.md`, and the CLI, and no source or tests;
-- npm with React 19, pnpm with React 18 (strict, so an undeclared dependency fails), and yarn and bun when installed: a server render using the root entry and a per-hook entry, with `@vincent.ri/react-tils/internal/*` blocked;
-- TypeScript with `moduleResolution` `bundler` and `nodenext`, including `@ts-expect-error` lines that fail if the types were `any`;
-- `npx react-tils init` from the installed package;
-- a Vite app compiled with React Compiler: production build, compared against a build without the compiler to confirm it was compiled, then run in Chromium.
-
-## Test matrix
-
-Every hook must pass:
-
-| Check                                                | Catches                                |
-| ---------------------------------------------------- | -------------------------------------- |
-| Server render with no `window`/`document`            | hooks that touch the DOM during render |
-| Hydration with no recoverable error or console error | server/client markup mismatch          |
-| StrictMode mount + unmount removes every listener    | leaked subscriptions                   |
-
-### React Compiler
-
-`pnpm test:compiler` (part of `pnpm check`) compiles the library with React Compiler, using oxc's Rust port (`oxc-transform-react`) set to fail on any function it can't compile, and runs all unit tests on the compiled code. `scripts/compiler-report.ts` then checks every hook was compiled rather than skipped, and that a component breaking the Rules of React is rejected, so a pass can't mean the strict setting was ignored. `pnpm e2e:compiler` runs the browser tests with the demo and the library compiled, and with the Next.js app compiled by Next's Rust compiler while it uses the published, uncompiled `dist`.
-
-Test components themselves stay uncompiled: they write hook values to outer variables during render so the tests can read them, which the compiler rightly rejects.
+- React 18 and 19, including React Compiler.
+- Tested in Next.js (App Router) and Vite apps, with npm, pnpm, yarn, and bun. Any bundler with ESM support works.
+- TypeScript with `moduleResolution` `bundler` or `nodenext`.
+- ESM only. Vitest works out of the box; Jest needs its ESM mode, or `transformIgnorePatterns` set so it transforms `@vincent.ri/react-tils`.
+- Not in scope: data fetching, state management, and generic helpers like `usePrevious`.
 
 ## Evaluation
 
-Headless Claude Code agents were given 7 tasks in a Next.js-shaped project: responsive sidebar, window width, persisted theme toggle, offline banner, pause when tab hidden, system dark mode, reduced motion. Prompts are normal requests and never mention SSR. Each task ran 3 times per model and setup. Every solution was scored with the same checks as `@vincent.ri/react-tils/testing`, under each client state the task covers (e.g. mobile and desktop viewport):
+Headless Claude Code agents were given 7 everyday tasks in a Next.js project (responsive sidebar, window width, theme toggle, offline banner, pause when hidden, dark mode, reduced motion), 3 runs each. Prompts were normal requests and never mentioned server rendering.
 
-- **Hard failures:** server crash, hydration mismatch, leaked listener, wrong output after hydration.
-- **Wrong first frame:** the text on the first commit of a client-side mount, before effects run. `useEffect`-based solutions show the default here, then switch a frame later.
+| Agent         | Wrong first frame, no library | With the library and `init` pointer |
+| ------------- | ----------------------------- | ----------------------------------- |
+| Claude Haiku  | 15/21                         | **0/21**                            |
+| Claude Sonnet | 7/21                          | **0/21**                            |
 
-| Model  | Setup                        | Hard checks pass | Wrong first frame | Used library |
-| ------ | ---------------------------- | ---------------- | ----------------- | ------------ |
-| Haiku  | no library                   | 20/21            | 15/21             | 0/21         |
-| Haiku  | installed, no pointer        | 20/21            | 15/21             | 1/21         |
-| Haiku  | installed + one-line pointer | 21/21            | 0/21              | 21/21        |
-| Sonnet | no library                   | 21/21            | 7/21              | 0/21         |
-| Sonnet | installed, no pointer        | 21/21            | 6/21              | 1/21         |
-| Sonnet | installed + one-line pointer | 21/21            | 0/21              | 21/21        |
+Without the pointer, agents used the installed library in only 2 of 42 runs. Hard failures such as crashes and hydration mismatches were rare either way; the common bug is the wrong first frame. The evaluation ran on an earlier version with fewer hooks, with Claude models only. Method, caveats, and how to reproduce it are in [CONTRIBUTING.md](CONTRIBUTING.md#evaluation).
 
-Findings:
+## Contributing
 
-- Current models rarely ship hard bugs: one hydration mismatch and one broken import in 126 runs.
-- Wrong first frames are common, mostly from the `useEffect` + `useState` pattern. Sonnet got every theme-toggle and window-width run wrong.
-- Agents ignore an installed library unless something points them to it. The one-line pointer is what makes it work.
-- When the prompt explicitly says the app is server-rendered, Sonnet uses `useSyncExternalStore` itself and gets 0/7 wrong. The library matters most for ordinary requests.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development, the test setup, and releasing.
 
-Caveats: 3 runs per task, tasks are within this library's scope, and only Claude models were tested. The first-frame check reads the DOM in a layout effect, so it would also flag a solution that corrects itself in its own `useLayoutEffect` (which the browser would not paint).
+## License
 
-Reproduce (needs the `claude` CLI, about $2.50):
-
-```sh
-pnpm build
-node eval/run.ts 3 8 haiku,sonnet realistic   # agents write solutions to eval/out/realistic/
-EVAL_OUT=./out/realistic/ pnpm eval:score     # writes eval/out/realistic/RESULTS.md
-pnpm eval:selftest                            # scorer sanity check on known-good and known-bad solutions
-```
-
-## Releasing
-
-**From GitHub:** Actions → Release → Run workflow. Pick patch, minor, or major and write one changelog line. The run checks everything, bumps the version, updates `CHANGELOG.md`, commits to `main`, publishes to npm with provenance, and creates the GitHub release. Tick "dry run" first to see the new version and changelog without committing or publishing.
-
-**With changesets:** add one with `pnpm changeset` in a PR. On `main`, the workflow opens a "Version Packages" PR; merging it publishes.
-
-Either way, `scripts/publish.ts` publishes with npm trusted publishing (no stored token) and fails unless npm really has the new version with its provenance attestation. `pnpm check` also runs `publint`, `arethetypeswrong`, and an `npm publish --dry-run` that fails if npm would silently change `package.json`.
-
-## Adding a hook
-
-1. `src/useThing.ts`, exported from `src/index.ts`.
-2. `src/useThing.test.ts` calling `hookMatrix(() => useThing())`, plus hook-specific tests.
-3. A size budget in `.size-limit.json`.
-4. JSDoc with a description, "Use when / Don't use when", and `@example`.
-5. A row in the `AGENTS.md` "Pick a hook" table.
-6. `pnpm check` passes. `src/docs.test.ts` enforces all of the above.
-
-## Scope
-
-Browser state (media, storage, network, visibility, focus, size, scroll, language, permissions, location, idle) and the browser events and interactions agents commonly get wrong (listeners, outside clicks, shortcuts, timers, clipboard, sharing, scroll lock, fullscreen, wake lock, third-party scripts, unload, camera and microphone, messages between tabs, file drops, long press, swipe, focus trapping, timeouts, debouncing, text selection, scroll containers and chat auto-scroll, arrow-key navigation, animation frames, the URL hash, rendering the current time). Not a general utility collection: no data fetching, no state management, no generic helpers like `usePrevious`. Debouncing is in because it is a timer that agents commonly get wrong; `useMergedRefs` because several hooks here return refs that often land on one element; `useControllableState` because copying props into state is one of the most common React bugs agents write.
+[MIT](LICENSE)
