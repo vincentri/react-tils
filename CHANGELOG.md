@@ -1,5 +1,14 @@
 # @vincent.ri/react-tils
 
+## 0.1.4
+
+### Patch Changes
+
+- baa8245: useCookie no longer crashes when a cookie on the page isn't URL-encoded (for example `a=100%` set by the server); such values are returned as written.
+- 15fe1cb: Add `useFocusWithin` (close menus when keyboard users Tab out) and `useEventSource` (Server-Sent Events that reconnect with backoff, can pause in hidden tabs, and close on unmount).
+- 8574283: Add `usePointerPosition`: where the mouse, pen, or finger is over an element, for spotlights, tooltips, and crosshairs.
+- 025f4d6: Add `useSearchParam` (one URL query parameter as state; server-rendered from the request, in sync with Next.js's `useSearchParams`), `useThrottledCallback`, and `usePrevious` (correct under the React Compiler, unlike the ref version).
+
 ## 0.1.3
 
 ### Patch Changes
