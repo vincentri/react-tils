@@ -411,6 +411,6 @@
     "name": "everything",
     "path": "dist/index.js",
     "import": "*",
-    "limit": "13 kB"
+    "limit": "12.3 kB"
   }
 ]
