@@ -7,7 +7,7 @@
 
 React hooks for browser state and interaction that are correct on the first frame: they render on the server, hydrate without mismatches, clean up every listener, and work with React Compiler. Documented so AI coding agents pick the right hook and use it correctly.
 
-**[Live demo](https://vincentri.github.io/react-tils/)** · **[llms.txt](https://vincentri.github.io/react-tils/llms.txt)** · **[Agent guide](AGENTS.md)**
+**[Docs and live demo](https://vincentri.github.io/react-tils/)** · **[llms.txt](https://vincentri.github.io/react-tils/llms.txt)** · **[Agent guide](AGENTS.md)**
 
 ```sh
 npm install @vincent.ri/react-tils
@@ -78,111 +78,111 @@ Every hook is documented in its type declarations, so your editor shows the full
 
 ### Viewport and media
 
-| Hook                                 | For                                                        | Size  |
-| ------------------------------------ | ---------------------------------------------------------- | ----- |
-| `useMediaQuery(query, serverValue?)` | Breakpoints, dark mode, reduced motion, pointer type in JS | 126 B |
-| `useWindowSize(serverValue?)`        | Exact window width and height in pixels                    | 168 B |
-| `useVisualViewport(serverValue?)`    | Keeping a bottom bar above the mobile keyboard             | 285 B |
-| `useWindowScroll(serverValue?)`      | Page scroll position: back-to-top buttons, progress bars   | 169 B |
-| `useScrollDirection(threshold?)`     | Hiding the header while scrolling down                     | 190 B |
-| `useScrollSpy(ids, options?)`        | Highlighting the current section in a table of contents    | 266 B |
-| `useScrollProgress()`                | Reading-progress bars for articles                         | 288 B |
+| Hook                                                                                                 | For                                                        | Size  |
+| ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | ----- |
+| [`useMediaQuery(query, serverValue?)`](https://vincentri.github.io/react-tils/hooks/useMediaQuery/)  | Breakpoints, dark mode, reduced motion, pointer type in JS | 126 B |
+| [`useWindowSize(serverValue?)`](https://vincentri.github.io/react-tils/hooks/useWindowSize/)         | Exact window width and height in pixels                    | 168 B |
+| [`useVisualViewport(serverValue?)`](https://vincentri.github.io/react-tils/hooks/useVisualViewport/) | Keeping a bottom bar above the mobile keyboard             | 285 B |
+| [`useWindowScroll(serverValue?)`](https://vincentri.github.io/react-tils/hooks/useWindowScroll/)     | Page scroll position: back-to-top buttons, progress bars   | 169 B |
+| [`useScrollDirection(threshold?)`](https://vincentri.github.io/react-tils/hooks/useScrollDirection/) | Hiding the header while scrolling down                     | 190 B |
+| [`useScrollSpy(ids, options?)`](https://vincentri.github.io/react-tils/hooks/useScrollSpy/)          | Highlighting the current section in a table of contents    | 266 B |
+| [`useScrollProgress()`](https://vincentri.github.io/react-tils/hooks/useScrollProgress/)             | Reading-progress bars for articles                         | 288 B |
 
 ### Elements
 
-| Hook                       | For                                                         | Size  |
-| -------------------------- | ----------------------------------------------------------- | ----- |
-| `useElementSize({ box? })` | An element's pixel size, for canvases and charts            | 322 B |
-| `useElementScroll()`       | Scroll position and edges of a scroll container             | 451 B |
-| `useInView(options?)`      | Lazy loading, infinite lists, play when visible             | 252 B |
-| `useIsStuck()`             | Styling a sticky header once it sticks                      | 268 B |
-| `useStickToBottom()`       | Chats and logs that follow new messages until you scroll up | 589 B |
-| `useMergedRefs(...refs)`   | Putting several refs on one element                         | 315 B |
+| Hook                                                                                       | For                                                         | Size  |
+| ------------------------------------------------------------------------------------------ | ----------------------------------------------------------- | ----- |
+| [`useElementSize({ box? })`](https://vincentri.github.io/react-tils/hooks/useElementSize/) | An element's pixel size, for canvases and charts            | 322 B |
+| [`useElementScroll()`](https://vincentri.github.io/react-tils/hooks/useElementScroll/)     | Scroll position and edges of a scroll container             | 451 B |
+| [`useInView(options?)`](https://vincentri.github.io/react-tils/hooks/useInView/)           | Lazy loading, infinite lists, play when visible             | 252 B |
+| [`useIsStuck()`](https://vincentri.github.io/react-tils/hooks/useIsStuck/)                 | Styling a sticky header once it sticks                      | 268 B |
+| [`useStickToBottom()`](https://vincentri.github.io/react-tils/hooks/useStickToBottom/)     | Chats and logs that follow new messages until you scroll up | 589 B |
+| [`useMergedRefs(...refs)`](https://vincentri.github.io/react-tils/hooks/useMergedRefs/)    | Putting several refs on one element                         | 315 B |
 
 ### Storage and URL
 
-| Hook                                    | For                                                            | Size  |
-| --------------------------------------- | -------------------------------------------------------------- | ----- |
-| `useLocalStorage(key, serverValue)`     | State that survives reloads, synced across tabs                | 368 B |
-| `useSessionStorage(key, serverValue)`   | State for this tab only                                        | 370 B |
-| `useCookie(name, serverValue?)`         | Preferences the server also reads, correct on the first render | 446 B |
-| `useHash(serverValue?)`                 | Tabs or panels linkable through the URL hash                   | 159 B |
-| `useSearchParam(name, serverValue?)`    | Tabs, search, and filters kept in the URL query                | 310 B |
-| `useBroadcastChannel(name, onMessage?)` | Telling other tabs about an event (logged out, cart)           | 214 B |
+| Hook                                                                                                         | For                                                            | Size  |
+| ------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------- | ----- |
+| [`useLocalStorage(key, serverValue)`](https://vincentri.github.io/react-tils/hooks/useLocalStorage/)         | State that survives reloads, synced across tabs                | 368 B |
+| [`useSessionStorage(key, serverValue)`](https://vincentri.github.io/react-tils/hooks/useSessionStorage/)     | State for this tab only                                        | 370 B |
+| [`useCookie(name, serverValue?)`](https://vincentri.github.io/react-tils/hooks/useCookie/)                   | Preferences the server also reads, correct on the first render | 446 B |
+| [`useHash(serverValue?)`](https://vincentri.github.io/react-tils/hooks/useHash/)                             | Tabs or panels linkable through the URL hash                   | 159 B |
+| [`useSearchParam(name, serverValue?)`](https://vincentri.github.io/react-tils/hooks/useSearchParam/)         | Tabs, search, and filters kept in the URL query                | 310 B |
+| [`useBroadcastChannel(name, onMessage?)`](https://vincentri.github.io/react-tils/hooks/useBroadcastChannel/) | Telling other tabs about an event (logged out, cart)           | 214 B |
 
 ### Page, device, and user
 
-| Hook                                  | For                                                          | Size  |
-| ------------------------------------- | ------------------------------------------------------------ | ----- |
-| `useOnline(serverValue?)`             | Offline banners, disabling network actions                   | 112 B |
-| `useNetworkInformation(serverValue?)` | Skipping autoplay on data saver or slow connections          | 228 B |
-| `useDocumentVisibility(serverValue?)` | Pausing work while the tab is hidden                         | 101 B |
-| `useWindowFocus(serverValue?)`        | Whether the window has focus                                 | 113 B |
-| `useIdle(timeoutMs?)`                 | "Are you still there?", away status                          | 238 B |
-| `usePreferredLanguages(serverValue?)` | The user's languages, for a default locale                   | 159 B |
-| `usePermission(name)`                 | Showing the right button for a permission, without prompting | 319 B |
-| `useGeolocation(options?)`            | The user's location, after they ask for it                   | 305 B |
-| `useHydrated()`                       | Rendering something only in the browser                      | 77 B  |
-| `useNow(intervalMs, serverValue?)`    | Clocks, countdowns, "5 minutes ago"                          | 153 B |
-| `usePageRestore(callback)`            | Refreshing stale data after the Back button                  | 150 B |
-| `useDeviceOrientation()`              | Tilt effects and compasses, with the iOS permission flow     | 331 B |
+| Hook                                                                                                         | For                                                          | Size  |
+| ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------ | ----- |
+| [`useOnline(serverValue?)`](https://vincentri.github.io/react-tils/hooks/useOnline/)                         | Offline banners, disabling network actions                   | 112 B |
+| [`useNetworkInformation(serverValue?)`](https://vincentri.github.io/react-tils/hooks/useNetworkInformation/) | Skipping autoplay on data saver or slow connections          | 228 B |
+| [`useDocumentVisibility(serverValue?)`](https://vincentri.github.io/react-tils/hooks/useDocumentVisibility/) | Pausing work while the tab is hidden                         | 101 B |
+| [`useWindowFocus(serverValue?)`](https://vincentri.github.io/react-tils/hooks/useWindowFocus/)               | Whether the window has focus                                 | 113 B |
+| [`useIdle(timeoutMs?)`](https://vincentri.github.io/react-tils/hooks/useIdle/)                               | "Are you still there?", away status                          | 238 B |
+| [`usePreferredLanguages(serverValue?)`](https://vincentri.github.io/react-tils/hooks/usePreferredLanguages/) | The user's languages, for a default locale                   | 159 B |
+| [`usePermission(name)`](https://vincentri.github.io/react-tils/hooks/usePermission/)                         | Showing the right button for a permission, without prompting | 319 B |
+| [`useGeolocation(options?)`](https://vincentri.github.io/react-tils/hooks/useGeolocation/)                   | The user's location, after they ask for it                   | 305 B |
+| [`useHydrated()`](https://vincentri.github.io/react-tils/hooks/useHydrated/)                                 | Rendering something only in the browser                      | 77 B  |
+| [`useNow(intervalMs, serverValue?)`](https://vincentri.github.io/react-tils/hooks/useNow/)                   | Clocks, countdowns, "5 minutes ago"                          | 153 B |
+| [`usePageRestore(callback)`](https://vincentri.github.io/react-tils/hooks/usePageRestore/)                   | Refreshing stale data after the Back button                  | 150 B |
+| [`useDeviceOrientation()`](https://vincentri.github.io/react-tils/hooks/useDeviceOrientation/)               | Tilt effects and compasses, with the iOS permission flow     | 331 B |
 
 ### Events and input
 
-| Hook                                                | For                                                           | Size  |
-| --------------------------------------------------- | ------------------------------------------------------------- | ----- |
-| `useEventListener(target, type, handler, options?)` | Any window, document, or element event                        | 220 B |
-| `useClickOutside(handler, enabled?)`                | Closing menus and popovers on an outside press                | 187 B |
-| `useHotkey(hotkey, handler, options?)`              | Keyboard shortcuts: `mod+k`, Escape, and sequences like `g i` | 586 B |
-| `useLongPress(onLongPress, options?)`               | Press and hold on touch and mouse                             | 364 B |
-| `useSwipe(onSwipe, options?)`                       | Swiping between slides, swipe to dismiss                      | 388 B |
-| `useDrag(onDrag, options?)`                         | Resizable panels, splitters, custom sliders                   | 495 B |
-| `usePointerPosition()`                              | Spotlights, tooltips, and crosshairs at the pointer           | 198 B |
-| `useFileDrop(onDrop, options?)`                     | Drag-and-drop file upload areas                               | 336 B |
-| `usePasteFiles(onFiles, options?)`                  | Pasting screenshots and files into a chat or editor           | 333 B |
-| `useTextSelection()`                                | Floating toolbars for selected text                           | 351 B |
-| `useRovingFocus(options?)`                          | Arrow keys and typeahead in toolbars, menus, and tab lists    | 838 B |
-| `useFocusTrap(active?)`                             | Keeping focus inside a custom modal or drawer                 | 512 B |
-| `useFocusWithin(options?)`                          | Closing menus when keyboard users Tab out                     | 266 B |
-| `useAutosizeTextarea(options?)`                     | Chat inputs that grow with their text                         | 474 B |
-| `useCaretPosition()`                                | `@mention` and `/command` popups at the caret                 | 705 B |
+| Hook                                                                                                                  | For                                                           | Size  |
+| --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- | ----- |
+| [`useEventListener(target, type, handler, options?)`](https://vincentri.github.io/react-tils/hooks/useEventListener/) | Any window, document, or element event                        | 220 B |
+| [`useClickOutside(handler, enabled?)`](https://vincentri.github.io/react-tils/hooks/useClickOutside/)                 | Closing menus and popovers on an outside press                | 187 B |
+| [`useHotkey(hotkey, handler, options?)`](https://vincentri.github.io/react-tils/hooks/useHotkey/)                     | Keyboard shortcuts: `mod+k`, Escape, and sequences like `g i` | 586 B |
+| [`useLongPress(onLongPress, options?)`](https://vincentri.github.io/react-tils/hooks/useLongPress/)                   | Press and hold on touch and mouse                             | 364 B |
+| [`useSwipe(onSwipe, options?)`](https://vincentri.github.io/react-tils/hooks/useSwipe/)                               | Swiping between slides, swipe to dismiss                      | 388 B |
+| [`useDrag(onDrag, options?)`](https://vincentri.github.io/react-tils/hooks/useDrag/)                                  | Resizable panels, splitters, custom sliders                   | 495 B |
+| [`usePointerPosition()`](https://vincentri.github.io/react-tils/hooks/usePointerPosition/)                            | Spotlights, tooltips, and crosshairs at the pointer           | 198 B |
+| [`useFileDrop(onDrop, options?)`](https://vincentri.github.io/react-tils/hooks/useFileDrop/)                          | Drag-and-drop file upload areas                               | 336 B |
+| [`usePasteFiles(onFiles, options?)`](https://vincentri.github.io/react-tils/hooks/usePasteFiles/)                     | Pasting screenshots and files into a chat or editor           | 333 B |
+| [`useTextSelection()`](https://vincentri.github.io/react-tils/hooks/useTextSelection/)                                | Floating toolbars for selected text                           | 351 B |
+| [`useRovingFocus(options?)`](https://vincentri.github.io/react-tils/hooks/useRovingFocus/)                            | Arrow keys and typeahead in toolbars, menus, and tab lists    | 838 B |
+| [`useFocusTrap(active?)`](https://vincentri.github.io/react-tils/hooks/useFocusTrap/)                                 | Keeping focus inside a custom modal or drawer                 | 512 B |
+| [`useFocusWithin(options?)`](https://vincentri.github.io/react-tils/hooks/useFocusWithin/)                            | Closing menus when keyboard users Tab out                     | 266 B |
+| [`useAutosizeTextarea(options?)`](https://vincentri.github.io/react-tils/hooks/useAutosizeTextarea/)                  | Chat inputs that grow with their text                         | 474 B |
+| [`useCaretPosition()`](https://vincentri.github.io/react-tils/hooks/useCaretPosition/)                                | `@mention` and `/command` popups at the caret                 | 705 B |
 
 ### Timers
 
-| Hook                                               | For                                                   | Size  |
-| -------------------------------------------------- | ----------------------------------------------------- | ----- |
-| `useInterval(callback, delayMs \| null, options?)` | Polling, carousels; can pause while the tab is hidden | 243 B |
-| `useTimeout(callback, delayMs \| null)`            | Auto-dismissing toasts, "Saved" labels                | 188 B |
-| `useDebouncedCallback(fn, delayMs, options?)`      | Search as you type, autosave                          | 281 B |
-| `useDebouncedValue(value, delayMs)`                | A debounced copy of state, such as a query to fetch   | 99 B  |
-| `useThrottledCallback(fn, intervalMs)`             | Live results while typing, sending cursor positions   | 268 B |
-| `useAnimationFrame(callback, active?)`             | Canvas drawing and game loops                         | 173 B |
+| Hook                                                                                                                | For                                                   | Size  |
+| ------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- | ----- |
+| [`useInterval(callback, delayMs \| null, options?)`](https://vincentri.github.io/react-tils/hooks/useInterval/)     | Polling, carousels; can pause while the tab is hidden | 243 B |
+| [`useTimeout(callback, delayMs \| null)`](https://vincentri.github.io/react-tils/hooks/useTimeout/)                 | Auto-dismissing toasts, "Saved" labels                | 188 B |
+| [`useDebouncedCallback(fn, delayMs, options?)`](https://vincentri.github.io/react-tils/hooks/useDebouncedCallback/) | Search as you type, autosave                          | 281 B |
+| [`useDebouncedValue(value, delayMs)`](https://vincentri.github.io/react-tils/hooks/useDebouncedValue/)              | A debounced copy of state, such as a query to fetch   | 99 B  |
+| [`useThrottledCallback(fn, intervalMs)`](https://vincentri.github.io/react-tils/hooks/useThrottledCallback/)        | Live results while typing, sending cursor positions   | 268 B |
+| [`useAnimationFrame(callback, active?)`](https://vincentri.github.io/react-tils/hooks/useAnimationFrame/)           | Canvas drawing and game loops                         | 173 B |
 
 ### Browser APIs
 
-| Hook                                  | For                                                               | Size  |
-| ------------------------------------- | ----------------------------------------------------------------- | ----- |
-| `useCopyToClipboard(resetMs?)`        | Copy buttons with a "Copied!" label                               | 177 B |
-| `useShare()`                          | The native share sheet                                            | 196 B |
-| `useFullscreen()`                     | Fullscreen for players, viewers, and slideshows                   | 292 B |
-| `useWakeLock(enabled?)`               | Keeping the screen on                                             | 313 B |
-| `useUserMedia(constraints, options?)` | Camera and microphone                                             | 313 B |
-| `useMediaRecorder(stream, options?)`  | Voice notes and voice input, in a format every browser can record | 698 B |
-| `useSpeechSynthesis()`                | "Read aloud" buttons                                              | 631 B |
-| `useSpeechRecognition(options?)`      | Dictation into search boxes and chat inputs                       | 514 B |
-| `useEventSource(url, options?)`       | Live notifications, progress, and prices from the server          | 547 B |
-| `useScript(src, options?)`            | Loading a third-party script once, on demand                      | 437 B |
-| `useServiceWorkerUpdate(options?)`    | "New version available" banners in PWAs                           | 418 B |
-| `useScrollLock(locked?)`              | Stopping the page scrolling behind a modal                        | 270 B |
-| `useBeforeUnload(when?)`              | Warning before leaving with unsaved changes                       | 105 B |
+| Hook                                                                                                       | For                                                               | Size  |
+| ---------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ----- |
+| [`useCopyToClipboard(resetMs?)`](https://vincentri.github.io/react-tils/hooks/useCopyToClipboard/)         | Copy buttons with a "Copied!" label                               | 177 B |
+| [`useShare()`](https://vincentri.github.io/react-tils/hooks/useShare/)                                     | The native share sheet                                            | 196 B |
+| [`useFullscreen()`](https://vincentri.github.io/react-tils/hooks/useFullscreen/)                           | Fullscreen for players, viewers, and slideshows                   | 292 B |
+| [`useWakeLock(enabled?)`](https://vincentri.github.io/react-tils/hooks/useWakeLock/)                       | Keeping the screen on                                             | 313 B |
+| [`useUserMedia(constraints, options?)`](https://vincentri.github.io/react-tils/hooks/useUserMedia/)        | Camera and microphone                                             | 313 B |
+| [`useMediaRecorder(stream, options?)`](https://vincentri.github.io/react-tils/hooks/useMediaRecorder/)     | Voice notes and voice input, in a format every browser can record | 698 B |
+| [`useSpeechSynthesis()`](https://vincentri.github.io/react-tils/hooks/useSpeechSynthesis/)                 | "Read aloud" buttons                                              | 631 B |
+| [`useSpeechRecognition(options?)`](https://vincentri.github.io/react-tils/hooks/useSpeechRecognition/)     | Dictation into search boxes and chat inputs                       | 514 B |
+| [`useEventSource(url, options?)`](https://vincentri.github.io/react-tils/hooks/useEventSource/)            | Live notifications, progress, and prices from the server          | 547 B |
+| [`useScript(src, options?)`](https://vincentri.github.io/react-tils/hooks/useScript/)                      | Loading a third-party script once, on demand                      | 437 B |
+| [`useServiceWorkerUpdate(options?)`](https://vincentri.github.io/react-tils/hooks/useServiceWorkerUpdate/) | "New version available" banners in PWAs                           | 418 B |
+| [`useScrollLock(locked?)`](https://vincentri.github.io/react-tils/hooks/useScrollLock/)                    | Stopping the page scrolling behind a modal                        | 270 B |
+| [`useBeforeUnload(when?)`](https://vincentri.github.io/react-tils/hooks/useBeforeUnload/)                  | Warning before leaving with unsaved changes                       | 105 B |
 
 ### Component helpers
 
-| Hook                                                   | For                                                   | Size  |
-| ------------------------------------------------------ | ----------------------------------------------------- | ----- |
-| `useControllableState(value, defaultValue, onChange?)` | Components that work both controlled and uncontrolled | 204 B |
-| `useAnnounce()`                                        | Announcing "Copied" or "3 results" to screen readers  | 346 B |
-| `usePrevious(value)`                                   | Price ▲/▼, slide direction, "changed from X to Y"     | 92 B  |
+| Hook                                                                                                                         | For                                                   | Size  |
+| ---------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- | ----- |
+| [`useControllableState(value, defaultValue, onChange?)`](https://vincentri.github.io/react-tils/hooks/useControllableState/) | Components that work both controlled and uncontrolled | 204 B |
+| [`useAnnounce()`](https://vincentri.github.io/react-tils/hooks/useAnnounce/)                                                 | Announcing "Copied" or "3 results" to screen readers  | 346 B |
+| [`usePrevious(value)`](https://vincentri.github.io/react-tils/hooks/usePrevious/)                                            | Price ▲/▼, slide direction, "changed from X to Y"     | 92 B  |
 
 Coming from react-use, ahooks, usehooks-ts, or similar? [`AGENTS.md`](AGENTS.md#coming-from-another-library) maps their hook names to these.
 

@@ -47,6 +47,10 @@ describe.each(hooks)('%s', (file) => {
     expect(read('../AGENTS.md')).toContain(`\`${name}(`)
   })
 
+  it('is linked from the README to its docs page', () => {
+    expect(read('../README.md')).toContain(`/react-tils/hooks/${name}/)`)
+  })
+
   it('has a test file that runs the hook or component matrix', () => {
     expect(read(`${name}.test.ts`)).toMatch(/(hookMatrix|componentMatrix)\(/)
   })

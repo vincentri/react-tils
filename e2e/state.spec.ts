@@ -248,7 +248,8 @@ test('useScrollSpy: the sidebar marks the section being read', async ({ page }) 
   const spy = page.getByTestId('spy-active')
   await expect(spy).toHaveText('reading: —') // top of the page: no section past the line yet
 
-  await page.getByTestId('nav-useHash').click()
+  // Sidebar links open each hook's page now; scroll to the card on this page instead.
+  await page.locator('#useHash').evaluate((card) => card.scrollIntoView())
   await expect(spy).toHaveText('reading: useHash')
   await expect(page.getByTestId('nav-useHash')).toHaveAttribute('aria-current', 'location')
   await expect(page.getByTestId('nav-useMediaQuery')).not.toHaveAttribute('aria-current')

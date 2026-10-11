@@ -1,9 +1,11 @@
 import {
+  createContext,
   createElement,
   type CSSProperties,
   Fragment,
   type ReactNode,
   useCallback,
+  useContext,
   useEffect,
   useRef,
   useState,
@@ -78,38 +80,13 @@ import {
   useWindowScroll,
   useWindowSize,
 } from '@vincent.ri/react-tils'
+import { hookDoc, PACKAGE, REPO } from './docs'
 
-// Each hook's description and example, read from its JSDoc so the demo can't drift from the docs.
-const sources = import.meta.glob(['../../src/use*.ts', '!../../src/*.test.ts'], {
-  query: '?raw',
-  import: 'default',
-  eager: true,
-}) as Record<string, string>
+const BASE = import.meta.env.BASE_URL
+export const hookUrl = (hook: string) => `${BASE}hooks/${hook}/`
 
-function hookDocs(hook: string): { description: string; example: string } {
-  const source = sources[`../../src/${hook}.ts`] ?? ''
-  const match = new RegExp(
-    `/\\*\\*((?:(?!\\*/)[\\s\\S])*)\\*/\\s*export function ${hook}[<(]`,
-  ).exec(source)
-  if (!match) return { description: '', example: '' }
-  const lines = match[1]!.split('\n').map((line) => line.replace(/^\s*\* ?/, ''))
-  const start = lines.findIndex((line) => line.trim() !== '')
-  const end = lines.indexOf('', start)
-  const at = lines.findIndex((line) => line.startsWith('@example'))
-  return {
-    description: lines
-      .slice(start, end === -1 ? undefined : end)
-      .join(' ')
-      .trim(),
-    example:
-      at === -1
-        ? ''
-        : lines
-            .slice(at + 1)
-            .join('\n')
-            .trim(),
-  }
-}
+// On a hook's own page, its demo card shows only the live demo: the page has the rest.
+const OnHookPage = createContext(false)
 
 /** Text with `code` spans. */
 function Prose({ text }: { text: string }) {
@@ -122,8 +99,16 @@ function Prose({ text }: { text: string }) {
 
 function Card({ hook, hint, children }: { hook: string; hint: string; children: ReactNode }) {
   const hooks = hook.split(' · ')
+  const onHookPage = useContext(OnHookPage)
+  if (onHookPage)
+    return (
+      <div className="demo" data-hook={hook}>
+        <p className="hint">{hint}</p>
+        <div className="body">{children}</div>
+      </div>
+    )
   const examples = hooks
-    .map((name) => hookDocs(name).example)
+    .map((name) => hookDoc(name).example)
     .filter(Boolean)
     .join('\n\n')
   return (
@@ -132,11 +117,18 @@ function Card({ hook, hint, children }: { hook: string; hint: string; children: 
         <span key={name} id={name} className="anchor" />
       ))}
       <h3>
-        <code>{hook}</code>
+        {hooks.map((name, i) => (
+          <Fragment key={name}>
+            {i > 0 && ' · '}
+            <a href={hookUrl(name)} data-testid={`docs-${name}`}>
+              <code>{name}</code>
+            </a>
+          </Fragment>
+        ))}
       </h3>
       {hooks.map((name) => (
         <p key={name} className="desc">
-          <Prose text={hookDocs(name).description} />
+          <Prose text={hookDoc(name).description[0] ?? ''} />
         </p>
       ))}
       <div className="card-grid">
@@ -1548,9 +1540,131 @@ const CATEGORIES: { title: string; cards: string[][] }[] = [
     cards: [['useControllableState'], ['useAnnounce'], ['usePrevious']],
   },
 ]
-const IDS = CATEGORIES.flatMap((category) => category.cards.flat())
+export const IDS = CATEGORIES.flatMap((category) => category.cards.flat())
 
-export function App() {
+// Their demos read the page's status bar or footer, so their pages show those too.
+const PAGE_DEMOS = new Set([
+  'useScrollDirection',
+  'useScrollSpy',
+  'useScrollProgress',
+  'useInView',
+  'useIsStuck',
+])
+
+/** The hook a path like `hooks/useHash/` is the page of, or null for the home page. */
+export function pageHook(path: string): string | null {
+  const hook = /^hooks\/(use\w+)\/?$/.exec(path)?.[1]
+  return hook && IDS.includes(hook) ? hook : null
+}
+
+function HookPage({ hook, demo }: { hook: string; demo: ReactNode }) {
+  const doc = hookDoc(hook)
+  const index = IDS.indexOf(hook)
+  const [previous, next] = [IDS[index - 1], IDS[index + 1]]
+  const category = CATEGORIES.find((c) => c.cards.flat().includes(hook))!.title
+  return (
+    <article className="doc" data-testid="hook-page">
+      <p className="crumb">
+        <a href={BASE}>All hooks</a> / {category}
+      </p>
+      <h1>
+        <code>{hook}</code>
+      </h1>
+      <p className="meta">
+        {doc.size && <span data-testid="hook-size">{doc.size} minified and brotlied</span>}
+        <a href={`${REPO}/blob/main/src/${hook}.ts`}>Source</a>
+      </p>
+      {doc.description.map((paragraph) => (
+        <p key={paragraph}>
+          <Prose text={paragraph} />
+        </p>
+      ))}
+
+      <h2>Import</h2>
+      <pre className="code">
+        <code>{`import { ${hook} } from '${PACKAGE}'\n// or only this hook\nimport { ${hook} } from '${PACKAGE}/${hook}'`}</code>
+      </pre>
+
+      <h2>Usage</h2>
+      <pre className="code" data-testid="hook-example">
+        <code>{doc.example}</code>
+      </pre>
+
+      <h2>Live demo</h2>
+      <OnHookPage.Provider value>{demo}</OnHookPage.Provider>
+
+      <h2>When to use it</h2>
+      <p>
+        <Prose text={doc.useWhen} />
+      </p>
+      {doc.dontUseWhen && (
+        <>
+          <h2>When not to</h2>
+          <p>
+            <Prose text={doc.dontUseWhen} />
+          </p>
+        </>
+      )}
+
+      <h2>API</h2>
+      <pre className="code signature" data-testid="hook-signature">
+        <code>{doc.signature}</code>
+      </pre>
+      {doc.params.length > 0 && (
+        <table className="params">
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {doc.params.map((param) => (
+              <tr key={param.name}>
+                <td>
+                  <code>{param.name}</code>
+                </td>
+                <td>
+                  <Prose text={param.text} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+      {doc.returns && (
+        <p>
+          <strong>Returns</strong> <Prose text={doc.returns} />
+        </p>
+      )}
+      {doc.types && (
+        <>
+          <h3>Types</h3>
+          <pre className="code">
+            <code>{doc.types}</code>
+          </pre>
+        </>
+      )}
+
+      {doc.aliases && (
+        <>
+          <h2>Coming from another library?</h2>
+          <p>
+            Other libraries call this <Prose text={doc.aliases} />.
+          </p>
+        </>
+      )}
+
+      <nav className="pager" aria-label="Previous and next hook">
+        {previous ? <a href={hookUrl(previous)}>← {previous}</a> : <span />}
+        {next && <a href={hookUrl(next)}>{next} →</a>}
+      </nav>
+    </article>
+  )
+}
+
+export function App({ path }: { path: string }) {
+  const current = pageHook(path)
   const [inViewRef, inView] = useInView<HTMLDivElement>()
   const direction = useScrollDirection()
   const [stuckRef, stuck] = useIsStuck<HTMLParagraphElement>()
@@ -1630,7 +1744,7 @@ export function App() {
   return (
     <div className="layout">
       <aside className="sidebar">
-        <a className="brand" href="#top">
+        <a className="brand" href={BASE}>
           react-tils
         </a>
         <nav aria-label="Hooks">
@@ -1641,9 +1755,15 @@ export function App() {
                 {category.cards.flat().map((hook) => (
                   <li key={hook}>
                     <a
-                      href={`#${hook}`}
+                      href={hookUrl(hook)}
                       data-testid={`nav-${hook}`}
-                      aria-current={active === hook ? 'location' : undefined}
+                      aria-current={
+                        current === hook
+                          ? 'page'
+                          : !current && active === hook
+                            ? 'location'
+                            : undefined
+                      }
                     >
                       {hook}
                     </a>
@@ -1655,32 +1775,48 @@ export function App() {
         </nav>
       </aside>
       <main id="top" ref={mainRef}>
-        <header>
-          <h1>react-tils</h1>
-          <p>
-            {IDS.length} React hooks for browser state, correct on the first frame. Every example
-            below is server-rendered at build time and hydrated in your browser.
+        {!current && (
+          <header>
+            <h1>react-tils</h1>
+            <p>
+              {IDS.length} React hooks for browser state, correct on the first frame. Every example
+              below is server-rendered at build time and hydrated in your browser. Click a hook's
+              name for its full documentation.
+            </p>
+          </header>
+        )}
+        {(!current || PAGE_DEMOS.has(current)) && (
+          <p ref={stuckRef} className={stuck ? 'sticky-status stuck' : 'sticky-status'}>
+            Scrolling <Value id="scroll-direction">{direction}</Value> · bottom of page in view:{' '}
+            <Value id="inview">{inView ? 'yes' : 'no'}</Value>
+            <span className="read-progress" style={{ transform: `scaleX(${progress})` }} />
           </p>
-        </header>
-        <p ref={stuckRef} className={stuck ? 'sticky-status stuck' : 'sticky-status'}>
-          Scrolling <Value id="scroll-direction">{direction}</Value> · bottom of page in view:{' '}
-          <Value id="inview">{inView ? 'yes' : 'no'}</Value>
-          <span className="read-progress" style={{ transform: `scaleX(${progress})` }} />
-        </p>
-        {CATEGORIES.map((category) => (
-          <section key={category.title} className="category">
-            <h2 className="group">{category.title}</h2>
-            {category.cards.map((card) => (
-              <Fragment key={card[0]}>{demos[card[0]!]}</Fragment>
-            ))}
-          </section>
-        ))}
-        <footer>
-          <div ref={inViewRef} className="sentinel" data-testid="inview-target" />
-          <p>
-            You reached the bottom: <code>useInView</code> in the status bar says yes.
-          </p>
-        </footer>
+        )}
+        {current ? (
+          <HookPage
+            hook={current}
+            demo={
+              demos[CATEGORIES.flatMap((c) => c.cards).find((card) => card.includes(current))![0]!]
+            }
+          />
+        ) : (
+          CATEGORIES.map((category) => (
+            <section key={category.title} className="category">
+              <h2 className="group">{category.title}</h2>
+              {category.cards.map((card) => (
+                <Fragment key={card[0]}>{demos[card[0]!]}</Fragment>
+              ))}
+            </section>
+          ))
+        )}
+        {(!current || PAGE_DEMOS.has(current)) && (
+          <footer>
+            <div ref={inViewRef} className="sentinel" data-testid="inview-target" />
+            <p>
+              You reached the bottom: <code>useInView</code> in the status bar says yes.
+            </p>
+          </footer>
+        )}
       </main>
     </div>
   )

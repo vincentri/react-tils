@@ -57,11 +57,14 @@ const center = async (page: Page, testId: string): Promise<Point> => {
 }
 
 test('the demo fits a phone screen: nothing wider than the viewport', async ({ page }) => {
-  await page.goto('/')
-  const overflow = await page.evaluate(
-    () => document.documentElement.scrollWidth - window.innerWidth,
-  )
-  expect(overflow).toBeLessThanOrEqual(0)
+  // A hook page too: long signatures and code scroll inside their own box.
+  for (const path of ['/hooks/useSearchParam/', '/']) {
+    await page.goto(path)
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - window.innerWidth,
+    )
+    expect(overflow, path).toBeLessThanOrEqual(0)
+  }
   // The sidebar becomes one row that scrolls sideways on its own.
   const nav = page.locator('.sidebar nav')
   expect(await nav.evaluate((el) => el.scrollWidth > el.clientWidth)).toBe(true)

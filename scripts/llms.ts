@@ -7,6 +7,7 @@ const dist = new URL('dist/', root)
 const pkg = JSON.parse(readFileSync(new URL('package.json', root), 'utf8')) as {
   name: string
   description: string
+  homepage: string
 }
 
 const unJsdoc = (comment: string) =>
@@ -28,8 +29,9 @@ for (const file of files.toSorted()) {
   )) {
     const [, doc, name, signature] = match
     const entry = file === 'testing.d.ts' ? `${pkg.name}/testing` : pkg.name
+    const page = name.startsWith('use') ? `\n\nDocs: ${pkg.homepage}hooks/${name}/` : ''
     sections.push(
-      `## ${name}\n\n\`\`\`ts\nimport { ${name} } from '${entry}'\nfunction ${name}${signature!.trim()}\n\`\`\`\n\n${unJsdoc(doc!)}`,
+      `## ${name}\n\n\`\`\`ts\nimport { ${name} } from '${entry}'\nfunction ${name}${signature!.trim()}\n\`\`\`\n\n${unJsdoc(doc!)}${page}`,
     )
   }
 }

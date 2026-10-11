@@ -26,8 +26,10 @@ export function reactCompiler(): Plugin {
     name: 'react-tils:react-compiler',
     enforce: 'pre',
     async transform(code, id) {
-      const [file] = id.split('?')
-      if (!file || !/\.[jt]sx?$/.test(file) || skip.test(file)) return
+      // Skip `?raw` and other queried imports: they're text or assets, not code to compile.
+      if (id.includes('?') || !/\.[jt]sx?$/.test(id) || id.endsWith('.d.ts') || skip.test(id))
+        return
+      const file = id
       const result = await transform(file, code, {
         jsx: { runtime: 'automatic', development: this.environment?.config.mode !== 'production' },
         reactCompiler: compilerOptions,

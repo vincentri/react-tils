@@ -29,7 +29,7 @@ pnpm e2e                                              # browser tests
 2. `src/useThing.test.ts` calling `hookMatrix(() => useThing())`, plus hook-specific tests.
 3. A size budget in `.size-limit.json`, a little above its measured size. Then raise the `everything` total by about the same amount: it sits just above the current total on purpose, so any growth (a new hook, or a helper that bloats) needs a deliberate bump that reviewers can see.
 4. JSDoc with a description, "Use when / Don't use when", and `@example`.
-5. A row in the `AGENTS.md` "Pick a hook" table, and in the README hook tables.
+5. A row in the `AGENTS.md` "Pick a hook" table, and in the README hook tables with the hook linked to its docs page (`https://vincentri.github.io/react-tils/hooks/useThing/`). The page itself is generated from the JSDoc and types.
 6. A demo card in `demo/src/App.tsx` and a browser test in `e2e/` when the behavior depends on a real browser.
 7. `pnpm check` passes. `src/docs.test.ts` enforces steps 1 to 5.
 

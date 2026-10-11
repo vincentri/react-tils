@@ -528,3 +528,78 @@ input {
   );
   touch-action: none;
 }
+
+/* A hook's own page. */
+.doc {
+  max-width: 860px;
+}
+
+.doc h1 {
+  margin: 4px 0 6px;
+  font-size: 28px;
+}
+
+.doc h2 {
+  margin: 28px 0 8px;
+  font-size: 18px;
+}
+
+.doc h3 {
+  margin: 18px 0 8px;
+  font-size: 15px;
+}
+
+.doc p {
+  max-width: 75ch;
+  overflow-wrap: anywhere;
+}
+
+.doc > .demo {
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+}
+
+.crumb,
+.meta {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.params {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.params th,
+.params td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.signature {
+  white-space: pre-wrap;
+}
+
+.pager {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 36px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.card h3 a {
+  color: inherit;
+}
