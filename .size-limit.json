@@ -108,6 +108,12 @@
     "limit": "350 B"
   },
   {
+    "name": "useEventSource",
+    "path": "dist/useEventSource.js",
+    "import": "{ useEventSource }",
+    "limit": "600 B"
+  },
+  {
     "name": "useFileDrop",
     "path": "dist/useFileDrop.js",
     "import": "{ useFileDrop }",
@@ -118,6 +124,12 @@
     "path": "dist/useFocusTrap.js",
     "import": "{ useFocusTrap }",
     "limit": "600 B"
+  },
+  {
+    "name": "useFocusWithin",
+    "path": "dist/useFocusWithin.js",
+    "import": "{ useFocusWithin }",
+    "limit": "300 B"
   },
   {
     "name": "useFullscreen",
@@ -399,6 +411,6 @@
     "name": "everything",
     "path": "dist/index.js",
     "import": "*",
-    "limit": "12 kB"
+    "limit": "13 kB"
   }
 ]

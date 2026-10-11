@@ -24,12 +24,14 @@ React hooks for browser state. Every hook renders on the server, hydrates with n
 | User's location after they ask for it                                                  | `useGeolocation({ enabled })`; keep `enabled` false until a click                                                            |
 | Rough location (country, city)                                                         | No hook. Use IP-based location on the server; no prompt.                                                                     |
 | Close a dropdown/popover/menu when the user presses outside it                         | `useClickOutside(handler, enabled?)` on a wrapper around the menu and its button, or native `<dialog>` / `popover`           |
+| Close a menu/popover/combobox when focus leaves it (Tab out), or save an inline editor | `useFocusWithin({ onLeave })` → `[ref, focused]`; pair with `useClickOutside` via `useMergedRefs`                            |
 | Keyboard shortcut (`mod+k` palette, Escape to close, `/` to search, `g i` sequences)   | `useHotkey(hotkey, handler, options?)`                                                                                       |
 | "Copy" button with a "Copied!" label                                                   | `useCopyToClipboard(resetMs?)`                                                                                               |
 | Stop the page scrolling behind a modal or drawer                                       | `useScrollLock(locked)`                                                                                                      |
 | Warn before leaving with unsaved changes                                               | `useBeforeUnload(when)` (does not catch client-side router navigation)                                                       |
 | Any other window/document/element event                                                | `useEventListener(target, type, handler, options?)`                                                                          |
 | Polling, countdown, clock, carousel                                                    | `useInterval(callback, delayMs \| null, { pauseWhenHidden? })`                                                               |
+| Live updates pushed by the server (notifications, job progress, prices, logs)          | `useEventSource(url, { onMessage?, events?, pauseWhenHidden? })` → `{ status, data }`; not for POST/AI streams               |
 | Auto-dismiss a toast, hide "Saved" after 2s, delay before showing a spinner            | `useTimeout(callback, delayMs \| null)` → `restart`                                                                          |
 | Reusable component, controlled or uncontrolled (`value` / `defaultValue` / `onChange`) | `useControllableState(value, defaultValue, onChange?)`; never copy a prop into state                                         |
 | Floating toolbar for selected text (highlight, quote, "Ask AI about this")             | `useTextSelection()` → `[ref, selection]`                                                                                    |
@@ -111,6 +113,8 @@ Names from react-use, ahooks, usehooks-ts, @uidotdev/usehooks, MUI, and Mantine,
 | `useSpeechToText`, `react-speech-recognition`, `useVoice`         | `useSpeechRecognition`   |
 | `useOrientation` (react-use), `useDeviceMotion`, `useGyroscope`   | `useDeviceOrientation`   |
 | `useMouse` (react-use), `useMousePosition`, `usePointer`          | `usePointerPosition`     |
+| `useFocusOutside`, `useFocusLeave`                                | `useFocusWithin`         |
+| `useSSE`, `useServerSentEvents`                                   | `useEventSource`         |
 | `useClickAway`, `useOnClickOutside`                               | `useClickOutside`        |
 | `useControlled`, `useUncontrolled`, `useControllableValue`        | `useControllableState`   |
 | `useDebounce`, `useDebounceValue`                                 | `useDebouncedValue`      |

@@ -39,7 +39,7 @@ The usual way to read browser state in React is `useState` plus `useEffect`. It 
 - **No leaks.** Every listener, observer, and timer is removed on unmount, including under StrictMode.
 - **Tested for real.** Every hook passes a server-render, hydration, and leak check on React 18, 19, and canary, plus browser tests in Chromium, Firefox, WebKit, and a Next.js app.
 - **React Compiler safe.** Every hook compiles with zero bailouts, and the full test suite runs again on compiled code.
-- **Small.** No dependencies, one file per hook, tree-shakeable. All 66 hooks together are 11.7 kB (brotli).
+- **Small.** No dependencies, one file per hook, tree-shakeable. All 68 hooks together are 12.1 kB (brotli).
 - **Made for agents.** Every hook's JSDoc says when to use it and when not to, with examples. `AGENTS.md` maps everyday tasks to hooks and lists the patterns to avoid.
 
 ## Setup for AI agents
@@ -143,6 +143,7 @@ Every hook is documented in its type declarations, so your editor shows the full
 | `useTextSelection()`                                | Floating toolbars for selected text                           | 351 B |
 | `useRovingFocus(options?)`                          | Arrow keys and typeahead in toolbars, menus, and tab lists    | 845 B |
 | `useFocusTrap(active?)`                             | Keeping focus inside a custom modal or drawer                 | 512 B |
+| `useFocusWithin(options?)`                          | Closing menus when keyboard users Tab out                     | 266 B |
 | `useAutosizeTextarea(options?)`                     | Chat inputs that grow with their text                         | 474 B |
 | `useCaretPosition()`                                | `@mention` and `/command` popups at the caret                 | 722 B |
 
@@ -169,6 +170,7 @@ Every hook is documented in its type declarations, so your editor shows the full
 | `useMediaRecorder(stream, options?)`  | Voice notes and voice input, in a format every browser can record | 709 B |
 | `useSpeechSynthesis()`                | "Read aloud" buttons                                              | 651 B |
 | `useSpeechRecognition(options?)`      | Dictation into search boxes and chat inputs                       | 514 B |
+| `useEventSource(url, options?)`       | Live notifications, progress, and prices from the server          | 547 B |
 | `useScript(src, options?)`            | Loading a third-party script once, on demand                      | 437 B |
 | `useServiceWorkerUpdate(options?)`    | "New version available" banners in PWAs                           | 418 B |
 | `useScrollLock(locked?)`              | Stopping the page scrolling behind a modal                        | 270 B |

@@ -540,3 +540,47 @@ test('usePointerPosition follows the mouse over the box, relative to it', async 
   await page.mouse.move(x + 40, y - 30)
   await expect(value).toHaveText('outside')
 })
+
+test('useFocusWithin closes the menu when the keyboard Tabs out of it', async ({
+  page,
+  browserName,
+}) => {
+  await page.goto('/')
+  const value = page.getByTestId('focus-within')
+  await page.getByTestId('fw-toggle').focus()
+  await page.keyboard.press('Enter')
+  await expect(value).toHaveText('focus inside: yes · menu open')
+  // WebKit's Tab skips buttons by default (macOS "Tab to all controls" off); Alt+Tab reaches them.
+  const tab = browserName === 'webkit' ? 'Alt+Tab' : 'Tab'
+  for (let i = 0; i < 3; i++) await page.keyboard.press(tab) // through the items: still open
+  await expect(page.getByTestId('fw-last')).toBeFocused()
+  await expect(value).toHaveText('focus inside: yes · menu open')
+  await page.keyboard.press(tab)
+  await expect(page.getByTestId('fw-after')).toBeFocused()
+  await expect(value).toHaveText('focus inside: no · menu closed')
+})
+
+test('useEventSource receives a live stream, and disconnects', async ({
+  page,
+  errors,
+  browserName,
+}) => {
+  await page.goto('/')
+  const value = page.getByTestId('sse')
+  await expect(value).toHaveText('closed · received 0 · latest —')
+  await page.getByTestId('sse-connect').click()
+  await expect(value).toHaveText(/^open · received [2-9]\d* · latest \d\d:\d\d:\d\d$/, {
+    timeout: 10_000,
+  })
+  await page.getByTestId('sse-disconnect').click()
+  await expect(value).toHaveText(/^closed · received \d+/)
+  const received = await value.textContent()
+  await page.waitForTimeout(1500)
+  await expect(value).toHaveText(received!) // nothing arrives after closing
+  // Firefox logs an error when a page aborts a response a service worker is still streaming,
+  // which is what closing does here. Only that message is allowed.
+  if (browserName === 'firefox') {
+    const aborted = /ServiceWorker intercepted the request and encountered an unexpected error/
+    errors.splice(0, errors.length, ...errors.filter((error) => !aborted.test(error)))
+  }
+})

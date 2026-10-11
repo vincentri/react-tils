@@ -28,7 +28,9 @@ import {
   useElementScroll,
   useEventListener,
   useFileDrop,
+  useEventSource,
   useFocusTrap,
+  useFocusWithin,
   useFullscreen,
   useGeolocation,
   useHash,
@@ -777,6 +779,81 @@ function PointerPositionDemo() {
   )
 }
 
+function FocusWithinDemo() {
+  const [open, setOpen] = useState(false)
+  const outsideRef = useClickOutside(() => setOpen(false), open)
+  const [focusRef, focused] = useFocusWithin({ onLeave: () => setOpen(false) })
+  const ref = useMergedRefs(outsideRef, focusRef)
+  return (
+    <Card
+      hook="useFocusWithin"
+      hint="Open the menu with the keyboard, then Tab past the last item."
+    >
+      <div ref={ref} className="menu-wrap">
+        <button type="button" data-testid="fw-toggle" onClick={() => setOpen(!open)}>
+          Menu {open ? '▴' : '▾'}
+        </button>
+        {open && (
+          <div className="row" data-testid="fw-menu">
+            <button type="button">Rename</button>
+            <button type="button">Duplicate</button>
+            <button type="button" data-testid="fw-last">
+              Delete
+            </button>
+          </div>
+        )}
+      </div>
+      <button type="button" data-testid="fw-after">
+        Next control
+      </button>
+      <Value id="focus-within">
+        focus inside: {focused ? 'yes' : 'no'} · menu {open ? 'open' : 'closed'}
+      </Value>
+    </Card>
+  )
+}
+
+function EventSourceDemo() {
+  // A static site has no server: a small service worker (demo-events-sw.js) answers ./demo-events
+  // with a real event stream. It is only installed when you press Connect.
+  const [url, setUrl] = useState<string | null>(null)
+  const [ticks, setTicks] = useState(0)
+  const { status, data } = useEventSource(url, {
+    events: ['tick'],
+    onMessage: () => setTicks((n) => n + 1),
+  })
+  const connect = async () => {
+    const sw = navigator.serviceWorker
+    if (!sw) return
+    await sw.register('./demo-events-sw.js')
+    if (!sw.controller)
+      await new Promise((resolve) =>
+        sw.addEventListener('controllerchange', resolve, { once: true }),
+      )
+    setUrl('./demo-events')
+  }
+  return (
+    <Card
+      hook="useEventSource"
+      hint="A service worker stands in for the server: one tick a second."
+    >
+      {url === null ? (
+        <button type="button" data-testid="sse-connect" onClick={connect}>
+          Connect
+        </button>
+      ) : (
+        <button type="button" data-testid="sse-disconnect" onClick={() => setUrl(null)}>
+          Disconnect
+        </button>
+      )}
+      <Value id="sse">
+        {status} · received {ticks} · latest{' '}
+        {data ? (JSON.parse(data) as { time: string }).time : '—'}
+      </Value>
+    </Card>
+  )
+}
+
 function AnimationFrameDemo() {
   const [playing, setPlaying] = useState(false)
   const box = useRef<HTMLDivElement>(null)
@@ -1432,6 +1509,7 @@ const CATEGORIES: { title: string; cards: string[][] }[] = [
       ['useTextSelection'],
       ['useRovingFocus'],
       ['useFocusTrap'],
+      ['useFocusWithin'],
       ['useAutosizeTextarea'],
       ['useCaretPosition'],
     ],
@@ -1458,6 +1536,7 @@ const CATEGORIES: { title: string; cards: string[][] }[] = [
       ['useMediaRecorder'],
       ['useSpeechSynthesis'],
       ['useSpeechRecognition'],
+      ['useEventSource'],
       ['useScript'],
       ['useServiceWorkerUpdate'],
       ['useScrollLock'],
@@ -1520,6 +1599,8 @@ export function App() {
     usePasteFiles: <PasteFilesDemo />,
     useTextSelection: <TextSelectionDemo />,
     useRovingFocus: <RovingFocusDemo />,
+    useFocusWithin: <FocusWithinDemo />,
+    useEventSource: <EventSourceDemo />,
     useFocusTrap: <FocusTrapDemo />,
     useAutosizeTextarea: <AutosizeDemo />,
     useCaretPosition: <CaretDemo />,
