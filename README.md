@@ -39,7 +39,7 @@ The usual way to read browser state in React is `useState` plus `useEffect`. It 
 - **No leaks.** Every listener, observer, and timer is removed on unmount, including under StrictMode.
 - **Tested for real.** Every hook passes a server-render, hydration, and leak check on React 18, 19, and canary, plus browser tests in Chromium, Firefox, WebKit, and a Next.js app.
 - **React Compiler safe.** Every hook compiles with zero bailouts, and the full test suite runs again on compiled code.
-- **Small.** No dependencies, one file per hook, tree-shakeable. All 62 hooks together are 11.3 kB (brotli).
+- **Small.** No dependencies, one file per hook, tree-shakeable. All 65 hooks together are 11.6 kB (brotli).
 - **Made for agents.** Every hook's JSDoc says when to use it and when not to, with examples. `AGENTS.md` maps everyday tasks to hooks and lists the patterns to avoid.
 
 ## Setup for AI agents
@@ -107,6 +107,7 @@ Every hook is documented in its type declarations, so your editor shows the full
 | `useSessionStorage(key, serverValue)`   | State for this tab only                                        | 370 B |
 | `useCookie(name, serverValue?)`         | Preferences the server also reads, correct on the first render | 446 B |
 | `useHash(serverValue?)`                 | Tabs or panels linkable through the URL hash                   | 159 B |
+| `useSearchParam(name, serverValue?)`    | Tabs, search, and filters kept in the URL query                | 310 B |
 | `useBroadcastChannel(name, onMessage?)` | Telling other tabs about an event (logged out, cart)           | 214 B |
 
 ### Page, device, and user
@@ -152,6 +153,7 @@ Every hook is documented in its type declarations, so your editor shows the full
 | `useTimeout(callback, delayMs \| null)`            | Auto-dismissing toasts, "Saved" labels                | 188 B |
 | `useDebouncedCallback(fn, delayMs, options?)`      | Search as you type, autosave                          | 281 B |
 | `useDebouncedValue(value, delayMs)`                | A debounced copy of state, such as a query to fetch   | 99 B  |
+| `useThrottledCallback(fn, intervalMs)`             | Live results while typing, sending cursor positions   | 268 B |
 | `useAnimationFrame(callback, active?)`             | Canvas drawing and game loops                         | 173 B |
 
 ### Browser APIs
@@ -177,6 +179,7 @@ Every hook is documented in its type declarations, so your editor shows the full
 | ------------------------------------------------------ | ----------------------------------------------------- | ----- |
 | `useControllableState(value, defaultValue, onChange?)` | Components that work both controlled and uncontrolled | 204 B |
 | `useAnnounce()`                                        | Announcing "Copied" or "3 results" to screen readers  | 346 B |
+| `usePrevious(value)`                                   | Price ▲/▼, slide direction, "changed from X to Y"     | 92 B  |
 
 Coming from react-use, ahooks, usehooks-ts, or similar? [`AGENTS.md`](AGENTS.md#coming-from-another-library) maps their hook names to these.
 

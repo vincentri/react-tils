@@ -182,6 +182,55 @@ test('useHash reads the hash on load, follows links, setHash, and Back', async (
   await expect(page.getByTestId('hash')).toHaveText('tab: profile · hash #profile-tab')
 })
 
+test('useSearchParam keeps the query in the URL: reload and Back restore it', async ({ page }) => {
+  await page.goto('/?q=hooks')
+  const value = page.getByTestId('query')
+  await expect(value).toHaveText('q: hooks · sort: (none)')
+  await expect(page.getByTestId('query-input')).toHaveValue('hooks')
+
+  await page.getByTestId('query-input').fill('react hooks')
+  await expect(value).toHaveText('q: react hooks · sort: (none)')
+  await page.getByTestId('sort-new').click()
+  await page.getByTestId('sort-top').click()
+  await expect(value).toHaveText('q: react hooks · sort: top')
+  expect(new URL(page.url()).search).toBe('?q=react+hooks&sort=top')
+
+  await page.goBack() // pushed sorts are history steps; typing replaced in place
+  await expect(value).toHaveText('q: react hooks · sort: new')
+  await page.reload()
+  await expect(value).toHaveText('q: react hooks · sort: new')
+  await page.getByTestId('query-input').fill('')
+  await expect(value).toHaveText('q: (none) · sort: new')
+  expect(new URL(page.url()).search).toBe('?sort=new')
+})
+
+test('useThrottledCallback saves during a drag, and the final value', async ({ page }) => {
+  await page.goto('/')
+  const slider = page.getByTestId('throttle-slider')
+  await slider.scrollIntoViewIfNeeded()
+  for (let value = 51; value <= 90; value++) {
+    await slider.fill(String(value))
+    await page.waitForTimeout(20)
+  }
+  const value = page.getByTestId('throttled')
+  await expect(value).toHaveText(/^events 40 · saves \d+ · saved 90$/)
+  const saves = Number((await value.textContent())!.match(/saves (\d+)/)![1])
+  expect(saves).toBeGreaterThanOrEqual(2)
+  expect(saves).toBeLessThan(10)
+})
+
+test('usePrevious shows the change, and keeps it across unrelated re-renders', async ({ page }) => {
+  await page.goto('/')
+  const price = page.getByTestId('price')
+  await expect(price).toHaveText('100 · was —')
+  await page.getByTestId('price-up').click()
+  await expect(price).toHaveText('105 ▲ · was 100')
+  await page.getByTestId('price-rerender').click()
+  await expect(price).toHaveText('105 ▲ · was 100')
+  await page.getByTestId('price-down').click()
+  await expect(price).toHaveText('100 ▼ · was 105')
+})
+
 test('useElementScroll follows a scroll container and its edges', async ({ page }) => {
   await page.goto('/')
   const panel = page.getByTestId('scroll-panel')

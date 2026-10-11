@@ -63,7 +63,10 @@ import {
   useStickToBottom,
   useSwipe,
   useTextSelection,
+  useThrottledCallback,
   useTimeout,
+  usePrevious,
+  useSearchParam,
   useUserMedia,
   useVisualViewport,
   useWakeLock,
@@ -661,6 +664,90 @@ function HashDemo() {
       </a>
       <Value id="hash">
         tab: {tab} · hash {hash || '(none)'}
+      </Value>
+    </Card>
+  )
+}
+
+function SearchParamDemo() {
+  const [query, setQuery] = useSearchParam('q')
+  const [sort, setSort] = useSearchParam('sort')
+  return (
+    <Card hook="useSearchParam" hint="Type, pick a sort, then reload or press Back.">
+      <input
+        data-testid="query-input"
+        placeholder="Search…"
+        value={query ?? ''}
+        onChange={(e) => setQuery(e.target.value || null)}
+      />{' '}
+      {['new', 'top'].map((option) => (
+        <button
+          key={option}
+          type="button"
+          data-testid={`sort-${option}`}
+          aria-pressed={sort === option}
+          onClick={() => setSort(option, { push: true })}
+        >
+          {option}
+        </button>
+      ))}
+      <Value id="query">
+        q: {query ?? '(none)'} · sort: {sort ?? '(none)'}
+      </Value>
+    </Card>
+  )
+}
+
+function ThrottleDemo() {
+  const [events, setEvents] = useState(0)
+  const [saved, setSaved] = useState<{ value: number; count: number }>({ value: 50, count: 0 })
+  const save = useThrottledCallback((value: number) => {
+    setSaved((s) => ({ value, count: s.count + 1 }))
+  }, 500)
+  return (
+    <Card
+      hook="useThrottledCallback"
+      hint="Drag the slider: saves every 500 ms, then once at the end."
+    >
+      <input
+        type="range"
+        data-testid="throttle-slider"
+        aria-label="Volume"
+        defaultValue={50}
+        onChange={(e) => {
+          setEvents((n) => n + 1)
+          save(Number(e.target.value))
+        }}
+      />
+      <Value id="throttled">
+        events {events} · saves {saved.count} · saved {saved.value}
+      </Value>
+    </Card>
+  )
+}
+
+function PreviousDemo() {
+  const [price, setPrice] = useState(100)
+  const [, rerender] = useState(0)
+  const previous = usePrevious(price)
+  const trend = previous === undefined ? '' : price > previous ? ' ▲' : ' ▼'
+  return (
+    <Card
+      hook="usePrevious"
+      hint="Change the price; an unrelated re-render keeps the previous one."
+    >
+      <button type="button" data-testid="price-up" onClick={() => setPrice(price + 5)}>
+        +5
+      </button>{' '}
+      <button type="button" data-testid="price-down" onClick={() => setPrice(price - 5)}>
+        −5
+      </button>{' '}
+      <button type="button" data-testid="price-rerender" onClick={() => rerender((n) => n + 1)}>
+        Re-render
+      </button>
+      <Value id="price">
+        {price}
+        {trend} · was {previous ?? '—'}
       </Value>
     </Card>
   )
@@ -1287,6 +1374,7 @@ const CATEGORIES: { title: string; cards: string[][] }[] = [
       ['useLocalStorage', 'useSessionStorage'],
       ['useCookie'],
       ['useHash'],
+      ['useSearchParam'],
       ['useBroadcastChannel'],
     ],
   },
@@ -1330,6 +1418,7 @@ const CATEGORIES: { title: string; cards: string[][] }[] = [
       ['useTimeout'],
       ['useDebouncedCallback'],
       ['useDebouncedValue'],
+      ['useThrottledCallback'],
       ['useAnimationFrame'],
     ],
   },
@@ -1350,7 +1439,10 @@ const CATEGORIES: { title: string; cards: string[][] }[] = [
       ['useBeforeUnload'],
     ],
   },
-  { title: 'Component helpers', cards: [['useControllableState'], ['useAnnounce']] },
+  {
+    title: 'Component helpers',
+    cards: [['useControllableState'], ['useAnnounce'], ['usePrevious']],
+  },
 ]
 const IDS = CATEGORIES.flatMap((category) => category.cards.flat())
 
@@ -1380,6 +1472,7 @@ export function App() {
     useLocalStorage: <StorageDemo />,
     useCookie: <CookieDemo />,
     useHash: <HashDemo />,
+    useSearchParam: <SearchParamDemo />,
     useBroadcastChannel: <BroadcastDemo />,
     useOnline: <OnlineDemo />,
     useNetworkInformation: <NetworkDemo />,
@@ -1408,6 +1501,7 @@ export function App() {
     useTimeout: <TimeoutDemo />,
     useDebouncedCallback: <DebounceDemo />,
     useDebouncedValue: <DebouncedValueDemo />,
+    useThrottledCallback: <ThrottleDemo />,
     useAnimationFrame: <AnimationFrameDemo />,
     useCopyToClipboard: <CopyDemo />,
     useShare: <ShareDemo />,
@@ -1423,6 +1517,7 @@ export function App() {
     useBeforeUnload: <BeforeUnloadDemo />,
     useControllableState: <ControllableDemo />,
     useAnnounce: <AnnounceDemo />,
+    usePrevious: <PreviousDemo />,
   }
 
   return (

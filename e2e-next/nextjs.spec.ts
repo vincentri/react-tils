@@ -76,3 +76,30 @@ test('useHash follows a Next.js <Link> hash navigation (pushState, no hashchange
   await page.goBack()
   await expect(page.getByTestId('hash')).toHaveText('(none)')
 })
+
+test('useSearchParam: right on the server, and in sync with Next.js without a server request', async ({
+  page,
+}) => {
+  const response = await page.goto('/?tab=profile')
+  expect(await response!.text()).toContain('data-testid="tab">profile<')
+  await expect(page.getByTestId('hydrated')).toHaveText('true')
+  await expect(page.getByTestId('tab')).toHaveText('profile')
+
+  const serverRequests: string[] = []
+  page.on('request', (request) => {
+    if (request.resourceType() === 'fetch' || request.resourceType() === 'document')
+      serverRequests.push(request.url())
+  })
+  await page.getByTestId('tab-billing').click()
+  await expect(page).toHaveURL(/\?tab=billing$/)
+  await expect(page.getByTestId('tab')).toHaveText('billing')
+  await expect(page.getByTestId('next-tab')).toHaveText('billing') // Next's own hook follows
+  await page.goBack()
+  await expect(page.getByTestId('tab')).toHaveText('profile')
+  await expect(page.getByTestId('next-tab')).toHaveText('profile')
+  expect(serverRequests).toEqual([])
+
+  // Navigation by the router itself (pushState, no event) reaches the hook too.
+  await page.getByTestId('tab-link').click()
+  await expect(page.getByTestId('tab')).toHaveText('team')
+})

@@ -1,16 +1,25 @@
 'use client'
 
 import Link from 'next/link'
-import { useHash, useHydrated, useLocalStorage, useOnline } from '@vincent.ri/react-tils'
+import { useSearchParams } from 'next/navigation'
+import {
+  useHash,
+  useHydrated,
+  useLocalStorage,
+  useOnline,
+  useSearchParam,
+} from '@vincent.ri/react-tils'
 // Subpath import: checks that per-hook entry points resolve, types included.
 import { useMediaQuery } from '@vincent.ri/react-tils/useMediaQuery'
 
-export function Widgets() {
+export function Widgets({ serverTab }: { serverTab: string | null }) {
   const wide = useMediaQuery('(min-width: 768px)')
   const online = useOnline()
   const hydrated = useHydrated()
   const [count, setCount] = useLocalStorage('next-count', 0)
   const [hash] = useHash()
+  const [tab, setTab] = useSearchParam('tab', serverTab)
+  const nextTab = useSearchParams().get('tab')
   return (
     <ul>
       <li>
@@ -34,6 +43,20 @@ export function Widgets() {
           #billing
         </Link>{' '}
         hash: <output data-testid="hash">{hash || '(none)'}</output>
+      </li>
+      <li>
+        <button
+          type="button"
+          data-testid="tab-billing"
+          onClick={() => setTab('billing', { push: true })}
+        >
+          tab=billing
+        </button>{' '}
+        <Link href="/?tab=team" data-testid="tab-link">
+          ?tab=team
+        </Link>{' '}
+        tab: <output data-testid="tab">{tab ?? '(none)'}</output> · Next sees:{' '}
+        <output data-testid="next-tab">{nextTab ?? '(none)'}</output>
       </li>
     </ul>
   )

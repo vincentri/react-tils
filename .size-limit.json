@@ -156,16 +156,16 @@
     "limit": "350 B"
   },
   {
-    "name": "useInterval",
-    "path": "dist/useInterval.js",
-    "import": "{ useInterval }",
-    "limit": "350 B"
-  },
-  {
     "name": "useInView",
     "path": "dist/useInView.js",
     "import": "{ useInView }",
     "limit": "400 B"
+  },
+  {
+    "name": "useInterval",
+    "path": "dist/useInterval.js",
+    "import": "{ useInterval }",
+    "limit": "350 B"
   },
   {
     "name": "useIsStuck",
@@ -246,6 +246,12 @@
     "limit": "250 B"
   },
   {
+    "name": "usePrevious",
+    "path": "dist/usePrevious.js",
+    "import": "{ usePrevious }",
+    "limit": "150 B"
+  },
+  {
     "name": "useRovingFocus",
     "path": "dist/useRovingFocus.js",
     "import": "{ useRovingFocus }",
@@ -280,6 +286,12 @@
     "path": "dist/useScrollSpy.js",
     "import": "{ useScrollSpy }",
     "limit": "300 B"
+  },
+  {
+    "name": "useSearchParam",
+    "path": "dist/useSearchParam.js",
+    "import": "{ useSearchParam }",
+    "limit": "350 B"
   },
   {
     "name": "useServiceWorkerUpdate",
@@ -328,6 +340,12 @@
     "path": "dist/useTextSelection.js",
     "import": "{ useTextSelection }",
     "limit": "400 B"
+  },
+  {
+    "name": "useThrottledCallback",
+    "path": "dist/useThrottledCallback.js",
+    "import": "{ useThrottledCallback }",
+    "limit": "350 B"
   },
   {
     "name": "useTimeout",
