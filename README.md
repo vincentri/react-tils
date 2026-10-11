@@ -141,11 +141,11 @@ Every hook is documented in its type declarations, so your editor shows the full
 | `useFileDrop(onDrop, options?)`                     | Drag-and-drop file upload areas                               | 336 B |
 | `usePasteFiles(onFiles, options?)`                  | Pasting screenshots and files into a chat or editor           | 333 B |
 | `useTextSelection()`                                | Floating toolbars for selected text                           | 351 B |
-| `useRovingFocus(options?)`                          | Arrow keys and typeahead in toolbars, menus, and tab lists    | 845 B |
+| `useRovingFocus(options?)`                          | Arrow keys and typeahead in toolbars, menus, and tab lists    | 838 B |
 | `useFocusTrap(active?)`                             | Keeping focus inside a custom modal or drawer                 | 512 B |
 | `useFocusWithin(options?)`                          | Closing menus when keyboard users Tab out                     | 266 B |
 | `useAutosizeTextarea(options?)`                     | Chat inputs that grow with their text                         | 474 B |
-| `useCaretPosition()`                                | `@mention` and `/command` popups at the caret                 | 722 B |
+| `useCaretPosition()`                                | `@mention` and `/command` popups at the caret                 | 705 B |
 
 ### Timers
 
@@ -167,8 +167,8 @@ Every hook is documented in its type declarations, so your editor shows the full
 | `useFullscreen()`                     | Fullscreen for players, viewers, and slideshows                   | 292 B |
 | `useWakeLock(enabled?)`               | Keeping the screen on                                             | 313 B |
 | `useUserMedia(constraints, options?)` | Camera and microphone                                             | 313 B |
-| `useMediaRecorder(stream, options?)`  | Voice notes and voice input, in a format every browser can record | 709 B |
-| `useSpeechSynthesis()`                | "Read aloud" buttons                                              | 651 B |
+| `useMediaRecorder(stream, options?)`  | Voice notes and voice input, in a format every browser can record | 698 B |
+| `useSpeechSynthesis()`                | "Read aloud" buttons                                              | 631 B |
 | `useSpeechRecognition(options?)`      | Dictation into search boxes and chat inputs                       | 514 B |
 | `useEventSource(url, options?)`       | Live notifications, progress, and prices from the server          | 547 B |
 | `useScript(src, options?)`            | Loading a third-party script once, on demand                      | 437 B |
@@ -213,7 +213,7 @@ They fail if the code touches the DOM during server render, causes a hydration m
 - Tested in Next.js (App Router) and Vite apps, with npm, pnpm, yarn, and bun. Any bundler with ESM support works.
 - TypeScript with `moduleResolution` `bundler` or `nodenext`.
 - ESM only. Vitest works out of the box; Jest needs its ESM mode, or `transformIgnorePatterns` set so it transforms `@vincent.ri/react-tils`.
-- Not in scope: data fetching, state management, and generic helpers like `usePrevious`.
+- Not in scope: data fetching, state management, and generic helpers like `useToggle` or `useCounter`.
 
 ## Evaluation
 

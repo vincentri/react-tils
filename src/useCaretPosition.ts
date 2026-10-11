@@ -46,12 +46,14 @@ function measure(element: HTMLTextAreaElement | HTMLInputElement): CaretPosition
   // A hidden copy of the field with the text up to the caret, then a marker where the caret is.
   const mirror = document.createElement('div')
   for (const property of COPIED) mirror.style[property] = style[property]
-  mirror.style.position = 'absolute'
-  mirror.style.visibility = 'hidden'
-  mirror.style.top = '0'
-  mirror.style.left = '-9999px'
-  mirror.style.whiteSpace = element instanceof HTMLTextAreaElement ? 'pre-wrap' : 'pre'
-  mirror.style.overflowWrap = 'break-word'
+  Object.assign(mirror.style, {
+    position: 'absolute',
+    visibility: 'hidden',
+    top: '0',
+    left: '-9999px',
+    whiteSpace: element instanceof HTMLTextAreaElement ? 'pre-wrap' : 'pre',
+    overflowWrap: 'break-word',
+  })
   const caret = element.selectionStart ?? element.value.length
   mirror.textContent = element.value.slice(0, caret)
   const marker = document.createElement('span')
@@ -72,7 +74,7 @@ function measure(element: HTMLTextAreaElement | HTMLInputElement): CaretPosition
 }
 
 const same = (a: CaretPosition | null, b: CaretPosition | null) =>
-  a === b || (!!a && !!b && a.top === b.top && a.left === b.left && a.height === b.height)
+  JSON.stringify(a) === JSON.stringify(b)
 
 /**
  * The caret's position on screen in a `<textarea>` or text `<input>`, or

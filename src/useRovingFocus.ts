@@ -115,25 +115,16 @@ export function useRovingFocus<T extends HTMLElement = HTMLElement>(
         return
       }
       if (event.shiftKey) return
-      const rtl = getComputedStyle(container).direction === 'rtl'
-      const vertical = orientation !== 'horizontal'
-      const horizontal = orientation !== 'vertical'
-      let next: number
-      if (event.key === 'Home') next = 0
-      else if (event.key === 'End') next = list.length - 1
-      else if (
-        (vertical && event.key === 'ArrowDown') ||
-        (horizontal && event.key === (rtl ? 'ArrowLeft' : 'ArrowRight'))
-      )
-        next = index + 1
-      else if (
-        (vertical && event.key === 'ArrowUp') ||
-        (horizontal && event.key === (rtl ? 'ArrowRight' : 'ArrowLeft'))
-      )
-        next = index - 1
-      else return
-      event.preventDefault()
       const count = list.length
+      const rtl = getComputedStyle(container).direction === 'rtl' ? -1 : 1
+      // Steps from the current item; Home and End jump to the ends.
+      const steps: Record<string, number> = { Home: -index, End: count - 1 - index }
+      if (orientation !== 'horizontal') Object.assign(steps, { ArrowDown: 1, ArrowUp: -1 })
+      if (orientation !== 'vertical') Object.assign(steps, { ArrowRight: rtl, ArrowLeft: -rtl })
+      const step = steps[event.key]
+      if (step === undefined) return
+      const next = index + step
+      event.preventDefault()
       list[loop ? (next + count) % count : Math.min(Math.max(next, 0), count - 1)]!.focus()
     }
 

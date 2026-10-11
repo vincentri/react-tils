@@ -103,29 +103,28 @@ export function useMediaRecorder(
       return
     }
     const chunks: Blob[] = []
+    let aborted = false
     const onData = (event: BlobEvent) => {
       if (event.data.size > 0) chunks.push(event.data)
     }
     // Built only on stop: the last chunk arrives just before it.
     const onStop = () => {
+      if (aborted) return
       const finished = new Blob(chunks, { type: next.mimeType || type || '' })
       recorder.current = null
       setBlob(finished)
       setRecording(false)
       for (const resolve of waiting.current.splice(0)) resolve(finished)
     }
-    const onError = () => setError(new Error('Recording failed'))
     next.addEventListener('dataavailable', onData)
     next.addEventListener('stop', onStop)
-    next.addEventListener('error', onError)
+    next.addEventListener('error', () => aborted || setError(new Error('Recording failed')))
     recorder.current = {
       instance: next,
       abort: () => {
-        next.removeEventListener('dataavailable', onData)
-        next.removeEventListener('stop', onStop)
-        next.removeEventListener('error', onError)
+        // Its stop event is ignored, so reset here; the cut-off recording isn't kept.
+        aborted = true
         if (next.state !== 'inactive') next.stop()
-        // The stop listener is gone, so reset here; the cut-off recording isn't kept.
         setRecording(false)
       },
     }

@@ -119,11 +119,9 @@ export function useSpeechSynthesis(): SpeechSynthesisState {
       const parts = chunks(text)
       const utterances = parts.map((part, i) => {
         const utterance = new SpeechSynthesisUtterance(part)
-        if (options.voice) utterance.voice = options.voice
-        if (options.lang) utterance.lang = options.lang
-        if (options.rate !== undefined) utterance.rate = options.rate
-        if (options.pitch !== undefined) utterance.pitch = options.pitch
-        if (options.volume !== undefined) utterance.volume = options.volume
+        // The option names match the utterance's properties; unset ones keep the defaults.
+        for (const [key, value] of Object.entries(options))
+          if (value != null && value !== '') Object.assign(utterance, { [key]: value })
         if (i === 0) utterance.addEventListener('start', () => setSpeaking(true))
         const done = () => {
           if (!queued.current.includes(utterance)) return
