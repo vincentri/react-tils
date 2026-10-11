@@ -59,7 +59,7 @@ The same checks ship to users as `hookMatrix` and `componentMatrix` from `@vince
 
 `e2e-next/` runs `examples/nextjs`, a Next.js App Router app, and checks the core claim directly: after a client-side navigation, a react-tils component shows the real window width from its first frame, while a hand-written `useEffect` version on the same page shows `0` first.
 
-Headless browsers can't drive tab visibility, window focus, wake lock, or the share sheet; unit tests cover their logic. Real phones are not tested.
+Headless browsers can't drive tab visibility, window focus, wake lock, the share sheet, or the back/forward cache (`usePageRestore`; automated browsers never restore pages from it); unit tests cover their logic. Screen reader output (`useAnnounce`) is checked through its live regions, not with a real screen reader. Real phones are not tested.
 
 ### React Compiler
 

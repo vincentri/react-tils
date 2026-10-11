@@ -205,8 +205,9 @@ test('useScrollSpy: the sidebar marks the section being read', async ({ page }) 
   await expect(page.getByTestId('nav-useMediaQuery')).not.toHaveAttribute('aria-current')
 
   // At the very bottom, the last section is active even though it's too short to reach the line.
+  const last = await page.locator('.sidebar a[data-testid^="nav-"]').last().textContent()
   await page.getByTestId('inview-target').scrollIntoViewIfNeeded()
-  await expect(spy).toHaveText('reading: useControllableState')
+  await expect(spy).toHaveText(`reading: ${last}`)
 })
 
 test('useIsStuck: the status bar reports when it sticks', async ({ page }) => {

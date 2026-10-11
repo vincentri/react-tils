@@ -9,15 +9,18 @@ import {
 } from 'react'
 import {
   useAnimationFrame,
+  useAnnounce,
   useAutosizeTextarea,
   useBeforeUnload,
   useBroadcastChannel,
+  useCaretPosition,
   useClickOutside,
   useControllableState,
   useCopyToClipboard,
   useDebouncedCallback,
   useDebouncedValue,
   useDocumentVisibility,
+  useDrag,
   useElementSize,
   useElementScroll,
   useEventListener,
@@ -40,6 +43,7 @@ import {
   useNow,
   usePasteFiles,
   useOnline,
+  usePageRestore,
   usePermission,
   usePreferredLanguages,
   useRovingFocus,
@@ -949,6 +953,114 @@ function ScrollDirectionCard({ direction }: { direction: string }) {
   )
 }
 
+function PageRestoreDemo() {
+  const [restores, setRestores] = useState(0)
+  usePageRestore(() => setRestores((n) => n + 1))
+  return (
+    <Card hook="usePageRestore" hint="Open another page in this tab, then press Back.">
+      <Value id="restored">restored from cache: {restores}</Value>
+      <a href="https://github.com/vincentri/react-tils" data-testid="leave">
+        Go to the GitHub repo
+      </a>
+    </Card>
+  )
+}
+
+function DragDemo() {
+  const [width, setWidth] = useState(140)
+  const handle = useDrag<HTMLDivElement>(({ deltaX }) =>
+    setWidth((w) => Math.min(260, Math.max(60, w + deltaX))),
+  )
+  return (
+    <Card hook="useDrag" hint="Drag the bar between the panes, even past the edge.">
+      <div className="split">
+        <div className="pane" style={{ width }}>
+          left
+        </div>
+        <div
+          ref={handle}
+          className="splitter"
+          role="separator"
+          aria-orientation="vertical"
+          aria-valuenow={width}
+          data-testid="splitter"
+        />
+        <div className="pane grow">right</div>
+      </div>
+      <Value id="pane-width">left pane: {width}px</Value>
+    </Card>
+  )
+}
+
+const MENTIONS = ['alice', 'bob', 'carol']
+
+function CaretDemo() {
+  const [text, setText] = useState('')
+  const [ref, caret] = useCaretPosition()
+  const query = /@(\w*)$/.exec(text)?.[1]
+  return (
+    <Card hook="useCaretPosition" hint="Type @ anywhere in the text: the popup follows the caret.">
+      <textarea
+        ref={ref}
+        rows={3}
+        className="caret-field"
+        data-testid="caret-field"
+        placeholder="Say hi to @…"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+      />
+      <Value id="caret">
+        {caret ? `caret at ${Math.round(caret.left)}, ${Math.round(caret.top)}` : 'not focused'}
+      </Value>
+      {query !== undefined && caret && (
+        <ul
+          className="mentions"
+          data-testid="mention-popup"
+          style={{ top: caret.top + caret.height, left: caret.left }}
+        >
+          {MENTIONS.filter((name) => name.startsWith(query)).map((name) => (
+            <li key={name}>@{name}</li>
+          ))}
+        </ul>
+      )}
+    </Card>
+  )
+}
+
+function AnnounceDemo() {
+  const announce = useAnnounce()
+  const [items, setItems] = useState(0)
+  const [said, setSaid] = useState('')
+  const say = (message: string, politeness?: 'assertive') => {
+    announce(message, politeness)
+    setSaid(message)
+  }
+  return (
+    <Card hook="useAnnounce" hint="Turn on a screen reader (VoiceOver: ⌘F5), then press a button.">
+      <div className="row">
+        <button
+          type="button"
+          data-testid="announce-add"
+          onClick={() => {
+            setItems(items + 1)
+            say(`Added to cart. ${items + 1} items.`)
+          }}
+        >
+          Add to cart
+        </button>
+        <button
+          type="button"
+          data-testid="announce-error"
+          onClick={() => say('Payment failed.', 'assertive')}
+        >
+          Fail payment
+        </button>
+      </div>
+      <Value id="announced">screen readers hear: {said || '—'}</Value>
+    </Card>
+  )
+}
+
 // Sidebar and page order. Each card lists its hooks; most show one, a few show two together.
 const CATEGORIES: { title: string; cards: string[][] }[] = [
   {
@@ -988,6 +1100,7 @@ const CATEGORIES: { title: string; cards: string[][] }[] = [
       ['usePermission', 'useGeolocation'],
       ['useHydrated'],
       ['useNow'],
+      ['usePageRestore'],
     ],
   },
   {
@@ -998,12 +1111,14 @@ const CATEGORIES: { title: string; cards: string[][] }[] = [
       ['useHotkey'],
       ['useLongPress'],
       ['useSwipe'],
+      ['useDrag'],
       ['useFileDrop'],
       ['usePasteFiles'],
       ['useTextSelection'],
       ['useRovingFocus'],
       ['useFocusTrap'],
       ['useAutosizeTextarea'],
+      ['useCaretPosition'],
     ],
   },
   {
@@ -1029,7 +1144,7 @@ const CATEGORIES: { title: string; cards: string[][] }[] = [
       ['useBeforeUnload'],
     ],
   },
-  { title: 'Component helpers', cards: [['useControllableState']] },
+  { title: 'Component helpers', cards: [['useControllableState'], ['useAnnounce']] },
 ]
 const IDS = CATEGORIES.flatMap((category) => category.cards.flat())
 
@@ -1065,17 +1180,20 @@ export function App() {
     usePermission: <GeolocationDemo />,
     useHydrated: <HydratedDemo />,
     useNow: <NowDemo />,
+    usePageRestore: <PageRestoreDemo />,
     useEventListener: <EventListenerDemo />,
     useClickOutside: <ClickOutsideDemo />,
     useHotkey: <HotkeyDemo />,
     useLongPress: <LongPressDemo />,
     useSwipe: <SwipeDemo />,
+    useDrag: <DragDemo />,
     useFileDrop: <FileDropDemo />,
     usePasteFiles: <PasteFilesDemo />,
     useTextSelection: <TextSelectionDemo />,
     useRovingFocus: <RovingFocusDemo />,
     useFocusTrap: <FocusTrapDemo />,
     useAutosizeTextarea: <AutosizeDemo />,
+    useCaretPosition: <CaretDemo />,
     useInterval: <IntervalDemo />,
     useTimeout: <TimeoutDemo />,
     useDebouncedCallback: <DebounceDemo />,
@@ -1090,6 +1208,7 @@ export function App() {
     useScrollLock: <ScrollLockDemo />,
     useBeforeUnload: <BeforeUnloadDemo />,
     useControllableState: <ControllableDemo />,
+    useAnnounce: <AnnounceDemo />,
   }
 
   return (

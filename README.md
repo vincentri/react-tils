@@ -2,7 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/@vincent.ri/react-tils)](https://www.npmjs.com/package/@vincent.ri/react-tils)
 [![CI](https://github.com/vincentri/react-tils/actions/workflows/ci.yml/badge.svg)](https://github.com/vincentri/react-tils/actions/workflows/ci.yml)
-[![size](https://img.shields.io/badge/all%2051%20hooks-7.9%20kB-blue)](#hooks)
+[![size](https://img.shields.io/badge/all%2055%20hooks-8.9%20kB-blue)](#hooks)
 [![license](https://img.shields.io/npm/l/@vincent.ri/react-tils)](LICENSE)
 
 React hooks for browser state and interaction that are correct on the first frame: they render on the server, hydrate without mismatches, clean up every listener, and work with React Compiler. Documented so AI coding agents pick the right hook and use it correctly.
@@ -39,7 +39,7 @@ The usual way to read browser state in React is `useState` plus `useEffect`. It 
 - **No leaks.** Every listener, observer, and timer is removed on unmount, including under StrictMode.
 - **Tested for real.** Every hook passes a server-render, hydration, and leak check on React 18, 19, and canary, plus browser tests in Chromium, Firefox, WebKit, and a Next.js app.
 - **React Compiler safe.** Every hook compiles with zero bailouts, and the full test suite runs again on compiled code.
-- **Small.** No dependencies, one file per hook, tree-shakeable. All 51 hooks together are 7.9 kB (brotli).
+- **Small.** No dependencies, one file per hook, tree-shakeable. All 55 hooks together are 8.9 kB (brotli).
 - **Made for agents.** Every hook's JSDoc says when to use it and when not to, with examples. `AGENTS.md` maps everyday tasks to hooks and lists the patterns to avoid.
 
 ## Setup for AI agents
@@ -121,6 +121,7 @@ Every hook is documented in its type declarations, so your editor shows the full
 | `useGeolocation(options?)`            | The user's location, after they ask for it                   | 305 B |
 | `useHydrated()`                       | Rendering something only in the browser                      | 77 B  |
 | `useNow(intervalMs, serverValue?)`    | Clocks, countdowns, "5 minutes ago"                          | 153 B |
+| `usePageRestore(callback)`            | Refreshing stale data after the Back button                  | 283 B |
 
 ### Events and input
 
@@ -131,12 +132,14 @@ Every hook is documented in its type declarations, so your editor shows the full
 | `useHotkey(hotkey, handler, options?)`              | Keyboard shortcuts like `mod+k` and Escape             | 611 B |
 | `useLongPress(onLongPress, options?)`               | Press and hold on touch and mouse                      | 381 B |
 | `useSwipe(onSwipe, options?)`                       | Swiping between slides, swipe to dismiss               | 401 B |
+| `useDrag(onDrag, options?)`                         | Resizable panels, splitters, custom sliders            | 515 B |
 | `useFileDrop(onDrop, options?)`                     | Drag-and-drop file upload areas                        | 348 B |
 | `usePasteFiles(onFiles, options?)`                  | Pasting screenshots and files into a chat or editor    | 347 B |
 | `useTextSelection()`                                | Floating toolbars for selected text                    | 351 B |
 | `useRovingFocus(options?)`                          | Arrow-key navigation in toolbars, menus, and tab lists | 688 B |
 | `useFocusTrap(active?)`                             | Keeping focus inside a custom modal or drawer          | 512 B |
 | `useAutosizeTextarea(options?)`                     | Chat inputs that grow with their text                  | 474 B |
+| `useCaretPosition()`                                | `@mention` and `/command` popups at the caret          | 722 B |
 
 ### Timers
 
@@ -166,6 +169,7 @@ Every hook is documented in its type declarations, so your editor shows the full
 | Hook                                                   | For                                                   | Size  |
 | ------------------------------------------------------ | ----------------------------------------------------- | ----- |
 | `useControllableState(value, defaultValue, onChange?)` | Components that work both controlled and uncontrolled | 216 B |
+| `useAnnounce()`                                        | Announcing "Copied" or "3 results" to screen readers  | 346 B |
 
 Coming from react-use, ahooks, usehooks-ts, or similar? [`AGENTS.md`](AGENTS.md#coming-from-another-library) maps their hook names to these.
 

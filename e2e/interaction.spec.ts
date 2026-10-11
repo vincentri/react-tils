@@ -392,3 +392,77 @@ test('usePasteFiles takes pasted images and leaves text pastes alone', async ({ 
   expect(await paste('image')).toBe(true)
   await expect(page.getByTestId('pasted')).toHaveText('shot.png (image/png)')
 })
+
+test('useDrag resizes with a real drag, keeps going past the handle, and clamps', async ({
+  page,
+}) => {
+  await page.goto('/')
+  const splitter = page.getByTestId('splitter')
+  await splitter.scrollIntoViewIfNeeded()
+  const width = page.getByTestId('pane-width')
+  await expect(width).toHaveText('left pane: 140px')
+
+  const box = (await splitter.boundingBox())!
+  const x = box.x + box.width / 2
+  const y = box.y + box.height / 2
+  await page.mouse.move(x, y)
+  await page.mouse.down()
+  await page.mouse.move(x + 60, y + 40, { steps: 6 }) // well off the 8px handle
+  await page.mouse.up()
+  await expect(width).toHaveText('left pane: 200px')
+
+  const box2 = (await splitter.boundingBox())!
+  await page.mouse.move(box2.x + box2.width / 2, y)
+  await page.mouse.down()
+  await page.mouse.move(box2.x - 400, y, { steps: 6 })
+  await page.mouse.up()
+  await expect(width).toHaveText('left pane: 60px')
+})
+
+test('useAnnounce puts messages in hidden live regions', async ({ page }) => {
+  await page.goto('/')
+  const polite = page.locator('[aria-live="polite"]')
+  const assertive = page.locator('[aria-live="assertive"]')
+  await expect(polite).toHaveAttribute('role', 'status')
+  await expect(polite).toHaveText('')
+
+  await page.getByTestId('announce-add').click()
+  await expect(polite).toHaveText('Added to cart. 1 items.')
+  await page.getByTestId('announce-error').click()
+  await expect(assertive).toHaveText('Payment failed.')
+  // Visually hidden, but in the accessibility tree.
+  expect((await polite.boundingBox())!.width).toBeLessThanOrEqual(1)
+})
+
+test('useCaretPosition follows the caret and places the mention popup there', async ({ page }) => {
+  await page.goto('/')
+  const field = page.getByTestId('caret-field')
+  const caret = page.getByTestId('caret')
+  await expect(caret).toHaveText('not focused')
+  await field.click()
+  const position = async () => {
+    const [left, top] = (await caret.textContent())!
+      .replace('caret at ', '')
+      .split(', ')
+      .map(Number)
+    return { left: left!, top: top! }
+  }
+  await expect(caret).toHaveText(/^caret at /)
+  const start = await position()
+
+  await field.pressSequentially('Hello there')
+  await expect.poll(async () => (await position()).left).toBeGreaterThan(start.left + 40)
+  await page.keyboard.press('Enter')
+  await expect.poll(async () => (await position()).top).toBeGreaterThan(start.top + 10)
+
+  await field.pressSequentially('hi @a')
+  const popup = page.getByTestId('mention-popup')
+  await expect(popup).toHaveText('@alice')
+  const at = await position()
+  const popupBox = (await popup.boundingBox())!
+  expect(Math.abs(popupBox.x - at.left)).toBeLessThanOrEqual(2)
+  expect(popupBox.y).toBeGreaterThan(at.top)
+
+  await page.keyboard.press('Space')
+  await expect(popup).toHaveCount(0)
+})

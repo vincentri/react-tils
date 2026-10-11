@@ -54,6 +54,10 @@ React hooks for browser state. Every hook renders on the server, hydrates with n
 | Chat input or comment box that grows with its text                                     | `useAutosizeTextarea({ maxRows? })` → `ref`; set the minimum with `rows`                                           |
 | Paste screenshots or files into a chat, editor, or upload area                         | `usePasteFiles(onFiles, { accept? })` → `ref`; pairs with `useFileDrop`                                            |
 | Style a sticky header once it sticks (shadow, border, smaller)                         | `useIsStuck()` → `[ref, stuck]`; the element needs `position: sticky`                                              |
+| Refresh stale data when the user comes back with the Back button                       | `usePageRestore(callback)` (back/forward cache)                                                                    |
+| Resizable panel, splitter, custom slider, dragging on a canvas                         | `useDrag(onDrag, { threshold? })` → `ref`; add CSS `touch-action: none`                                            |
+| Tell screen reader users "Copied", "Added to cart", "3 results"                        | `useAnnounce()` → `announce(message, politeness?)`                                                                 |
+| `@mention` or `/command` popup at the caret in a textarea                              | `useCaretPosition()` → `[ref, { top, left, height } \| null]`                                                      |
 | Arrow-key navigation in a toolbar, menu, tab list, or listbox (one Tab stop)           | `useRovingFocus({ orientation?, loop? })`; radio groups and `<select>` do it natively                              |
 | Hide the header on scroll down, show it on scroll up                                   | `useScrollDirection(threshold?)`                                                                                   |
 | Keep keyboard focus inside a custom modal or drawer                                    | `useFocusTrap(active)`; prefer `<dialog>` with `showModal()`                                                       |
@@ -84,6 +88,10 @@ Names from react-use, ahooks, usehooks-ts, @uidotdev/usehooks, MUI, and Mantine,
 | `useTextareaAutosize`, `useAutoResize`, `react-textarea-autosize` | `useAutosizeTextarea`   |
 | `usePaste`, `useClipboardFiles`                                   | `usePasteFiles`         |
 | `useSticky`, `useStickyFixed`                                     | `useIsStuck`            |
+| `useBfcache`, `usePageShow`                                       | `usePageRestore`        |
+| `useDraggable`, `useGesture` (`onDrag`), `usePointerDrag`         | `useDrag`               |
+| `useAnnouncer`, `useLiveAnnouncer`, `LiveAnnouncer`               | `useAnnounce`           |
+| `useCaretCoordinates`, `textarea-caret`                           | `useCaretPosition`      |
 | `useClickAway`, `useOnClickOutside`                               | `useClickOutside`       |
 | `useControlled`, `useUncontrolled`, `useControllableValue`        | `useControllableState`  |
 | `useDebounce`, `useDebounceValue`                                 | `useDebouncedValue`     |

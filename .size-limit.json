@@ -6,6 +6,12 @@
     "limit": "200 B"
   },
   {
+    "name": "useAnnounce",
+    "path": "dist/useAnnounce.js",
+    "import": "{ useAnnounce }",
+    "limit": "400 B"
+  },
+  {
     "name": "useAutosizeTextarea",
     "path": "dist/useAutosizeTextarea.js",
     "import": "{ useAutosizeTextarea }",
@@ -22,6 +28,12 @@
     "path": "dist/useBroadcastChannel.js",
     "import": "{ useBroadcastChannel }",
     "limit": "300 B"
+  },
+  {
+    "name": "useCaretPosition",
+    "path": "dist/useCaretPosition.js",
+    "import": "{ useCaretPosition }",
+    "limit": "750 B"
   },
   {
     "name": "useClickOutside",
@@ -58,6 +70,12 @@
     "path": "dist/useDocumentVisibility.js",
     "import": "{ useDocumentVisibility }",
     "limit": "200 B"
+  },
+  {
+    "name": "useDrag",
+    "path": "dist/useDrag.js",
+    "import": "{ useDrag }",
+    "limit": "550 B"
   },
   {
     "name": "useElementScroll",
@@ -186,6 +204,12 @@
     "limit": "200 B"
   },
   {
+    "name": "usePageRestore",
+    "path": "dist/usePageRestore.js",
+    "import": "{ usePageRestore }",
+    "limit": "350 B"
+  },
+  {
     "name": "usePasteFiles",
     "path": "dist/usePasteFiles.js",
     "import": "{ usePasteFiles }",
@@ -309,6 +333,6 @@
     "name": "everything",
     "path": "dist/index.js",
     "import": "*",
-    "limit": "9 kB"
+    "limit": "10 kB"
   }
 ]
