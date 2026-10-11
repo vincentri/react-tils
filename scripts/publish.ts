@@ -49,6 +49,6 @@ const changelog = readFileSync('CHANGELOG.md', 'utf8')
 const notes = changelog.split(`## ${version}\n`)[1]?.split('\n## ')[0]?.trim() ?? ''
 const tag = `${name}@${version}`
 execSync(
-  `gh release create ${tag} --target ${process.env.GITHUB_SHA} --title ${tag} --notes-file -`,
+  `gh release create ${tag} --target ${execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim()} --title ${tag} --notes-file -`,
   { input: `${notes}\n\nInstall: \`npm install ${name}\``, stdio: ['pipe', 'inherit', 'inherit'] },
 )

@@ -1,13 +1,33 @@
 name: Release
 
-# On main: opens a "Version Packages" PR from pending changesets. Merging that PR
-# publishes to npm with provenance and creates a git tag (scripts/publish.ts).
-# Auth: npm trusted publishing (OIDC) for this workflow, set up on npmjs.com.
-# No token is stored; the id-token permission below lets npm verify this workflow.
+# Two ways to release, both publishing with provenance and creating a GitHub release
+# (scripts/publish.ts):
+# - Actions → Release → Run workflow: pick the bump and write a changelog line. Versions,
+#   commits to main, and publishes in one run. Tick "dry run" to see the result without
+#   committing or publishing.
+# - Changesets: on push to main, pending changesets open a "Version Packages" PR; merging it
+#   publishes.
+# Auth: npm trusted publishing (OIDC) for this workflow file, set up on npmjs.com. No token is
+# stored; the id-token permission below lets npm verify this workflow.
 
 on:
   push:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: Version bump
+        type: choice
+        options: [patch, minor, major]
+        default: patch
+      note:
+        description: Changelog line (what changed)
+        type: string
+        required: true
+      dry_run:
+        description: Dry run (show the new version and changelog; don't commit or publish)
+        type: boolean
+        default: false
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -30,7 +50,41 @@ jobs:
           # which npm sends instead of using trusted publishing.
       - run: pnpm install --frozen-lockfile
       - run: pnpm check
-      - uses: changesets/action@v1
+
+      # Run workflow button.
+      - if: github.event_name == 'workflow_dispatch'
+        name: Version
+        env:
+          BUMP: ${{ inputs.bump }}
+          NOTE: ${{ inputs.note }}
+        # The note goes through an env var, never into the script text.
+        run: |
+          node -e "
+            const { writeFileSync } = require('node:fs')
+            const { name } = require('./package.json')
+            writeFileSync('.changeset/release-${{ github.run_id }}.md',
+              '---\n' + JSON.stringify(name) + ': ' + process.env.BUMP + '\n---\n\n' + process.env.NOTE.trim() + '\n')
+          "
+          pnpm exec changeset version
+          pnpm exec oxfmt package.json CHANGELOG.md
+          echo "New version: $(node -p "require('./package.json').version")"
+          git diff
+      - if: github.event_name == 'workflow_dispatch' && !inputs.dry_run
+        name: Commit, publish, and release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          version=$(node -p "require('./package.json').version")
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Release $version"
+          git push
+          pnpm run release
+
+      # Changesets flow on push.
+      - if: github.event_name == 'push'
+        uses: changesets/action@v1
         with:
           version: pnpm exec changeset version
           publish: pnpm run release
