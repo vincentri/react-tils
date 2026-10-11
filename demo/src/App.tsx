@@ -82,6 +82,7 @@ import {
 import { BrowserSupport, SupportBadge } from './BrowserSupport'
 import { Code, Prose, Search, type SearchEntry, ThemeToggle } from './chrome'
 import { hookDoc, PACKAGE, REPO, summary } from './docs'
+import { Compare } from './Compare'
 import { GettingStarted, gettingStartedEntries } from './GettingStarted'
 import pkg from '../../package.json'
 
@@ -1653,6 +1654,12 @@ function HookPage({ hook, demo }: { hook: string; demo: ReactNode }) {
 // What search looks through: the tutorial's sections, then every hook.
 const SEARCH: SearchEntry[] = [
   ...gettingStartedEntries(BASE),
+  {
+    title: 'Compare',
+    href: `${BASE}compare/`,
+    summary: 'react-tils vs other hook libraries: server rendering and size',
+    keywords: 'comparison vs react-use usehooks-ts uidotdev mantine ahooks reactuses size ssr',
+  },
   ...IDS.map((hook) => {
     const doc = hookDoc(hook)
     const category = CATEGORIES.find((c) => c.cards.flat().includes(hook))!.title
@@ -1674,6 +1681,7 @@ const GitHubIcon = () => (
 export function App({ path }: { path: string }) {
   const current = pageHook(path)
   const tutorial = /^getting-started\/?$/.test(path)
+  const comparing = /^compare\/?$/.test(path)
   const [inViewRef, inView] = useInView<HTMLDivElement>()
   const direction = useScrollDirection()
   const [stuckRef, stuck] = useIsStuck<HTMLParagraphElement>()
@@ -1779,7 +1787,19 @@ export function App({ path }: { path: string }) {
                 </a>
               </li>
               <li>
-                <a href={BASE} aria-current={!current && !tutorial ? 'page' : undefined}>
+                <a
+                  href={`${BASE}compare/`}
+                  data-testid="link-compare"
+                  aria-current={comparing ? 'page' : undefined}
+                >
+                  Compare
+                </a>
+              </li>
+              <li>
+                <a
+                  href={BASE}
+                  aria-current={!current && !tutorial && !comparing ? 'page' : undefined}
+                >
                   All hooks
                 </a>
               </li>
@@ -1797,7 +1817,7 @@ export function App({ path }: { path: string }) {
                       aria-current={
                         current === hook
                           ? 'page'
-                          : !current && !tutorial && active === hook
+                          : !current && !tutorial && !comparing && active === hook
                             ? 'location'
                             : undefined
                       }
@@ -1812,7 +1832,7 @@ export function App({ path }: { path: string }) {
         </nav>
       </aside>
       <main id="top" ref={mainRef}>
-        {!current && !tutorial && (
+        {!current && !tutorial && !comparing && (
           <header className="hero">
             <h1>
               React hooks for browser state,{' '}
@@ -1831,14 +1851,16 @@ export function App({ path }: { path: string }) {
             </div>
           </header>
         )}
-        {((!current && !tutorial) || (current && PAGE_DEMOS.has(current))) && (
+        {((!current && !tutorial && !comparing) || (current && PAGE_DEMOS.has(current))) && (
           <p ref={stuckRef} className={stuck ? 'sticky-status stuck' : 'sticky-status'}>
             Scrolling <Value id="scroll-direction">{direction}</Value> · bottom of page in view:{' '}
             <Value id="inview">{inView ? 'yes' : 'no'}</Value>
             <span className="read-progress" style={{ transform: `scaleX(${progress})` }} />
           </p>
         )}
-        {tutorial ? (
+        {comparing ? (
+          <Compare />
+        ) : tutorial ? (
           <GettingStarted base={BASE} />
         ) : current ? (
           <HookPage
@@ -1857,7 +1879,7 @@ export function App({ path }: { path: string }) {
             </section>
           ))
         )}
-        {((!current && !tutorial) || (current && PAGE_DEMOS.has(current))) && (
+        {((!current && !tutorial && !comparing) || (current && PAGE_DEMOS.has(current))) && (
           <footer>
             <div ref={inViewRef} className="sentinel" data-testid="inview-target" />
             <p>

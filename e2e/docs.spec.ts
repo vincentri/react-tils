@@ -171,3 +171,19 @@ test('each hook page says which browsers support it, from MDN data', async ({ pa
   await page.goto('/hooks/usePrevious/')
   await expect(page.getByTestId('browser-support')).toContainText('works wherever React does')
 })
+
+test('compare page: measured checks and sizes against other hook libraries', async ({ page }) => {
+  await page.goto('/')
+  await page.getByTestId('link-compare').click()
+  await expect(page).toHaveURL(/\/compare\/$/)
+  await expect(page).toHaveTitle('Compare — react-tils')
+  const checks = page.getByTestId('compare-checks')
+  await expect(checks.locator('tbody tr')).toHaveCount(11) // 10 tasks and the total
+  await expect(checks.locator('tr.total td').first()).toHaveText('10 / 10')
+  // A real result from the data: @uidotdev/usehooks' useMediaQuery throws on the server.
+  await expect(
+    checks.getByRole('cell', { name: '@uidotdev/usehooks useMediaQuery: Throws on the server' }),
+  ).toBeVisible()
+  await expect(page.getByTestId('compare-sizes').locator('td.best').first()).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'How this was measured' })).toBeVisible()
+})

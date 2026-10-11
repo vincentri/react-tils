@@ -44,6 +44,8 @@ jobs:
       - run: pnpm e2e:compiler
       # The packed tarball installed into fresh npm, pnpm, and yarn projects, as users get it.
       - run: pnpm test:install
+      # The docs site's Compare page must match what the current code measures.
+      - run: pnpm compare --check
       - if: failure()
         uses: actions/upload-artifact@v4
         with:

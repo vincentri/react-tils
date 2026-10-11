@@ -11,3 +11,7 @@ examples/*/next-env.d.ts
 examples/*/tsconfig.tsbuildinfo
 eval/.vitest
 *.tgz
+compare/.size
+compare/.size-limit.json
+compare/server.json
+compare/results.json

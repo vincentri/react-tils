@@ -11,6 +11,7 @@ export default defineConfig({
       'e2e-mobile/**',
       'examples/**',
       'demo/**',
+      'compare/**',
       'node_modules/**',
     ],
   },

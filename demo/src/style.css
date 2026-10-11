@@ -1217,3 +1217,101 @@ footer {
   color: var(--muted);
   font-size: 13px;
 }
+
+/* Compare page. */
+.doc.compare {
+  max-width: none;
+}
+
+.takeaways {
+  max-width: 72ch;
+  padding-left: 20px;
+}
+
+.takeaways li + li {
+  margin-top: 8px;
+}
+
+.compare-table td {
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+.compare-table td code {
+  display: block;
+  margin-top: 2px;
+  padding: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.compare-table .ours {
+  background: var(--accent-soft);
+}
+
+.compare-table thead .ours {
+  color: var(--accent);
+}
+
+.compare-table .mark,
+.legend .mark {
+  font-weight: 800;
+}
+
+.compare-table td.good .mark,
+.legend .mark.good {
+  color: #16a34a;
+}
+
+.compare-table td.warn .mark,
+.legend .mark.warn {
+  color: #d97706;
+}
+
+.compare-table td.bad .mark,
+.legend .mark.bad {
+  color: #dc2626;
+}
+
+.compare-table td.warn {
+  background: color-mix(in srgb, #d97706 10%, transparent);
+}
+
+.compare-table td.bad {
+  background: color-mix(in srgb, #dc2626 10%, transparent);
+}
+
+.compare-table td.none {
+  color: var(--muted);
+}
+
+.compare-table td.best {
+  color: #15803d;
+  font-weight: 700;
+}
+
+.compare-table td.best::after {
+  content: ' ★';
+  font-size: 10px;
+}
+
+.compare-table .total > * {
+  border-top: 2px solid var(--border);
+  font-weight: 700;
+}
+
+.legend {
+  margin: 12px 0 0;
+  padding-left: 20px;
+  color: var(--text);
+  font-size: 14px;
+}
+
+.legend li + li {
+  margin-top: 4px;
+}
+
+main:has(.doc.compare) {
+  max-width: 1320px;
+}

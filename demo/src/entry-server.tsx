@@ -15,6 +15,12 @@ export function render(path: string): string {
 /** The tutorial and every hook's page, for prerendering: its path, title, and meta description. */
 export const pages = [
   {
+    path: 'compare/',
+    title: 'Compare — react-tils',
+    description:
+      'react-tils against react-use, usehooks-ts, @uidotdev/usehooks, Mantine, ahooks, and @reactuses/core: server rendering, hydration, leaks, and size, measured.',
+  },
+  {
     path: 'getting-started/',
     title: 'Installation — react-tils',
     description:

@@ -1,0 +1,19 @@
+{
+  "name": "react-tils-compare",
+  "private": true,
+  "description": "Measures react-tils against other React hook libraries for the docs site's Compare page. Not published.",
+  "type": "module",
+  "dependencies": {
+    "@mantine/hooks": "^9.7.1",
+    "@reactuses/core": "^6.5.9",
+    "@size-limit/preset-small-lib": "^14.2.0",
+    "@uidotdev/usehooks": "^2.4.1",
+    "@vincent.ri/react-tils": "workspace:*",
+    "ahooks": "^3.10.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-use": "^17.6.1",
+    "size-limit": "^14.2.0",
+    "usehooks-ts": "^3.1.1"
+  }
+}

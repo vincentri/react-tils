@@ -7,7 +7,7 @@
 
 React hooks for browser state and interaction that are correct on the first frame: they render on the server, hydrate without mismatches, clean up every listener, and work with React Compiler. Documented so AI coding agents pick the right hook and use it correctly.
 
-**[Docs and live demo](https://vincentri.github.io/react-tils/)** · **[Installation guide](https://vincentri.github.io/react-tils/getting-started/)** · **[llms.txt](https://vincentri.github.io/react-tils/llms.txt)** · **[Agent guide](AGENTS.md)**
+**[Docs and live demo](https://vincentri.github.io/react-tils/)** · **[Installation guide](https://vincentri.github.io/react-tils/getting-started/)** · **[Compare](https://vincentri.github.io/react-tils/compare/)** · **[llms.txt](https://vincentri.github.io/react-tils/llms.txt)** · **[Agent guide](AGENTS.md)**
 
 ```sh
 npm install @vincent.ri/react-tils

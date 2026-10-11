@@ -1,0 +1,570 @@
+{
+  "measured": "2026-10-11",
+  "libraries": [
+    {
+      "id": "react-tils",
+      "pkg": "@vincent.ri/react-tils",
+      "version": "0.1.4",
+      "size": 11953
+    },
+    {
+      "id": "uidotdev",
+      "pkg": "@uidotdev/usehooks",
+      "version": "2.4.1",
+      "size": 4145
+    },
+    {
+      "id": "usehooks-ts",
+      "pkg": "usehooks-ts",
+      "version": "3.1.1",
+      "size": 4718
+    },
+    {
+      "id": "mantine",
+      "pkg": "@mantine/hooks",
+      "version": "9.7.1",
+      "size": 21283
+    },
+    {
+      "id": "react-use",
+      "pkg": "react-use",
+      "version": "17.6.1",
+      "size": 20262
+    },
+    {
+      "id": "reactuses",
+      "pkg": "@reactuses/core",
+      "version": "6.5.9",
+      "size": 23879
+    },
+    {
+      "id": "ahooks",
+      "pkg": "ahooks",
+      "version": "3.10.0",
+      "size": 22857
+    }
+  ],
+  "tasks": [
+    {
+      "id": "media-query",
+      "task": "Media query",
+      "notes": {},
+      "cells": {
+        "react-tils": {
+          "hook": "useMediaQuery",
+          "size": 150,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "uidotdev": {
+          "hook": "useMediaQuery",
+          "size": 181,
+          "server": "throws",
+          "hydration": "skipped",
+          "leaks": "ok",
+          "detail": "useMediaQuery is a client-only hook"
+        },
+        "usehooks-ts": {
+          "hook": "useMediaQuery",
+          "size": 968,
+          "server": "ok",
+          "hydration": "mismatch",
+          "leaks": "ok",
+          "detail": "Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed "
+        },
+        "mantine": {
+          "hook": "useMediaQuery",
+          "size": 256,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "react-use": {
+          "hook": "useMedia",
+          "size": 208,
+          "server": "warns",
+          "hydration": "mismatch",
+          "leaks": "ok",
+          "detail": "`useMedia` When server side rendering, defaultState should be defined to prevent a hydration mismatches."
+        },
+        "reactuses": {
+          "hook": "useMediaQuery",
+          "size": 318,
+          "server": "warns",
+          "hydration": "mismatch",
+          "leaks": "ok",
+          "detail": "`useMediaQuery` When server side rendering, defaultState should be defined to prevent a hydration mismatches."
+        },
+        "ahooks": null
+      }
+    },
+    {
+      "id": "window-size",
+      "task": "Window size",
+      "notes": {},
+      "cells": {
+        "react-tils": {
+          "hook": "useWindowSize",
+          "size": 194,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "uidotdev": {
+          "hook": "useWindowSize",
+          "size": 159,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "usehooks-ts": {
+          "hook": "useWindowSize",
+          "size": 1373,
+          "server": "ok",
+          "hydration": "mismatch",
+          "leaks": "ok",
+          "detail": "Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed "
+        },
+        "mantine": {
+          "hook": "useViewportSize",
+          "size": 213,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "react-use": {
+          "hook": "useWindowSize",
+          "size": 414,
+          "server": "ok",
+          "hydration": "mismatch",
+          "leaks": "ok",
+          "detail": "Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed "
+        },
+        "reactuses": {
+          "hook": "useWindowSize",
+          "size": 861,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "ahooks": null
+      }
+    },
+    {
+      "id": "window-scroll",
+      "task": "Window scroll",
+      "notes": {},
+      "cells": {
+        "react-tils": {
+          "hook": "useWindowScroll",
+          "size": 191,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "uidotdev": {
+          "hook": "useWindowScroll",
+          "size": 286,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "usehooks-ts": null,
+        "mantine": {
+          "hook": "useWindowScroll",
+          "size": 278,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "react-use": {
+          "hook": "useWindowScroll",
+          "size": 388,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "reactuses": {
+          "hook": "useWindowScroll",
+          "size": 4451,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "ahooks": {
+          "hook": "useScroll",
+          "size": 622,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        }
+      }
+    },
+    {
+      "id": "in-view",
+      "task": "Element in view",
+      "notes": {},
+      "cells": {
+        "react-tils": {
+          "hook": "useInView",
+          "size": 268,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "uidotdev": {
+          "hook": "useIntersectionObserver",
+          "size": 234,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "usehooks-ts": {
+          "hook": "useIntersectionObserver",
+          "size": 1184,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "mantine": {
+          "hook": "useInViewport",
+          "size": 209,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "react-use": {
+          "hook": "useIntersection",
+          "size": 201,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "reactuses": {
+          "hook": "useIntersectionObserver",
+          "size": 4208,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "ahooks": {
+          "hook": "useInViewport",
+          "size": 702,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        }
+      }
+    },
+    {
+      "id": "local-storage",
+      "task": "localStorage state",
+      "notes": {},
+      "cells": {
+        "react-tils": {
+          "hook": "useLocalStorage",
+          "size": 389,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "uidotdev": {
+          "hook": "useLocalStorage",
+          "size": 362,
+          "server": "throws",
+          "hydration": "skipped",
+          "leaks": "ok",
+          "detail": "useLocalStorage is a client-only hook"
+        },
+        "usehooks-ts": {
+          "hook": "useLocalStorage",
+          "size": 1392,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "mantine": {
+          "hook": "useLocalStorage",
+          "size": 791,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "react-use": {
+          "hook": "useLocalStorage",
+          "size": 394,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "reactuses": {
+          "hook": "useLocalStorage",
+          "size": 5704,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "ahooks": {
+          "hook": "useLocalStorageState",
+          "size": 1101,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        }
+      }
+    },
+    {
+      "id": "click-outside",
+      "task": "Click outside",
+      "notes": {},
+      "cells": {
+        "react-tils": {
+          "hook": "useClickOutside",
+          "size": 214,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "uidotdev": {
+          "hook": "useClickAway",
+          "size": 184,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "usehooks-ts": {
+          "hook": "useOnClickOutside",
+          "size": 994,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "mantine": {
+          "hook": "useClickOutside",
+          "size": 294,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "react-use": {
+          "hook": "useClickAway",
+          "size": 269,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "reactuses": {
+          "hook": "useClickOutside",
+          "size": 4325,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "ahooks": {
+          "hook": "useClickAway",
+          "size": 576,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        }
+      }
+    },
+    {
+      "id": "hotkey",
+      "task": "Keyboard shortcut",
+      "notes": {
+        "react-use": "One key; no modifiers like mod+k, no sequences."
+      },
+      "cells": {
+        "react-tils": {
+          "hook": "useHotkey",
+          "size": 611,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "uidotdev": null,
+        "usehooks-ts": null,
+        "mantine": {
+          "hook": "useHotkeys",
+          "size": 710,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "react-use": {
+          "hook": "useKey",
+          "size": 382,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "reactuses": null,
+        "ahooks": {
+          "hook": "useKeyPress",
+          "size": 2167,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        }
+      }
+    },
+    {
+      "id": "debounced-value",
+      "task": "Debounced value",
+      "notes": {
+        "react-use": "A debounced effect: you set state in it yourself."
+      },
+      "cells": {
+        "react-tils": {
+          "hook": "useDebouncedValue",
+          "size": 128,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "uidotdev": {
+          "hook": "useDebounce",
+          "size": 120,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "usehooks-ts": {
+          "hook": "useDebounceValue",
+          "size": 1252,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "mantine": {
+          "hook": "useDebouncedValue",
+          "size": 284,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "react-use": {
+          "hook": "useDebounce",
+          "size": 252,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "reactuses": {
+          "hook": "useDebounce",
+          "size": 1249,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "ahooks": {
+          "hook": "useDebounce",
+          "size": 1484,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        }
+      }
+    },
+    {
+      "id": "debounced-callback",
+      "task": "Debounced callback",
+      "notes": {},
+      "cells": {
+        "react-tils": {
+          "hook": "useDebouncedCallback",
+          "size": 309,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "uidotdev": null,
+        "usehooks-ts": {
+          "hook": "useDebounceCallback",
+          "size": 1167,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "mantine": {
+          "hook": "useDebouncedCallback",
+          "size": 478,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "react-use": null,
+        "reactuses": {
+          "hook": "useDebounceFn",
+          "size": 1200,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "ahooks": {
+          "hook": "useDebounceFn",
+          "size": 1446,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        }
+      }
+    },
+    {
+      "id": "online",
+      "task": "Online status",
+      "notes": {},
+      "cells": {
+        "react-tils": {
+          "hook": "useOnline",
+          "size": 134,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "uidotdev": {
+          "hook": "useNetworkState",
+          "size": 377,
+          "server": "throws",
+          "hydration": "skipped",
+          "leaks": "ok",
+          "detail": "useNetworkState is a client-only hook"
+        },
+        "usehooks-ts": null,
+        "mantine": {
+          "hook": "useNetwork",
+          "size": 365,
+          "server": "ok",
+          "hydration": "ok",
+          "leaks": "ok"
+        },
+        "react-use": {
+          "hook": "useNetworkState",
+          "size": 375,
+          "server": "ok",
+          "hydration": "mismatch",
+          "leaks": "ok",
+          "detail": "Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed "
+        },
+        "reactuses": {
+          "hook": "useOnline",
+          "size": 425,
+          "server": "ok",
+          "hydration": "mismatch",
+          "leaks": "ok",
+          "detail": "Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed "
+        },
+        "ahooks": {
+          "hook": "useNetwork",
+          "size": 410,
+          "server": "ok",
+          "hydration": "mismatch",
+          "leaks": "ok",
+          "detail": "Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed "
+        }
+      }
+    }
+  ]
+}

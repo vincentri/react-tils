@@ -11,6 +11,7 @@
     "eval/fixtures/RESULTS.md",
     "eval/fixtures/results.json",
     "eval/results-realistic.md",
-    "demo/src/browser-support.json"
+    "demo/src/browser-support.json",
+    "demo/src/compare.json"
   ]
 }
