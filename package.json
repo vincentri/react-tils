@@ -62,7 +62,8 @@
     "e2e:serve": "pnpm demo:build && pnpm --dir examples/nextjs build && (pnpm demo:preview & pnpm --dir examples/nextjs start --port 3000 & wait)",
     "test:compiler": "vitest run -c vitest.compiler.config.ts && node scripts/compiler-report.ts",
     "e2e:compiler": "REACT_COMPILER=1 playwright test && node scripts/compiler-report.ts && grep -rl next-count examples/nextjs/.next/static/chunks | xargs grep -q memo_cache_sentinel && echo 'Next.js app: components compiled by React Compiler'",
-    "test:install": "node scripts/install-test.ts"
+    "test:install": "node scripts/install-test.ts",
+    "release": "node scripts/publish.ts"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
