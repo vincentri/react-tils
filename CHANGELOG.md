@@ -1,5 +1,13 @@
 # @vincent.ri/react-tils
 
+## 0.1.3
+
+### Patch Changes
+
+- a5d7176: New hooks: `useCookie` (correct on the first render when given the request's cookie), `useSpeechRecognition` (dictation), and `useDeviceOrientation` (tilt and compass, with the iOS permission request).
+- dd8fef8: Smaller hooks, same behavior: `useClickOutside` (-37%), `usePageRestore` (-42%), `useHotkey` (-21%), and `useEventListener` (-12%) add their own listener instead of going through a general-purpose one, and the 16 hooks that always call your latest callback are 3-9% smaller.
+- a448404: `hookMatrix` and `componentMatrix` render on the server more like a real Node server: no `location`, and a server-side `navigator` (`en-US`). Components that read the URL or the browser's language during render now fail the check, as they would break in production.
+
 ## 0.1.2
 
 ### Patch Changes
