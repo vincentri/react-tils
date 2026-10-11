@@ -240,6 +240,12 @@
     "limit": "400 B"
   },
   {
+    "name": "usePointerPosition",
+    "path": "dist/usePointerPosition.js",
+    "import": "{ usePointerPosition }",
+    "limit": "250 B"
+  },
+  {
     "name": "usePreferredLanguages",
     "path": "dist/usePreferredLanguages.js",
     "import": "{ usePreferredLanguages }",

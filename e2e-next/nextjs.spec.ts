@@ -87,8 +87,8 @@ test('useSearchParam: right on the server, and in sync with Next.js without a se
 
   const serverRequests: string[] = []
   page.on('request', (request) => {
-    if (request.resourceType() === 'fetch' || request.resourceType() === 'document')
-      serverRequests.push(request.url())
+    // Only this page: Next may prefetch other links (/measure) at any time.
+    if (new URL(request.url()).pathname === '/') serverRequests.push(request.url())
   })
   await page.getByTestId('tab-billing').click()
   await expect(page).toHaveURL(/\?tab=billing$/)

@@ -524,3 +524,19 @@ test('useSpeechSynthesis reads aloud and stops without errors', async ({ page })
     await expect(page.getByTestId('speech-start')).toBeVisible()
   }
 })
+
+test('usePointerPosition follows the mouse over the box, relative to it', async ({ page }) => {
+  await page.goto('/')
+  const box = page.getByTestId('spotlight')
+  const value = page.getByTestId('pointer')
+  await expect(value).toHaveText('outside')
+  // hover() scrolls the box clear of the sticky bar and checks nothing covers the point.
+  // hover() positions start inside the 1px border; the hook measures from the outer edge.
+  await box.hover({ position: { x: 40, y: 30 } })
+  await expect(value).toHaveText('x 41 · y 31')
+  await box.hover({ position: { x: 120, y: 70 } })
+  await expect(value).toHaveText('x 121 · y 71')
+  const { x, y } = (await box.boundingBox())!
+  await page.mouse.move(x + 40, y - 30)
+  await expect(value).toHaveText('outside')
+})

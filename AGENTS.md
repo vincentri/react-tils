@@ -59,6 +59,7 @@ React hooks for browser state. Every hook renders on the server, hydrates with n
 | Style a sticky header once it sticks (shadow, border, smaller)                         | `useIsStuck()` → `[ref, stuck]`; the element needs `position: sticky`                                                        |
 | Refresh stale data when the user comes back with the Back button                       | `usePageRestore(callback)` (back/forward cache)                                                                              |
 | Resizable panel, splitter, custom slider, dragging on a canvas                         | `useDrag(onDrag, { threshold? })` → `ref`; add CSS `touch-action: none`                                                      |
+| Spotlight, tooltip, crosshair, or magnifier at the pointer over an element             | `usePointerPosition()` → `[ref, { x, y } \| null]`; page-wide cursor: `useEventListener` + a CSS variable                    |
 | Tell screen reader users "Copied", "Added to cart", "3 results"                        | `useAnnounce()` → `announce(message, politeness?)`                                                                           |
 | `@mention` or `/command` popup at the caret in a textarea                              | `useCaretPosition()` → `[ref, { top, left, height } \| null]`                                                                |
 | Record a voice note, voice input for AI chat, or a video message                       | `useMediaRecorder(stream)` with `useUserMedia`; picks a format the browser supports                                          |
@@ -109,6 +110,7 @@ Names from react-use, ahooks, usehooks-ts, @uidotdev/usehooks, MUI, and Mantine,
 | `useCookies` (react-cookie), `useCookieState`                     | `useCookie`              |
 | `useSpeechToText`, `react-speech-recognition`, `useVoice`         | `useSpeechRecognition`   |
 | `useOrientation` (react-use), `useDeviceMotion`, `useGyroscope`   | `useDeviceOrientation`   |
+| `useMouse` (react-use), `useMousePosition`, `usePointer`          | `usePointerPosition`     |
 | `useClickAway`, `useOnClickOutside`                               | `useClickOutside`        |
 | `useControlled`, `useUncontrolled`, `useControllableValue`        | `useControllableState`   |
 | `useDebounce`, `useDebounceValue`                                 | `useDebouncedValue`      |

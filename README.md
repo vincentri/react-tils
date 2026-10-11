@@ -39,7 +39,7 @@ The usual way to read browser state in React is `useState` plus `useEffect`. It 
 - **No leaks.** Every listener, observer, and timer is removed on unmount, including under StrictMode.
 - **Tested for real.** Every hook passes a server-render, hydration, and leak check on React 18, 19, and canary, plus browser tests in Chromium, Firefox, WebKit, and a Next.js app.
 - **React Compiler safe.** Every hook compiles with zero bailouts, and the full test suite runs again on compiled code.
-- **Small.** No dependencies, one file per hook, tree-shakeable. All 65 hooks together are 11.6 kB (brotli).
+- **Small.** No dependencies, one file per hook, tree-shakeable. All 66 hooks together are 11.7 kB (brotli).
 - **Made for agents.** Every hook's JSDoc says when to use it and when not to, with examples. `AGENTS.md` maps everyday tasks to hooks and lists the patterns to avoid.
 
 ## Setup for AI agents
@@ -137,6 +137,7 @@ Every hook is documented in its type declarations, so your editor shows the full
 | `useLongPress(onLongPress, options?)`               | Press and hold on touch and mouse                             | 364 B |
 | `useSwipe(onSwipe, options?)`                       | Swiping between slides, swipe to dismiss                      | 388 B |
 | `useDrag(onDrag, options?)`                         | Resizable panels, splitters, custom sliders                   | 495 B |
+| `usePointerPosition()`                              | Spotlights, tooltips, and crosshairs at the pointer           | 198 B |
 | `useFileDrop(onDrop, options?)`                     | Drag-and-drop file upload areas                               | 336 B |
 | `usePasteFiles(onFiles, options?)`                  | Pasting screenshots and files into a chat or editor           | 333 B |
 | `useTextSelection()`                                | Floating toolbars for selected text                           | 351 B |

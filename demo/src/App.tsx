@@ -1,5 +1,6 @@
 import {
   createElement,
+  type CSSProperties,
   Fragment,
   type ReactNode,
   useCallback,
@@ -62,6 +63,7 @@ import {
   useShare,
   useStickToBottom,
   useSwipe,
+  usePointerPosition,
   useTextSelection,
   useThrottledCallback,
   useTimeout,
@@ -753,6 +755,28 @@ function PreviousDemo() {
   )
 }
 
+function PointerPositionDemo() {
+  const [ref, pointer] = usePointerPosition<HTMLDivElement>()
+  return (
+    <Card hook="usePointerPosition" hint="Move the mouse over the box, or touch it.">
+      <div
+        ref={ref}
+        className="spotlight"
+        data-testid="spotlight"
+        style={
+          {
+            '--x': `${pointer?.x ?? -999}px`,
+            '--y': `${pointer?.y ?? -999}px`,
+          } as CSSProperties
+        }
+      />
+      <Value id="pointer">
+        {pointer ? `x ${Math.round(pointer.x)} · y ${Math.round(pointer.y)}` : 'outside'}
+      </Value>
+    </Card>
+  )
+}
+
 function AnimationFrameDemo() {
   const [playing, setPlaying] = useState(false)
   const box = useRef<HTMLDivElement>(null)
@@ -1402,6 +1426,7 @@ const CATEGORIES: { title: string; cards: string[][] }[] = [
       ['useLongPress'],
       ['useSwipe'],
       ['useDrag'],
+      ['usePointerPosition'],
       ['useFileDrop'],
       ['usePasteFiles'],
       ['useTextSelection'],
@@ -1489,6 +1514,7 @@ export function App() {
     useHotkey: <HotkeyDemo />,
     useLongPress: <LongPressDemo />,
     useSwipe: <SwipeDemo />,
+    usePointerPosition: <PointerPositionDemo />,
     useDrag: <DragDemo />,
     useFileDrop: <FileDropDemo />,
     usePasteFiles: <PasteFilesDemo />,

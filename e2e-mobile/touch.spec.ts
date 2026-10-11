@@ -148,3 +148,26 @@ test('useStickToBottom: a finger scrolling up stops following', async ({ page, b
   await touch(cdp, { x: chat.x, y: chat.y - 40 }, { x: chat.x, y: chat.y + 60 })
   await expect(following).toHaveText('following: no')
 })
+
+test('usePointerPosition: follows a finger while it touches, then clears', async ({
+  page,
+  browserName,
+}) => {
+  test.skip(browserName !== 'chromium', 'Needs real touch input (Chromium only here)')
+  await page.goto('/')
+  const cdp = await page.context().newCDPSession(page)
+  const value = page.getByTestId('pointer')
+  const start = await center(page, 'spotlight')
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [start] })
+  await cdp.send('Input.dispatchTouchEvent', {
+    type: 'touchMove',
+    touchPoints: [{ x: start.x + 20, y: start.y + 10 }],
+  })
+  await expect(value).not.toHaveText('outside')
+  const box = (await page.getByTestId('spotlight').boundingBox())!
+  await expect(value).toHaveText(
+    `x ${Math.round(start.x + 20 - box.x)} · y ${Math.round(start.y + 10 - box.y)}`,
+  )
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
+  await expect(value).toHaveText('outside')
+})

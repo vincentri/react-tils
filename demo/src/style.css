@@ -515,3 +515,16 @@ input {
   line-height: 1;
   transition: transform 0.1s;
 }
+
+.spotlight {
+  align-self: stretch;
+  height: 120px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: radial-gradient(
+    90px at var(--x) var(--y),
+    color-mix(in srgb, var(--accent) 40%, transparent),
+    transparent
+  );
+  touch-action: none;
+}
