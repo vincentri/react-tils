@@ -26,7 +26,8 @@ jobs:
         with:
           node-version: 24
           cache: pnpm
-          registry-url: https://registry.npmjs.org
+          # No registry-url: it makes setup-node write an .npmrc with a placeholder token,
+          # which npm sends instead of using trusted publishing.
       - run: pnpm install --frozen-lockfile
       - run: pnpm check
       - uses: changesets/action@v1

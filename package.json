@@ -20,7 +20,7 @@
     "url": "git+https://github.com/vincentri/react-tils.git"
   },
   "bin": {
-    "react-tils": "./bin/react-tils.js"
+    "react-tils": "bin/react-tils.js"
   },
   "files": [
     "dist",
@@ -55,7 +55,7 @@
     "demo:build": "pnpm build && node scripts/llms.ts && vite build --config demo/vite.config.ts && vite build --config demo/vite.config.ts --ssr src/entry-server.tsx --outDir dist-server && node demo/prerender.ts",
     "demo:preview": "vite preview --config demo/vite.config.ts --port 4173 --strictPort",
     "e2e": "playwright test",
-    "lint:pkg": "publint && attw --pack . --profile esm-only",
+    "lint:pkg": "publint && attw --pack . --profile esm-only && node scripts/publish-dry-run.ts",
     "llms": "node scripts/llms.ts",
     "prepublishOnly": "pnpm check",
     "changeset": "changeset",
