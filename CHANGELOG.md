@@ -1,5 +1,11 @@
 # @vincent.ri/react-tils
 
+## 0.1.1
+
+### Patch Changes
+
+- a1d834d: Published as `@vincent.ri/react-tils` (npm rejected the unscoped name as too similar to existing packages). Releases now carry npm provenance and are published through npm trusted publishing. No code changes.
+
 ## 0.1.0
 
 ### Minor Changes
