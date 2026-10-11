@@ -1,4 +1,4 @@
-# react-tils
+# @vincent.ri/react-tils
 
 ## 0.1.0
 

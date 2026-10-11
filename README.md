@@ -14,19 +14,19 @@ See [Evaluation](#evaluation) for the method and caveats.
 Install, then add one line so your agent reads the guide. Without it, agents almost never use an installed library (2 of 42 runs in the evaluation).
 
 ```sh
-npm install react-tils
+npm install @vincent.ri/react-tils
 npx react-tils init   # adds the pointer line to CLAUDE.md / AGENTS.md, and a Cursor rule if .cursor/ exists
 ```
 
 `AGENTS.md` covers which hook fits each task, the patterns to replace, how to verify a custom hook, and the API rules.
 
-ESM only. Works with any bundler, Next.js, and Vitest. Jest needs its ESM mode, or `transformIgnorePatterns` set so it transforms `react-tils`.
+ESM only. Works with any bundler, Next.js, and Vitest. Jest needs its ESM mode, or `transformIgnorePatterns` set so it transforms `@vincent.ri/react-tils`.
 
 ## Why
 
 - **Correct first frame.** Built on `useSyncExternalStore`: a client-side mount renders the real value immediately, and hydration renders `serverValue` with no mismatch.
 - **Made for agents.** Full JSDoc with "Use when / Don't use when" and examples in every `.d.ts`, and an API agents can guess. CI fails if any hook is missing docs.
-- **Verify any hook or component.** `hookMatrix` and `componentMatrix` from `react-tils/testing` run the same checks on your own code, so an agent can prove what it just wrote is safe.
+- **Verify any hook or component.** `hookMatrix` and `componentMatrix` from `@vincent.ri/react-tils/testing` run the same checks on your own code, so an agent can prove what it just wrote is safe.
 - **Proven.** CI runs every hook through the same checks against React 18, 19, and canary.
 - **React Compiler safe.** Every hook compiles with React Compiler with zero bailouts, and CI runs all unit tests and the browser tests again on compiled code: the library, the demo app, and a Next.js app.
 - **Small.** Zero dependencies, one file per hook, 7.22 kB for everything, size budget enforced in CI.
@@ -123,7 +123,7 @@ Not covered by e2e (headless browsers can't drive them): tab visibility, window 
 `pnpm test:install` packs the real tarball and installs it into fresh projects outside the repo, the way users get it:
 
 - the tarball has `dist`, types, `AGENTS.md`, and the CLI, and no source or tests;
-- npm with React 19, pnpm with React 18 (strict, so an undeclared dependency fails), and yarn and bun when installed: a server render using the root entry and a per-hook entry, with `react-tils/internal/*` blocked;
+- npm with React 19, pnpm with React 18 (strict, so an undeclared dependency fails), and yarn and bun when installed: a server render using the root entry and a per-hook entry, with `@vincent.ri/react-tils/internal/*` blocked;
 - TypeScript with `moduleResolution` `bundler` and `nodenext`, including `@ts-expect-error` lines that fail if the types were `any`;
 - `npx react-tils init` from the installed package;
 - a Vite app compiled with React Compiler: production build, compared against a build without the compiler to confirm it was compiled, then run in Chromium.
@@ -146,7 +146,7 @@ Test components themselves stay uncompiled: they write hook values to outer vari
 
 ## Evaluation
 
-Headless Claude Code agents were given 7 tasks in a Next.js-shaped project: responsive sidebar, window width, persisted theme toggle, offline banner, pause when tab hidden, system dark mode, reduced motion. Prompts are normal requests and never mention SSR. Each task ran 3 times per model and setup. Every solution was scored with the same checks as `react-tils/testing`, under each client state the task covers (e.g. mobile and desktop viewport):
+Headless Claude Code agents were given 7 tasks in a Next.js-shaped project: responsive sidebar, window width, persisted theme toggle, offline banner, pause when tab hidden, system dark mode, reduced motion. Prompts are normal requests and never mention SSR. Each task ran 3 times per model and setup. Every solution was scored with the same checks as `@vincent.ri/react-tils/testing`, under each client state the task covers (e.g. mobile and desktop viewport):
 
 - **Hard failures:** server crash, hydration mismatch, leaked listener, wrong output after hydration.
 - **Wrong first frame:** the text on the first commit of a client-side mount, before effects run. `useEffect`-based solutions show the default here, then switch a frame later.

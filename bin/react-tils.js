@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-// `npx react-tils init`: points the project's AI agent config at node_modules/react-tils/AGENTS.md.
+// `npx react-tils init`: points the project's AI agent config at node_modules/@vincent.ri/react-tils/AGENTS.md.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 const LINE =
-  'For React code that reads browser state, read node_modules/react-tils/AGENTS.md first.'
+  'For React code that reads browser state, read node_modules/@vincent.ri/react-tils/AGENTS.md first.'
 const CURSOR_RULE = `---
 description: React hooks for browser state and interaction
 alwaysApply: true

@@ -7,7 +7,7 @@ import { afterEach, describe, expect, it } from 'vitest'
 
 const bin = new URL('./react-tils.js', import.meta.url).pathname
 const LINE =
-  'For React code that reads browser state, read node_modules/react-tils/AGENTS.md first.'
+  'For React code that reads browser state, read node_modules/@vincent.ri/react-tils/AGENTS.md first.'
 
 let dir: string
 const run = (...args: string[]) =>

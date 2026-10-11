@@ -1,5 +1,5 @@
 {
-  "name": "react-tils",
+  "name": "@vincent.ri/react-tils",
   "version": "0.1.0",
   "description": "React hooks for browser state and interaction that render the right first frame: SSR-safe, hydration-correct, tested in real browsers, and documented for AI coding agents.",
   "keywords": [

@@ -232,6 +232,9 @@ importers:
 
   examples/nextjs:
     dependencies:
+      '@vincent.ri/react-tils':
+        specifier: workspace:*
+        version: link:../..
       next:
         specifier: 16.4.0
         version: 16.4.0(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.64.0)(@types/node@26.6.4)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -241,9 +244,6 @@ importers:
       react-dom:
         specifier: ^19.3.0
         version: 19.3.0(react@19.3.0)
-      react-tils:
-        specifier: workspace:*
-        version: link:../..
     devDependencies:
       '@types/node':
         specifier: ^26.6.4

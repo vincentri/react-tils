@@ -4,7 +4,7 @@ import { renderToString } from 'react-dom/server'
 import { vi } from 'vitest'
 
 // Each check returns null on success, or a short reason on failure.
-// Shared by `react-tils/testing` and the eval scorer.
+// Shared by `@vincent.ri/react-tils/testing` and the eval scorer.
 
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true })
 

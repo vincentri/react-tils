@@ -11,8 +11,8 @@ export default defineConfig({
   // REACT_COMPILER=1 compiles the demo and the library with React Compiler (pnpm e2e:compiler).
   plugins: [react(), ...(process.env.REACT_COMPILER === '1' ? [reactCompiler()] : [])],
   resolve: {
-    // The demo imports the library the way users do: `react-tils`.
-    alias: [{ find: /^react-tils$/, replacement: `${src}index.ts` }],
+    // The demo imports the library the way users do: `@vincent.ri/react-tils`.
+    alias: [{ find: /^@vincent\.ri\/react-tils$/, replacement: `${src}index.ts` }],
   },
   build: { outDir: 'dist', emptyOutDir: true },
 })

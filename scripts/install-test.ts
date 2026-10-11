@@ -71,8 +71,8 @@ const pkg = (deps: Record<string, string>, devDeps: Record<string, string> = {})
 const ssr = `import assert from 'node:assert/strict'
 import { createElement as h } from 'react'
 import { renderToString } from 'react-dom/server'
-import { useLocalStorage, useMediaQuery, useNow, useOnline, useWindowSize } from 'react-tils'
-import { useHash } from 'react-tils/useHash'
+import { useLocalStorage, useMediaQuery, useNow, useOnline, useWindowSize } from '@vincent.ri/react-tils'
+import { useHash } from '@vincent.ri/react-tils/useHash'
 
 function App() {
   const wide = useMediaQuery('(min-width: 768px)', true)
@@ -84,7 +84,7 @@ function App() {
   return h('p', null, [wide, online, count, now, width, hash].join('|'))
 }
 assert.equal(renderToString(h(App)), '<p>true|true|0||0|#top</p>')
-await assert.rejects(import('react-tils/internal/storage'), { code: 'ERR_PACKAGE_PATH_NOT_EXPORTED' })
+await assert.rejects(import('@vincent.ri/react-tils/internal/storage'), { code: 'ERR_PACKAGE_PATH_NOT_EXPORTED' })
 console.log('ok')
 `
 
@@ -116,12 +116,16 @@ await step('tarball has dist, types, AGENTS.md, and the CLI; no source or tests'
 
 const app19 = project('npm-react19', {
   'package.json': pkg(
-    { react: dev('react'), 'react-dom': dev('react-dom'), 'react-tils': `file:${tarball}` },
+    {
+      react: dev('react'),
+      'react-dom': dev('react-dom'),
+      '@vincent.ri/react-tils': `file:${tarball}`,
+    },
     { typescript: dev('typescript'), '@types/react': dev('@types/react') },
   ),
   'ssr.mjs': ssr,
-  'src/app.ts': `import { useElementSize, useLocalStorage, useMediaQuery } from 'react-tils'
-import { useHotkey } from 'react-tils/useHotkey'
+  'src/app.ts': `import { useElementSize, useLocalStorage, useMediaQuery } from '@vincent.ri/react-tils'
+import { useHotkey } from '@vincent.ri/react-tils/useHotkey'
 
 export function useExample(): string {
   const wide: boolean = useMediaQuery('(min-width: 768px)')
@@ -177,9 +181,13 @@ await step(
 await step('npx react-tils init adds the agent pointer, and the file it points to exists', () => {
   run('npx react-tils init', app19)
   for (const file of ['AGENTS.md', 'CLAUDE.md'])
-    if (!readFileSync(join(app19, file), 'utf8').includes('node_modules/react-tils/AGENTS.md'))
+    if (
+      !readFileSync(join(app19, file), 'utf8').includes(
+        'node_modules/@vincent.ri/react-tils/AGENTS.md',
+      )
+    )
       throw new Error(`${file} has no pointer line`)
-  if (!existsSync(join(app19, 'node_modules/react-tils/AGENTS.md')))
+  if (!existsSync(join(app19, 'node_modules/@vincent.ri/react-tils/AGENTS.md')))
     throw new Error('AGENTS.md not installed')
 })
 
@@ -188,7 +196,7 @@ await step('pnpm install, React 18: server render with strict dependency isolati
     'package.json': pkg({
       react: '^18.3.1',
       'react-dom': '^18.3.1',
-      'react-tils': `file:${tarball}`,
+      '@vincent.ri/react-tils': `file:${tarball}`,
     }),
     'ssr.mjs': ssr,
   })
@@ -203,7 +211,7 @@ for (const manager of ['yarn', 'bun'] as const) {
       'package.json': pkg({
         react: dev('react'),
         'react-dom': dev('react-dom'),
-        'react-tils': `file:${tarball}`,
+        '@vincent.ri/react-tils': `file:${tarball}`,
       }),
       'ssr.mjs': ssr,
     })
@@ -217,7 +225,11 @@ await step(
   async () => {
     const app = project('vite-compiler', {
       'package.json': pkg(
-        { react: dev('react'), 'react-dom': dev('react-dom'), 'react-tils': `file:${tarball}` },
+        {
+          react: dev('react'),
+          'react-dom': dev('react-dom'),
+          '@vincent.ri/react-tils': `file:${tarball}`,
+        },
         {
           vite: dev('vite'),
           '@vitejs/plugin-react': dev('@vitejs/plugin-react'),
@@ -232,7 +244,7 @@ export default defineConfig({ plugins: [react({ compiler })] })
       'index.html':
         '<!doctype html><div id="root"></div><script type="module" src="/main.jsx"></script>',
       'main.jsx': `import { createRoot } from 'react-dom/client'
-import { useHydrated, useInView, useLocalStorage, useOnline, useWindowSize } from 'react-tils'
+import { useHydrated, useInView, useLocalStorage, useOnline, useWindowSize } from '@vincent.ri/react-tils'
 
 function App() {
   const { width } = useWindowSize()

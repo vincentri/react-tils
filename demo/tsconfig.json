@@ -12,7 +12,7 @@
     "noEmit": true,
     "types": ["vite/client", "node"],
     "paths": {
-      "react-tils": ["../src/index.ts"]
+      "@vincent.ri/react-tils": ["../src/index.ts"]
     }
   },
   "include": ["src", "prerender.ts", "vite.config.ts", "../e2e", "../e2e-next"]

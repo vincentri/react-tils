@@ -47,7 +47,7 @@ import {
   useWindowFocus,
   useWindowScroll,
   useWindowSize,
-} from 'react-tils'
+} from '@vincent.ri/react-tils'
 
 function Card({ hook, hint, children }: { hook: string; hint: string; children: ReactNode }) {
   return (
@@ -279,7 +279,10 @@ function ShareDemo() {
     <Card hook="useShare" hint="Opens the native share sheet where supported.">
       <Value id="share-supported">{supported ? 'supported' : 'not supported'}</Value>
       {supported && (
-        <button type="button" onClick={() => share({ title: 'react-tils', url: location.href })}>
+        <button
+          type="button"
+          onClick={() => share({ title: '@vincent.ri/react-tils', url: location.href })}
+        >
           Share
         </button>
       )}

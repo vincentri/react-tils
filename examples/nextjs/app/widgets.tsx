@@ -1,9 +1,9 @@
 'use client'
 
 import Link from 'next/link'
-import { useHash, useHydrated, useLocalStorage, useOnline } from 'react-tils'
+import { useHash, useHydrated, useLocalStorage, useOnline } from '@vincent.ri/react-tils'
 // Subpath import: checks that per-hook entry points resolve, types included.
-import { useMediaQuery } from 'react-tils/useMediaQuery'
+import { useMediaQuery } from '@vincent.ri/react-tils/useMediaQuery'
 
 export function Widgets() {
   const wide = useMediaQuery('(min-width: 768px)')

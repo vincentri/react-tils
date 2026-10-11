@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useWindowSize } from 'react-tils'
+import { useWindowSize } from '@vincent.ri/react-tils'
 
 // The pattern agents usually write: state starts at 0 and is fixed in an effect,
 // so the first frame after a client-side navigation shows 0.

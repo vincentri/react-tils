@@ -15,7 +15,7 @@ import { checkHydration, checkLeaks, checkServer } from './internal/check'
  * @example
  * // Sidebar.test.tsx
  * import { describe } from 'vitest'
- * import { componentMatrix } from 'react-tils/testing'
+ * import { componentMatrix } from '@vincent.ri/react-tils/testing'
  * import { Sidebar } from './Sidebar'
  *
  * describe('Sidebar', () => {
@@ -48,7 +48,7 @@ export function componentMatrix(Component: FunctionComponent): void {
  * @example
  * // useScrollY.test.ts
  * import { describe } from 'vitest'
- * import { hookMatrix } from 'react-tils/testing'
+ * import { hookMatrix } from '@vincent.ri/react-tils/testing'
  * import { useScrollY } from './useScrollY'
  *
  * describe('useScrollY', () => {

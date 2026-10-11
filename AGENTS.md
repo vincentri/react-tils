@@ -65,8 +65,8 @@ React hooks for browser state. Every hook renders on the server, hydrates with n
 Import from the root or from the hook's own path. Both tree-shake.
 
 ```ts
-import { useMediaQuery } from 'react-tils'
-import { useMediaQuery } from 'react-tils/useMediaQuery'
+import { useMediaQuery } from '@vincent.ri/react-tils'
+import { useMediaQuery } from '@vincent.ri/react-tils/useMediaQuery'
 ```
 
 ## Coming from another library
@@ -143,7 +143,7 @@ No hook fits? Write one with `useSyncExternalStore` and a server snapshot, then 
 ```ts
 // useScrollY.test.ts (vitest, happy-dom or jsdom environment)
 import { describe } from 'vitest'
-import { hookMatrix } from 'react-tils/testing'
+import { hookMatrix } from '@vincent.ri/react-tils/testing'
 import { useScrollY } from './useScrollY'
 
 describe('useScrollY', () => {
@@ -157,7 +157,7 @@ describe('useScrollY', () => {
 
 Every hook follows these, so you can guess a call without looking it up:
 
-- Hook name = file name = export name (`useMediaQuery` lives in `react-tils/useMediaQuery`).
+- Hook name = file name = export name (`useMediaQuery` lives in `@vincent.ri/react-tils/useMediaQuery`).
 - Hooks that wrap a DOM API take its arguments in the same order: `useEventListener(target, type, handler, options)` mirrors `addEventListener`.
 - Otherwise: required arguments first, then one optional last argument, either `serverValue` or an options object. No overloads.
 - The value used on the server and during hydration is always named `serverValue`.
