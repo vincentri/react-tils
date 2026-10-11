@@ -266,7 +266,12 @@ test('useStickToBottom follows a streamed reply, stops when scrolled up, and jum
   await page.mouse.wheel(0, -400)
   await expect(following).toHaveText('following: no')
   await expect(page.getByTestId('chat-stream')).toBeEnabled()
+  // WebKit on Linux applies the wheel's scroll about half a second later; wait for it, then check
+  // the finished reply didn't pull the reader back down.
+  await expect.poll(distance).toBeGreaterThan(1)
+  await page.waitForTimeout(300)
   expect(await distance()).toBeGreaterThan(1)
+  await expect(following).toHaveText('following: no')
 
   await page.getByTestId('chat-jump').click()
   await expect(following).toHaveText('following: yes')

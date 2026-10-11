@@ -152,6 +152,7 @@ kbd {
 .brand {
   display: flex;
   flex: 1;
+  white-space: nowrap;
   align-items: center;
   gap: 8px;
   color: var(--heading);
