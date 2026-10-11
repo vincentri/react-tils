@@ -1,5 +1,11 @@
 # @vincent.ri/react-tils
 
+## 0.1.5
+
+### Patch Changes
+
+- Every hook's docs are also served as markdown at `https://vincentri.github.io/react-tils/hooks/useThing.md`, prerendered with the docs site from the same JSDoc and types the pages use.
+
 ## 0.1.4
 
 ### Patch Changes
