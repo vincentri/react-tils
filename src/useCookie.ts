@@ -31,11 +31,20 @@ function subscribe(onChange: () => void) {
   }
 }
 
+// Cookies set elsewhere (the server, other scripts) may not be URL-encoded, e.g. `a=100%`:
+// keep those as written instead of throwing during render.
+const decode = (text: string) => {
+  try {
+    return decodeURIComponent(text)
+  } catch {
+    return text
+  }
+}
+
 function read(name: string): string | null {
   for (const pair of document.cookie.split('; ')) {
     const at = pair.indexOf('=')
-    if (at !== -1 && decodeURIComponent(pair.slice(0, at)) === name)
-      return decodeURIComponent(pair.slice(at + 1))
+    if (at !== -1 && decode(pair.slice(0, at)) === name) return decode(pair.slice(at + 1))
   }
   return null
 }

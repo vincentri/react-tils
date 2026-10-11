@@ -65,6 +65,14 @@ describe('useCookie', () => {
     await b.unmount()
   })
 
+  it("doesn't crash on cookies that aren't URL-encoded, set by the server or other scripts", async () => {
+    document.cookie = '%E0%A4%A=broken; path=/'
+    document.cookie = 'theme=100%; path=/'
+    const view = await mount()
+    expect(view.text()).toBe('100%')
+    await view.unmount()
+  })
+
   it('follows changes made elsewhere: Cookie Store change events, and on window focus', async () => {
     const store = new EventTarget()
     Object.defineProperty(window, 'cookieStore', { configurable: true, value: store })
