@@ -1,0 +1,104 @@
+{
+  "name": "react-tils",
+  "version": "0.0.0",
+  "description": "React hooks for browser state and interaction that render the right first frame: SSR-safe, hydration-correct, tested in real browsers, and documented for AI coding agents.",
+  "keywords": [
+    "ai-agents",
+    "hooks",
+    "hydration",
+    "nextjs",
+    "react",
+    "react-hooks",
+    "ssr",
+    "useSyncExternalStore"
+  ],
+  "homepage": "https://vincentri.github.io/react-tils/",
+  "bugs": "https://github.com/vincentri/react-tils/issues",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vincentri/react-tils.git"
+  },
+  "bin": {
+    "react-tils": "./bin/react-tils.js"
+  },
+  "files": [
+    "dist",
+    "AGENTS.md",
+    "bin/react-tils.js"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./dist/index.js",
+    "./internal/*": null,
+    "./*": "./dist/*.js",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsdown",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p demo",
+    "lint": "oxlint",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
+    "size": "size-limit",
+    "check": "pnpm fmt:check && pnpm lint && pnpm typecheck && pnpm test && pnpm test:compiler && pnpm build && pnpm size && pnpm lint:pkg",
+    "eval": "node eval/run.ts",
+    "eval:score": "vitest run --config eval/vitest.config.ts",
+    "eval:selftest": "EVAL_OUT=./fixtures/ vitest run --config eval/vitest.config.ts",
+    "demo": "vite --config demo/vite.config.ts",
+    "demo:build": "pnpm build && node scripts/llms.ts && vite build --config demo/vite.config.ts && vite build --config demo/vite.config.ts --ssr src/entry-server.tsx --outDir dist-server && node demo/prerender.ts",
+    "demo:preview": "vite preview --config demo/vite.config.ts --port 4173 --strictPort",
+    "e2e": "playwright test",
+    "lint:pkg": "publint && attw --pack . --profile esm-only",
+    "llms": "node scripts/llms.ts",
+    "prepublishOnly": "pnpm check",
+    "changeset": "changeset",
+    "e2e:serve": "pnpm demo:build && pnpm --dir examples/nextjs build && (pnpm demo:preview & pnpm --dir examples/nextjs start --port 3000 & wait)",
+    "test:compiler": "vitest run -c vitest.compiler.config.ts && node scripts/compiler-report.ts",
+    "e2e:compiler": "REACT_COMPILER=1 playwright test && node scripts/compiler-report.ts && grep -rl next-count examples/nextjs/.next/static/chunks | xargs grep -q memo_cache_sentinel && echo 'Next.js app: components compiled by React Compiler'",
+    "test:install": "node scripts/install-test.ts"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
+    "@changesets/cli": "^3.0.3",
+    "@playwright/test": "^1.64.0",
+    "@size-limit/preset-small-lib": "^14.2.0",
+    "@types/node": "^26.6.4",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "happy-dom": "^20.14.6",
+    "oxc-transform-react": "^0.153.0",
+    "oxfmt": "^0.72.0",
+    "oxlint": "^1.87.0",
+    "publint": "^0.3.25",
+    "react": "^19.3.0",
+    "react-compiler-runtime": "^1.0.0",
+    "react-dom": "^19.3.0",
+    "size-limit": "^14.2.0",
+    "tsdown": "^0.23.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4",
+    "vitest": "^5.0.3"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18",
+    "vitest": ">=3"
+  },
+  "peerDependenciesMeta": {
+    "react-dom": {
+      "optional": true
+    },
+    "vitest": {
+      "optional": true
+    }
+  },
+  "packageManager": "pnpm@12.10.1"
+}

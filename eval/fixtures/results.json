@@ -1,0 +1,94 @@
+[
+  {
+    "condition": "bad",
+    "file": "offline-banner-1.tsx",
+    "usedLibrary": false,
+    "failures": ["leaked listeners: offline, offline"],
+    "flashes": ["[offline] first frame \"Online\""]
+  },
+  {
+    "condition": "bad",
+    "file": "responsive-sidebar-1.tsx",
+    "usedLibrary": false,
+    "failures": [
+      "[desktop] hydration: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/clien"
+    ],
+    "flashes": []
+  },
+  {
+    "condition": "bad",
+    "file": "system-dark-mode-1.tsx",
+    "usedLibrary": false,
+    "failures": [],
+    "flashes": ["[dark OS] first frame \"Light\""]
+  },
+  {
+    "condition": "bad",
+    "file": "theme-toggle-1.tsx",
+    "usedLibrary": false,
+    "failures": [
+      "[reload after toggling] wrong output: expected \"Theme: dark\", got \"Theme: light\""
+    ],
+    "flashes": ["[reload after toggling] first frame \"Theme: light\""]
+  },
+  {
+    "condition": "bad",
+    "file": "window-width-1.tsx",
+    "usedLibrary": false,
+    "failures": [
+      "server render threw: Cannot read properties of undefined (reading 'innerWidth')",
+      "[1024px] server render threw: Cannot read properties of undefined (reading 'innerWidth')",
+      "[500px] server render threw: Cannot read properties of undefined (reading 'innerWidth')"
+    ],
+    "flashes": []
+  },
+  {
+    "condition": "good",
+    "file": "offline-banner-1.tsx",
+    "usedLibrary": true,
+    "failures": [],
+    "flashes": []
+  },
+  {
+    "condition": "good",
+    "file": "pause-when-hidden-1.tsx",
+    "usedLibrary": true,
+    "failures": [],
+    "flashes": []
+  },
+  {
+    "condition": "good",
+    "file": "reduced-motion-1.tsx",
+    "usedLibrary": true,
+    "failures": [],
+    "flashes": []
+  },
+  {
+    "condition": "good",
+    "file": "responsive-sidebar-1.tsx",
+    "usedLibrary": true,
+    "failures": [],
+    "flashes": []
+  },
+  {
+    "condition": "good",
+    "file": "system-dark-mode-1.tsx",
+    "usedLibrary": true,
+    "failures": [],
+    "flashes": []
+  },
+  {
+    "condition": "good",
+    "file": "theme-toggle-1.tsx",
+    "usedLibrary": true,
+    "failures": [],
+    "flashes": []
+  },
+  {
+    "condition": "good",
+    "file": "window-width-1.tsx",
+    "usedLibrary": true,
+    "failures": [],
+    "flashes": []
+  }
+]

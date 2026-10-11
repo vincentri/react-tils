@@ -1,0 +1,40 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "unicorn", "oxc", "react", "vitest"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "error",
+    "perf": "error"
+  },
+  "rules": {
+    "react/rules-of-hooks": "error",
+    "react/exhaustive-deps": "error",
+    "react/react-in-jsx-scope": "off"
+  },
+  "env": {
+    "builtin": true,
+    "browser": true
+  },
+  "overrides": [
+    {
+      "files": ["*.test.ts"],
+      "rules": {
+        "react/globals": "off",
+        "react/immutability": "off"
+      }
+    },
+    {
+      "files": ["eval/**", "e2e/**", "e2e-next/**", "scripts/install-test.ts"],
+      "rules": {
+        "no-await-in-loop": "off"
+      }
+    }
+  ],
+  "ignorePatterns": [
+    "dist",
+    "eval/fixtures",
+    "eval/out",
+    "examples/*/.next",
+    "examples/*/next-env.d.ts"
+  ]
+}

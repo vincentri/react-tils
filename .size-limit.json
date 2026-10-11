@@ -1,0 +1,290 @@
+[
+  {
+    "name": "useAnimationFrame",
+    "path": "dist/useAnimationFrame.js",
+    "import": "{ useAnimationFrame }",
+    "limit": "200 B"
+  },
+  {
+    "name": "useBeforeUnload",
+    "path": "dist/useBeforeUnload.js",
+    "import": "{ useBeforeUnload }",
+    "limit": "150 B"
+  },
+  {
+    "name": "useBroadcastChannel",
+    "path": "dist/useBroadcastChannel.js",
+    "import": "{ useBroadcastChannel }",
+    "limit": "300 B"
+  },
+  {
+    "name": "useClickOutside",
+    "path": "dist/useClickOutside.js",
+    "import": "{ useClickOutside }",
+    "limit": "400 B"
+  },
+  {
+    "name": "useControllableState",
+    "path": "dist/useControllableState.js",
+    "import": "{ useControllableState }",
+    "limit": "250 B"
+  },
+  {
+    "name": "useCopyToClipboard",
+    "path": "dist/useCopyToClipboard.js",
+    "import": "{ useCopyToClipboard }",
+    "limit": "300 B"
+  },
+  {
+    "name": "useDebouncedCallback",
+    "path": "dist/useDebouncedCallback.js",
+    "import": "{ useDebouncedCallback }",
+    "limit": "350 B"
+  },
+  {
+    "name": "useDebouncedValue",
+    "path": "dist/useDebouncedValue.js",
+    "import": "{ useDebouncedValue }",
+    "limit": "150 B"
+  },
+  {
+    "name": "useDocumentVisibility",
+    "path": "dist/useDocumentVisibility.js",
+    "import": "{ useDocumentVisibility }",
+    "limit": "200 B"
+  },
+  {
+    "name": "useElementScroll",
+    "path": "dist/useElementScroll.js",
+    "import": "{ useElementScroll }",
+    "limit": "500 B"
+  },
+  {
+    "name": "useElementSize",
+    "path": "dist/useElementSize.js",
+    "import": "{ useElementSize }",
+    "limit": "350 B"
+  },
+  {
+    "name": "useEventListener",
+    "path": "dist/useEventListener.js",
+    "import": "{ useEventListener }",
+    "limit": "350 B"
+  },
+  {
+    "name": "useFileDrop",
+    "path": "dist/useFileDrop.js",
+    "import": "{ useFileDrop }",
+    "limit": "400 B"
+  },
+  {
+    "name": "useFocusTrap",
+    "path": "dist/useFocusTrap.js",
+    "import": "{ useFocusTrap }",
+    "limit": "600 B"
+  },
+  {
+    "name": "useFullscreen",
+    "path": "dist/useFullscreen.js",
+    "import": "{ useFullscreen }",
+    "limit": "450 B"
+  },
+  {
+    "name": "useGeolocation",
+    "path": "dist/useGeolocation.js",
+    "import": "{ useGeolocation }",
+    "limit": "400 B"
+  },
+  {
+    "name": "useHash",
+    "path": "dist/useHash.js",
+    "import": "{ useHash }",
+    "limit": "200 B"
+  },
+  {
+    "name": "useHotkey",
+    "path": "dist/useHotkey.js",
+    "import": "{ useHotkey }",
+    "limit": "700 B"
+  },
+  {
+    "name": "useHydrated",
+    "path": "dist/useHydrated.js",
+    "import": "{ useHydrated }",
+    "limit": "150 B"
+  },
+  {
+    "name": "useIdle",
+    "path": "dist/useIdle.js",
+    "import": "{ useIdle }",
+    "limit": "350 B"
+  },
+  {
+    "name": "useInterval",
+    "path": "dist/useInterval.js",
+    "import": "{ useInterval }",
+    "limit": "350 B"
+  },
+  {
+    "name": "useInView",
+    "path": "dist/useInView.js",
+    "import": "{ useInView }",
+    "limit": "400 B"
+  },
+  {
+    "name": "useLocalStorage",
+    "path": "dist/useLocalStorage.js",
+    "import": "{ useLocalStorage }",
+    "limit": "500 B"
+  },
+  {
+    "name": "useLongPress",
+    "path": "dist/useLongPress.js",
+    "import": "{ useLongPress }",
+    "limit": "450 B"
+  },
+  {
+    "name": "useMediaQuery",
+    "path": "dist/useMediaQuery.js",
+    "import": "{ useMediaQuery }",
+    "limit": "300 B"
+  },
+  {
+    "name": "useMergedRefs",
+    "path": "dist/useMergedRefs.js",
+    "import": "{ useMergedRefs }",
+    "limit": "350 B"
+  },
+  {
+    "name": "useNetworkInformation",
+    "path": "dist/useNetworkInformation.js",
+    "import": "{ useNetworkInformation }",
+    "limit": "350 B"
+  },
+  {
+    "name": "useNow",
+    "path": "dist/useNow.js",
+    "import": "{ useNow }",
+    "limit": "200 B"
+  },
+  {
+    "name": "useOnline",
+    "path": "dist/useOnline.js",
+    "import": "{ useOnline }",
+    "limit": "200 B"
+  },
+  {
+    "name": "usePermission",
+    "path": "dist/usePermission.js",
+    "import": "{ usePermission }",
+    "limit": "400 B"
+  },
+  {
+    "name": "usePreferredLanguages",
+    "path": "dist/usePreferredLanguages.js",
+    "import": "{ usePreferredLanguages }",
+    "limit": "250 B"
+  },
+  {
+    "name": "useRovingFocus",
+    "path": "dist/useRovingFocus.js",
+    "import": "{ useRovingFocus }",
+    "limit": "750 B"
+  },
+  {
+    "name": "useScript",
+    "path": "dist/useScript.js",
+    "import": "{ useScript }",
+    "limit": "500 B"
+  },
+  {
+    "name": "useScrollDirection",
+    "path": "dist/useScrollDirection.js",
+    "import": "{ useScrollDirection }",
+    "limit": "250 B"
+  },
+  {
+    "name": "useScrollLock",
+    "path": "dist/useScrollLock.js",
+    "import": "{ useScrollLock }",
+    "limit": "350 B"
+  },
+  {
+    "name": "useSessionStorage",
+    "path": "dist/useSessionStorage.js",
+    "import": "{ useSessionStorage }",
+    "limit": "500 B"
+  },
+  {
+    "name": "useShare",
+    "path": "dist/useShare.js",
+    "import": "{ useShare }",
+    "limit": "300 B"
+  },
+  {
+    "name": "useStickToBottom",
+    "path": "dist/useStickToBottom.js",
+    "import": "{ useStickToBottom }",
+    "limit": "650 B"
+  },
+  {
+    "name": "useSwipe",
+    "path": "dist/useSwipe.js",
+    "import": "{ useSwipe }",
+    "limit": "450 B"
+  },
+  {
+    "name": "useTextSelection",
+    "path": "dist/useTextSelection.js",
+    "import": "{ useTextSelection }",
+    "limit": "400 B"
+  },
+  {
+    "name": "useTimeout",
+    "path": "dist/useTimeout.js",
+    "import": "{ useTimeout }",
+    "limit": "250 B"
+  },
+  {
+    "name": "useUserMedia",
+    "path": "dist/useUserMedia.js",
+    "import": "{ useUserMedia }",
+    "limit": "450 B"
+  },
+  {
+    "name": "useVisualViewport",
+    "path": "dist/useVisualViewport.js",
+    "import": "{ useVisualViewport }",
+    "limit": "400 B"
+  },
+  {
+    "name": "useWakeLock",
+    "path": "dist/useWakeLock.js",
+    "import": "{ useWakeLock }",
+    "limit": "450 B"
+  },
+  {
+    "name": "useWindowFocus",
+    "path": "dist/useWindowFocus.js",
+    "import": "{ useWindowFocus }",
+    "limit": "200 B"
+  },
+  {
+    "name": "useWindowScroll",
+    "path": "dist/useWindowScroll.js",
+    "import": "{ useWindowScroll }",
+    "limit": "300 B"
+  },
+  {
+    "name": "useWindowSize",
+    "path": "dist/useWindowSize.js",
+    "import": "{ useWindowSize }",
+    "limit": "300 B"
+  },
+  {
+    "name": "everything",
+    "path": "dist/index.js",
+    "import": "*",
+    "limit": "8 kB"
+  }
+]

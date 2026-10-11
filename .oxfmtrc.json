@@ -1,0 +1,12 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "semi": false,
+  "singleQuote": true,
+  "ignorePatterns": [
+    "dist",
+    "pnpm-lock.yaml",
+    "eval/out",
+    "examples/*/.next",
+    "examples/*/next-env.d.ts"
+  ]
+}

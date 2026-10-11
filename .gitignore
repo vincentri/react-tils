@@ -1,0 +1,13 @@
+node_modules
+dist
+eval/out
+demo/dist
+demo/dist-server
+test-results
+playwright-report
+demo/public/llms.txt
+examples/*/.next
+examples/*/next-env.d.ts
+examples/*/tsconfig.tsbuildinfo
+eval/.vitest
+*.tgz
