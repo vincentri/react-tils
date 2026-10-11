@@ -2,7 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/@vincent.ri/react-tils)](https://www.npmjs.com/package/@vincent.ri/react-tils)
 [![CI](https://github.com/vincentri/react-tils/actions/workflows/ci.yml/badge.svg)](https://github.com/vincentri/react-tils/actions/workflows/ci.yml)
-[![size](https://img.shields.io/badge/all%2059%20hooks-10.5%20kB-blue)](#hooks)
+[![size](https://img.shields.io/badge/all%2062%20hooks-11.3%20kB-blue)](#hooks)
 [![license](https://img.shields.io/npm/l/@vincent.ri/react-tils)](LICENSE)
 
 React hooks for browser state and interaction that are correct on the first frame: they render on the server, hydrate without mismatches, clean up every listener, and work with React Compiler. Documented so AI coding agents pick the right hook and use it correctly.
@@ -39,7 +39,7 @@ The usual way to read browser state in React is `useState` plus `useEffect`. It 
 - **No leaks.** Every listener, observer, and timer is removed on unmount, including under StrictMode.
 - **Tested for real.** Every hook passes a server-render, hydration, and leak check on React 18, 19, and canary, plus browser tests in Chromium, Firefox, WebKit, and a Next.js app.
 - **React Compiler safe.** Every hook compiles with zero bailouts, and the full test suite runs again on compiled code.
-- **Small.** No dependencies, one file per hook, tree-shakeable. All 59 hooks together are 10.5 kB (brotli).
+- **Small.** No dependencies, one file per hook, tree-shakeable. All 62 hooks together are 11.3 kB (brotli).
 - **Made for agents.** Every hook's JSDoc says when to use it and when not to, with examples. `AGENTS.md` maps everyday tasks to hooks and lists the patterns to avoid.
 
 ## Setup for AI agents
@@ -101,12 +101,13 @@ Every hook is documented in its type declarations, so your editor shows the full
 
 ### Storage and URL
 
-| Hook                                    | For                                                  | Size  |
-| --------------------------------------- | ---------------------------------------------------- | ----- |
-| `useLocalStorage(key, serverValue)`     | State that survives reloads, synced across tabs      | 368 B |
-| `useSessionStorage(key, serverValue)`   | State for this tab only                              | 370 B |
-| `useHash(serverValue?)`                 | Tabs or panels linkable through the URL hash         | 159 B |
-| `useBroadcastChannel(name, onMessage?)` | Telling other tabs about an event (logged out, cart) | 214 B |
+| Hook                                    | For                                                            | Size  |
+| --------------------------------------- | -------------------------------------------------------------- | ----- |
+| `useLocalStorage(key, serverValue)`     | State that survives reloads, synced across tabs                | 368 B |
+| `useSessionStorage(key, serverValue)`   | State for this tab only                                        | 370 B |
+| `useCookie(name, serverValue?)`         | Preferences the server also reads, correct on the first render | 446 B |
+| `useHash(serverValue?)`                 | Tabs or panels linkable through the URL hash                   | 159 B |
+| `useBroadcastChannel(name, onMessage?)` | Telling other tabs about an event (logged out, cart)           | 214 B |
 
 ### Page, device, and user
 
@@ -123,6 +124,7 @@ Every hook is documented in its type declarations, so your editor shows the full
 | `useHydrated()`                       | Rendering something only in the browser                      | 77 B  |
 | `useNow(intervalMs, serverValue?)`    | Clocks, countdowns, "5 minutes ago"                          | 153 B |
 | `usePageRestore(callback)`            | Refreshing stale data after the Back button                  | 150 B |
+| `useDeviceOrientation()`              | Tilt effects and compasses, with the iOS permission flow     | 331 B |
 
 ### Events and input
 
@@ -163,6 +165,7 @@ Every hook is documented in its type declarations, so your editor shows the full
 | `useUserMedia(constraints, options?)` | Camera and microphone                                             | 313 B |
 | `useMediaRecorder(stream, options?)`  | Voice notes and voice input, in a format every browser can record | 709 B |
 | `useSpeechSynthesis()`                | "Read aloud" buttons                                              | 651 B |
+| `useSpeechRecognition(options?)`      | Dictation into search boxes and chat inputs                       | 514 B |
 | `useScript(src, options?)`            | Loading a third-party script once, on demand                      | 437 B |
 | `useServiceWorkerUpdate(options?)`    | "New version available" banners in PWAs                           | 418 B |
 | `useScrollLock(locked?)`              | Stopping the page scrolling behind a modal                        | 270 B |

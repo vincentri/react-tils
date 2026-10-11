@@ -509,3 +509,9 @@ input {
   color: var(--muted);
   font-size: 13px;
 }
+
+.tilt {
+  font-size: 28px;
+  line-height: 1;
+  transition: transform 0.1s;
+}

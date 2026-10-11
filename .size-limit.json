@@ -48,6 +48,12 @@
     "limit": "250 B"
   },
   {
+    "name": "useCookie",
+    "path": "dist/useCookie.js",
+    "import": "{ useCookie }",
+    "limit": "500 B"
+  },
+  {
     "name": "useCopyToClipboard",
     "path": "dist/useCopyToClipboard.js",
     "import": "{ useCopyToClipboard }",
@@ -64,6 +70,12 @@
     "path": "dist/useDebouncedValue.js",
     "import": "{ useDebouncedValue }",
     "limit": "150 B"
+  },
+  {
+    "name": "useDeviceOrientation",
+    "path": "dist/useDeviceOrientation.js",
+    "import": "{ useDeviceOrientation }",
+    "limit": "450 B"
   },
   {
     "name": "useDocumentVisibility",
@@ -286,6 +298,12 @@
     "path": "dist/useShare.js",
     "import": "{ useShare }",
     "limit": "300 B"
+  },
+  {
+    "name": "useSpeechRecognition",
+    "path": "dist/useSpeechRecognition.js",
+    "import": "{ useSpeechRecognition }",
+    "limit": "650 B"
   },
   {
     "name": "useSpeechSynthesis",

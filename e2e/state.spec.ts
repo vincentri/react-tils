@@ -241,3 +241,39 @@ test('useServiceWorkerUpdate reports no update on a site without a service worke
   await page.goto('/')
   await expect(page.getByTestId('sw-update')).toHaveText('update available: no')
 })
+
+test('useCookie sets, survives a reload, and removes', async ({ page }) => {
+  await page.goto('/')
+  const value = page.getByTestId('cookie')
+  await expect(value).toHaveText('demo-theme: not set')
+  await page.getByTestId('cookie-dark').click()
+  await expect(value).toHaveText('demo-theme: dark')
+  expect(await page.evaluate(() => document.cookie)).toContain('demo-theme=dark')
+  await page.reload()
+  await expect(value).toHaveText('demo-theme: dark')
+  await page.getByTestId('cookie-remove').click()
+  await expect(value).toHaveText('demo-theme: not set')
+  expect(await page.evaluate(() => document.cookie)).not.toContain('demo-theme')
+})
+
+test('useDeviceOrientation shows sensor readings, with no permission button once they arrive', async ({
+  page,
+}) => {
+  await page.goto('/')
+  const value = page.getByTestId('orientation')
+  // Chromium offers requestPermission without requiring it; the button shows until a reading.
+  await expect(value).toHaveText(/^(no readings|needs permission)$/)
+  await page.evaluate(() =>
+    window.dispatchEvent(
+      Object.assign(new Event('deviceorientation'), { alpha: 120, beta: 15, gamma: -30 }),
+    ),
+  )
+  await expect(value).toHaveText('alpha 120 · beta 15 · gamma -30')
+  await expect(page.getByTestId('orientation-allow')).toHaveCount(0)
+})
+
+test('useSpeechRecognition renders its support state without errors', async ({ page }) => {
+  await page.goto('/')
+  // Headless browsers can't actually recognize speech; check support and a clean render.
+  await expect(page.getByTestId('dictation')).toHaveText(/^(—|not supported)$/)
+})

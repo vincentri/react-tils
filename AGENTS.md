@@ -62,6 +62,9 @@ React hooks for browser state. Every hook renders on the server, hydrates with n
 | "Read aloud" button for AI answers or articles                                         | `useSpeechSynthesis()` → `{ voices, speaking, speak, cancel }`                                                     |
 | "New version available, reload" banner in a PWA                                        | `useServiceWorkerUpdate({ checkIntervalMs? })`; the worker must handle `SKIP_WAITING`                              |
 | Reading-progress bar for an article                                                    | `useScrollProgress()` → `[ref, progress]` from 0 to 1                                                              |
+| A preference the server must know on the first request (theme, locale, currency)       | `useCookie(name, serverValue)`; pass the request's cookie as `serverValue`                                         |
+| Dictation: speech to text in a search box or chat input                                | `useSpeechRecognition({ lang?, continuous? })`; Chrome, Edge, Safari only                                          |
+| Tilt effects, a compass, steering by tilting the phone                                 | `useDeviceOrientation()`; on iOS call `requestPermission()` from a tap                                             |
 | Arrow-key navigation in a toolbar, menu, tab list, or listbox (one Tab stop)           | `useRovingFocus({ orientation?, loop? })`; radio groups and `<select>` do it natively                              |
 | Hide the header on scroll down, show it on scroll up                                   | `useScrollDirection(threshold?)`                                                                                   |
 | Keep keyboard focus inside a custom modal or drawer                                    | `useFocusTrap(active)`; prefer `<dialog>` with `showModal()`                                                       |
@@ -100,6 +103,9 @@ Names from react-use, ahooks, usehooks-ts, @uidotdev/usehooks, MUI, and Mantine,
 | `useSpeech`, `useTextToSpeech`, `react-speech-kit`                | `useSpeechSynthesis`     |
 | `useRegisterSW`, `useServiceWorker`                               | `useServiceWorkerUpdate` |
 | `useReadingProgress`, `useScrollPercentage`                       | `useScrollProgress`      |
+| `useCookies` (react-cookie), `useCookieState`                     | `useCookie`              |
+| `useSpeechToText`, `react-speech-recognition`, `useVoice`         | `useSpeechRecognition`   |
+| `useOrientation` (react-use), `useDeviceMotion`, `useGyroscope`   | `useDeviceOrientation`   |
 | `useClickAway`, `useOnClickOutside`                               | `useClickOutside`        |
 | `useControlled`, `useUncontrolled`, `useControllableValue`        | `useControllableState`   |
 | `useDebounce`, `useDebounceValue`                                 | `useDebouncedValue`      |

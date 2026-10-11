@@ -16,9 +16,11 @@ import {
   useCaretPosition,
   useClickOutside,
   useControllableState,
+  useCookie,
   useCopyToClipboard,
   useDebouncedCallback,
   useDebouncedValue,
+  useDeviceOrientation,
   useDocumentVisibility,
   useDrag,
   useElementSize,
@@ -56,6 +58,7 @@ import {
   useServiceWorkerUpdate,
   useSessionStorage,
   useSpeechSynthesis,
+  useSpeechRecognition,
   useShare,
   useStickToBottom,
   useSwipe,
@@ -1170,6 +1173,89 @@ function ScrollProgressDemo({ progress }: { progress: number }) {
   )
 }
 
+function CookieDemo() {
+  const [theme, setTheme, removeTheme] = useCookie('demo-theme')
+  return (
+    <Card
+      hook="useCookie"
+      hint="Set it, then reload: the cookie is still there, and sent to the server too."
+    >
+      <div className="row">
+        <button
+          type="button"
+          data-testid="cookie-dark"
+          onClick={() => setTheme('dark', { maxAgeSeconds: 3600 })}
+        >
+          dark
+        </button>
+        <button
+          type="button"
+          data-testid="cookie-light"
+          onClick={() => setTheme('light', { maxAgeSeconds: 3600 })}
+        >
+          light
+        </button>
+        <button type="button" data-testid="cookie-remove" onClick={() => removeTheme()}>
+          remove
+        </button>
+      </div>
+      <Value id="cookie">demo-theme: {theme ?? 'not set'}</Value>
+    </Card>
+  )
+}
+
+function DeviceOrientationDemo() {
+  const { orientation, needsPermission, requestPermission } = useDeviceOrientation()
+  return (
+    <Card hook="useDeviceOrientation" hint="On a phone, tilt it. Laptops usually have no sensor.">
+      {needsPermission ? (
+        <button type="button" data-testid="orientation-allow" onClick={requestPermission}>
+          Enable tilt
+        </button>
+      ) : (
+        <div
+          className="tilt"
+          style={{ transform: `rotate(${Math.round(orientation?.gamma ?? 0)}deg)` }}
+          aria-hidden="true"
+        >
+          ⬆
+        </div>
+      )}
+      <Value id="orientation">
+        {orientation
+          ? `alpha ${Math.round(orientation.alpha ?? 0)} · beta ${Math.round(orientation.beta ?? 0)} · gamma ${Math.round(orientation.gamma ?? 0)}`
+          : needsPermission
+            ? 'needs permission'
+            : 'no readings'}
+      </Value>
+    </Card>
+  )
+}
+
+function SpeechRecognitionDemo() {
+  const speech = useSpeechRecognition()
+  return (
+    <Card hook="useSpeechRecognition" hint="Click and speak. Chrome, Edge, and Safari.">
+      <button
+        type="button"
+        data-testid="dictate"
+        disabled={!speech.supported}
+        onClick={speech.listening ? speech.stop : speech.start}
+      >
+        {speech.listening ? 'Stop' : 'Dictate'}
+      </button>
+      <Value id="dictation">
+        {!speech.supported
+          ? 'not supported'
+          : speech.error
+            ? `error: ${speech.error}`
+            : `${speech.transcript} ${speech.interim}`.trim() ||
+              (speech.listening ? 'listening…' : '—')}
+      </Value>
+    </Card>
+  )
+}
+
 // Sidebar and page order. Each card lists its hooks; most show one, a few show two together.
 const CATEGORIES: { title: string; cards: string[][] }[] = [
   {
@@ -1197,7 +1283,12 @@ const CATEGORIES: { title: string; cards: string[][] }[] = [
   },
   {
     title: 'Storage and URL',
-    cards: [['useLocalStorage', 'useSessionStorage'], ['useHash'], ['useBroadcastChannel']],
+    cards: [
+      ['useLocalStorage', 'useSessionStorage'],
+      ['useCookie'],
+      ['useHash'],
+      ['useBroadcastChannel'],
+    ],
   },
   {
     title: 'Page, device, and user',
@@ -1211,6 +1302,7 @@ const CATEGORIES: { title: string; cards: string[][] }[] = [
       ['useHydrated'],
       ['useNow'],
       ['usePageRestore'],
+      ['useDeviceOrientation'],
     ],
   },
   {
@@ -1251,6 +1343,7 @@ const CATEGORIES: { title: string; cards: string[][] }[] = [
       ['useUserMedia'],
       ['useMediaRecorder'],
       ['useSpeechSynthesis'],
+      ['useSpeechRecognition'],
       ['useScript'],
       ['useServiceWorkerUpdate'],
       ['useScrollLock'],
@@ -1285,6 +1378,7 @@ export function App() {
     useStickToBottom: <StickToBottomDemo />,
     useMergedRefs: <MergedRefsDemo />,
     useLocalStorage: <StorageDemo />,
+    useCookie: <CookieDemo />,
     useHash: <HashDemo />,
     useBroadcastChannel: <BroadcastDemo />,
     useOnline: <OnlineDemo />,
@@ -1296,6 +1390,7 @@ export function App() {
     useHydrated: <HydratedDemo />,
     useNow: <NowDemo />,
     usePageRestore: <PageRestoreDemo />,
+    useDeviceOrientation: <DeviceOrientationDemo />,
     useEventListener: <EventListenerDemo />,
     useClickOutside: <ClickOutsideDemo />,
     useHotkey: <HotkeyDemo />,
@@ -1321,6 +1416,7 @@ export function App() {
     useUserMedia: <UserMediaDemo />,
     useMediaRecorder: <MediaRecorderDemo />,
     useSpeechSynthesis: <SpeechDemo />,
+    useSpeechRecognition: <SpeechRecognitionDemo />,
     useScript: <ScriptDemo />,
     useServiceWorkerUpdate: <ServiceWorkerDemo />,
     useScrollLock: <ScrollLockDemo />,
