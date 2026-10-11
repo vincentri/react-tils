@@ -4,6 +4,14 @@ export default defineConfig({
   test: {
     environment: 'happy-dom',
     restoreMocks: true,
-    exclude: ['eval/**', 'e2e/**', 'e2e-next/**', 'examples/**', 'demo/**', 'node_modules/**'],
+    exclude: [
+      'eval/**',
+      'e2e/**',
+      'e2e-next/**',
+      'e2e-mobile/**',
+      'examples/**',
+      'demo/**',
+      'node_modules/**',
+    ],
   },
 })

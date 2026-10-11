@@ -36,6 +36,9 @@ export default defineConfig({
       },
     },
     { name: 'webkit', use: { ...devices['Desktop Safari'] } },
+    // Phones, emulated: touch input at phone size. Not a real device (see e2e-mobile).
+    { name: 'mobile-chrome', testDir: 'e2e-mobile', use: { ...devices['Pixel 7'] } },
+    { name: 'mobile-webkit', testDir: 'e2e-mobile', use: { ...devices['iPhone 15'] } },
     {
       name: 'nextjs',
       testDir: 'e2e-next',

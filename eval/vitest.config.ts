@@ -4,10 +4,10 @@ const src = new URL('../src/', import.meta.url).pathname
 
 export default defineConfig({
   resolve: {
-    // Solutions import the package as an agent would: `react-tils` or `react-tils/<entry>`.
+    // Solutions import the package as an agent would: the root or `<package>/<entry>`.
     alias: [
-      { find: /^react-tils$/, replacement: `${src}index.ts` },
-      { find: /^react-tils\/(.+)$/, replacement: `${src}$1.ts` },
+      { find: /^@vincent\.ri\/react-tils$/, replacement: `${src}index.ts` },
+      { find: /^@vincent\.ri\/react-tils\/(.+)$/, replacement: `${src}$1.ts` },
     ],
   },
   test: {

@@ -32,7 +32,7 @@ const conditions: Condition[] = ['baseline', 'library', 'library+pointer']
 function makeProject(condition: Condition): string {
   const dir = mkdtempSync(join(tmpdir(), 'hooks-eval-'))
   const deps: Record<string, string> = { react: '^19.0.0', 'react-dom': '^19.0.0' }
-  if (condition !== 'baseline') deps['react-tils'] = '^0.0.0'
+  if (condition !== 'baseline') deps['@vincent.ri/react-tils'] = '^0.1.0'
   if (variant === 'realistic') {
     deps.next = '^15.0.0'
     mkdirSync(join(dir, 'app'))
@@ -66,12 +66,12 @@ function makeProject(condition: Condition): string {
       'README.md',
     ]
     for (const f of files)
-      cpSync(join(pkg, f), join(dir, 'node_modules/react-tils', f), { recursive: true })
+      cpSync(join(pkg, f), join(dir, 'node_modules/@vincent.ri/react-tils', f), { recursive: true })
   }
   if (condition === 'library+pointer')
     writeFileSync(
       join(dir, 'CLAUDE.md'),
-      'For React code that reads browser state, read node_modules/react-tils/AGENTS.md first.\n',
+      'For React code that reads browser state, read node_modules/@vincent.ri/react-tils/AGENTS.md first.\n',
     )
   return dir
 }

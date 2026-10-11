@@ -1,4 +1,4 @@
-import { useLocalStorage } from 'react-tils'
+import { useLocalStorage } from '@vincent.ri/react-tils'
 export default function Solution() {
   const [theme, setTheme] = useLocalStorage('theme', 'light')
   return (

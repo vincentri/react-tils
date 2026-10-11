@@ -1,4 +1,4 @@
-// Scores every eval/out/<condition>/<task>-<rep>.tsx with the same checks as hooks/testing.
+// Scores every eval/out/<condition>/<task>-<rep>.tsx with the same checks as react-tils/testing.
 import { readdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs'
 import { act, createElement, Fragment, type FunctionComponent, useLayoutEffect } from 'react'
 import { createRoot } from 'react-dom/client'
@@ -96,10 +96,18 @@ it.each(solutions)('$condition/$file', async ({ condition, file, taskId }) => {
     if (leaks) failures.push(leaks)
   }
 
+  // The self-test: known-good solutions must pass everything, known-bad ones must fail something.
+  const problems = failures.length + flashes.length
+  const expected = condition === 'good' ? problems === 0 : condition === 'bad' ? problems > 0 : true
+  expect(
+    expected,
+    `${condition}/${file}: ${[...failures, ...flashes].join('; ') || 'no problems'}`,
+  ).toBe(true)
+
   results.push({
     condition,
     file,
-    usedLibrary: /from ['"]react-tils(\/[\w]+)?['"]/.test(source),
+    usedLibrary: /from ['"]@vincent\.ri\/react-tils(\/[\w]+)?['"]/.test(source),
     failures,
     flashes,
   })

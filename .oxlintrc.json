@@ -24,7 +24,7 @@
       }
     },
     {
-      "files": ["eval/**", "e2e/**", "e2e-next/**", "scripts/install-test.ts"],
+      "files": ["eval/**", "e2e/**", "e2e-next/**", "e2e-mobile/**", "scripts/install-test.ts"],
       "rules": {
         "no-await-in-loop": "off"
       }

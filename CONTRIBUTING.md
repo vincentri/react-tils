@@ -59,6 +59,8 @@ The same checks ship to users as `hookMatrix` and `componentMatrix` from `@vince
 
 `e2e-next/` runs `examples/nextjs`, a Next.js App Router app, and checks the core claim directly: after a client-side navigation, a react-tils component shows the real window width from its first frame, while a hand-written `useEffect` version on the same page shows `0` first.
 
+`e2e-mobile/` runs phone-sized browsers with touch: Android Chrome (Pixel 7) with real touch input through the DevTools protocol, covering swipe, long press, dragging, scroll lock under a finger, and chat auto-scroll; and WebKit at iPhone size, which only gets synthetic touch pointers, so its touch-scrolling tests are skipped. This is emulation, not a real phone: iOS Safari itself is not tested.
+
 Headless browsers can't drive tab visibility, window focus, wake lock, the share sheet, or the back/forward cache (`usePageRestore`; automated browsers never restore pages from it); unit tests cover their logic. Screen reader output (`useAnnounce`) is checked through its live regions, not with a real screen reader. Real phones are not tested.
 
 ### React Compiler
@@ -79,30 +81,31 @@ Test components stay uncompiled: they write hook values to outer variables durin
 
 ## Evaluation
 
-Headless Claude Code agents were given 7 tasks in a Next.js-shaped project: responsive sidebar, window width, persisted theme toggle, offline banner, pause when tab hidden, system dark mode, reduced motion. Prompts are normal requests and never mention SSR. Each task ran 3 times per model and setup. Every solution was scored with the same checks as `hookMatrix`, under each client state the task covers (for example mobile and desktop viewports):
+Headless Claude Code agents were given 9 tasks in a Next.js-shaped project: responsive sidebar, window width, persisted theme toggle, offline banner, pause when tab hidden, system dark mode, reduced motion, tabs from the URL hash, and a greeting in the browser's language. Prompts are normal requests and never mention SSR. Each task ran 3 times per model and setup, with current Claude Haiku and Sonnet (October 2026), 162 runs in all. Every solution was scored with the same checks as `hookMatrix`, under each client state the task covers (for example mobile and desktop viewports, or a Spanish browser):
 
 - **Hard failures:** server crash, hydration mismatch, leaked listener, wrong output after hydration.
 - **Wrong first frame:** the text on the first commit of a client-side mount, before effects run. `useEffect`-based solutions show the default here, then switch a frame later.
 
-| Model  | Setup                        | Hard checks pass | Wrong first frame | Used library |
-| ------ | ---------------------------- | ---------------- | ----------------- | ------------ |
-| Haiku  | no library                   | 20/21            | 15/21             | 0/21         |
-| Haiku  | installed, no pointer        | 20/21            | 15/21             | 1/21         |
-| Haiku  | installed + one-line pointer | 21/21            | 0/21              | 21/21        |
-| Sonnet | no library                   | 21/21            | 7/21              | 0/21         |
-| Sonnet | installed, no pointer        | 21/21            | 6/21              | 1/21         |
-| Sonnet | installed + one-line pointer | 21/21            | 0/21              | 21/21        |
+| Model  | Setup                        | Hard checks pass | Hydration mismatch | Unscorable | Wrong first frame | Used library |
+| ------ | ---------------------------- | ---------------- | ------------------ | ---------- | ----------------- | ------------ |
+| Haiku  | no library                   | 21/27            | 2                  | 4          | 17/27             | 0/27         |
+| Haiku  | installed, no pointer        | 20/27            | 3                  | 4          | 10/27             | 9/27         |
+| Haiku  | installed + one-line pointer | 22/27            | 0                  | 5          | 0/27              | 27/27        |
+| Sonnet | no library                   | 27/27            | 0                  | 0          | 14/27             | 0/27         |
+| Sonnet | installed, no pointer        | 27/27            | 0                  | 0          | 12/27             | 1/27         |
+| Sonnet | installed + one-line pointer | 27/27            | 0                  | 0          | 0/27              | 27/27        |
+
+"Unscorable": Haiku ignored "only create that one file" and imported components from extra files (`./Billing`, `./Paused`) that the harness doesn't keep. It happened in every setup, including without the library, and in all 9 of its hash-tab runs, so it says nothing about the library. Full per-solution results are in `eval/results-realistic.md`.
 
 Findings:
 
-- Current models rarely ship hard bugs: one hydration mismatch and one broken import in 126 runs.
-- Wrong first frames are common, mostly from the `useEffect` + `useState` pattern. Sonnet got every theme-toggle and window-width run wrong.
-- Agents ignore an installed library unless something points them to it. The one-line pointer is what makes it work.
-- When the prompt explicitly says the app is server-rendered, Sonnet uses `useSyncExternalStore` itself and gets 0/7 wrong. The library matters most for ordinary requests.
+- Current models rarely ship hard bugs: Sonnet passed every hard check; Haiku's hydration mismatches (responsive sidebar) disappeared with the pointer.
+- Wrong first frames are common, mostly from the `useEffect` + `useState` pattern. Without the pointer, both models got the theme toggle and window width wrong in every run, and the language greeting in all but one.
+- Agents mostly ignore an installed library unless something points them to it (Sonnet used it in 1 of 27 runs). The one-line pointer from `npx react-tils init` is what makes it work.
 
-Caveats: the evaluation ran on an earlier version with fewer hooks; 3 runs per task; tasks are within this library's scope; only Claude models were tested. The first-frame check reads the DOM in a layout effect, so it would also flag a solution that corrects itself in its own `useLayoutEffect` (which the browser would not paint).
+Caveats: 3 runs per task, tasks are within this library's scope, and only Claude models were tested. The first-frame check reads the DOM in a layout effect, so it would also flag a solution that corrects itself in its own `useLayoutEffect` (which the browser would not paint). Server rendering is simulated in the test environment: no `window`, `document`, or `location`, and a server-side `navigator`. `pnpm eval:selftest` checks the scorer itself: known-good solutions must pass everything and known-bad ones must fail.
 
-Reproduce (needs the `claude` CLI, about $2.50):
+Reproduce (needs the `claude` CLI, about $4):
 
 ```sh
 pnpm build

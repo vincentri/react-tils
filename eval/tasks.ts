@@ -36,6 +36,7 @@ const clickOnce = async (Solution: FunctionComponent) => {
 
 export function resetEnvironment(): void {
   localStorage.clear()
+  history.replaceState(null, '', '/')
   happyDOM().setViewport({ width: 1024, height: 768 })
   device('prefersColorScheme', 'light')()
   device('prefersReducedMotion', 'no-preference')()
@@ -101,6 +102,31 @@ export const tasks: Task[] = [
     states: [
       { name: 'no preference', expect: 'Animations on' },
       { name: 'reduce', setup: device('prefersReducedMotion', 'reduce'), expect: 'Animations off' },
+    ],
+  },
+  {
+    id: 'hash-tabs',
+    states: [
+      { name: 'no hash', expect: 'Profile' },
+      {
+        name: '#billing',
+        setup: () => history.replaceState(null, '', '#billing'),
+        expect: 'Billing',
+      },
+    ],
+  },
+  {
+    id: 'language-greeting',
+    states: [
+      { name: 'English browser', expect: 'Hello' },
+      {
+        name: 'Spanish browser',
+        setup: () => {
+          vi.spyOn(navigator, 'language', 'get').mockReturnValue('es-ES')
+          vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['es-ES', 'es'])
+        },
+        expect: 'Hola',
+      },
     ],
   },
 ]

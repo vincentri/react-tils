@@ -12,8 +12,12 @@ const message = (error: unknown) => (error instanceof Error ? error.message : St
 
 /** Render like a real server: no `window`, no `document`. */
 export function serverRender(Component: FunctionComponent): string {
+  // What a Node server has: no window, document, or location, and the server's own navigator.
+  // Reading these during render crashes there, or renders something the browser won't match.
   vi.stubGlobal('window', undefined)
   vi.stubGlobal('document', undefined)
+  vi.stubGlobal('location', undefined)
+  vi.stubGlobal('navigator', { language: 'en-US', languages: ['en-US'], userAgent: 'Node.js' })
   try {
     return renderToString(createElement(Component))
   } finally {

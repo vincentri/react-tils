@@ -1,10 +1,43 @@
 [
   {
     "condition": "bad",
+    "file": "hash-tabs-1.tsx",
+    "usedLibrary": false,
+    "failures": [
+      "server render threw: Cannot read properties of undefined (reading 'hash')",
+      "[no hash] server render threw: Cannot read properties of undefined (reading 'hash')",
+      "[#billing] server render threw: Cannot read properties of undefined (reading 'hash')"
+    ],
+    "flashes": []
+  },
+  {
+    "condition": "bad",
+    "file": "hash-tabs-2.tsx",
+    "usedLibrary": false,
+    "failures": [],
+    "flashes": [
+      "[#billing] first frame \"Profile\""
+    ]
+  },
+  {
+    "condition": "bad",
+    "file": "language-greeting-1.tsx",
+    "usedLibrary": false,
+    "failures": [
+      "[Spanish browser] hydration: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/clien"
+    ],
+    "flashes": []
+  },
+  {
+    "condition": "bad",
     "file": "offline-banner-1.tsx",
     "usedLibrary": false,
-    "failures": ["leaked listeners: offline, offline"],
-    "flashes": ["[offline] first frame \"Online\""]
+    "failures": [
+      "leaked listeners: offline, offline"
+    ],
+    "flashes": [
+      "[offline] first frame \"Online\""
+    ]
   },
   {
     "condition": "bad",
@@ -20,7 +53,9 @@
     "file": "system-dark-mode-1.tsx",
     "usedLibrary": false,
     "failures": [],
-    "flashes": ["[dark OS] first frame \"Light\""]
+    "flashes": [
+      "[dark OS] first frame \"Light\""
+    ]
   },
   {
     "condition": "bad",
@@ -29,7 +64,9 @@
     "failures": [
       "[reload after toggling] wrong output: expected \"Theme: dark\", got \"Theme: light\""
     ],
-    "flashes": ["[reload after toggling] first frame \"Theme: light\""]
+    "flashes": [
+      "[reload after toggling] first frame \"Theme: light\""
+    ]
   },
   {
     "condition": "bad",
@@ -40,6 +77,20 @@
       "[1024px] server render threw: Cannot read properties of undefined (reading 'innerWidth')",
       "[500px] server render threw: Cannot read properties of undefined (reading 'innerWidth')"
     ],
+    "flashes": []
+  },
+  {
+    "condition": "good",
+    "file": "hash-tabs-1.tsx",
+    "usedLibrary": true,
+    "failures": [],
+    "flashes": []
+  },
+  {
+    "condition": "good",
+    "file": "language-greeting-1.tsx",
+    "usedLibrary": true,
+    "failures": [],
     "flashes": []
   },
   {

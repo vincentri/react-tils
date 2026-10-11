@@ -15,5 +15,5 @@
       "@vincent.ri/react-tils": ["../src/index.ts"]
     }
   },
-  "include": ["src", "prerender.ts", "vite.config.ts", "../e2e", "../e2e-next"]
+  "include": ["src", "prerender.ts", "vite.config.ts", "../e2e", "../e2e-next", "../e2e-mobile"]
 }

@@ -15,6 +15,10 @@ const descriptions: Record<string, string> = {
     "Render `Dark` if the user's operating system prefers a dark color scheme, otherwise `Light`. Update if the OS setting changes.",
   'reduced-motion':
     'Render `Animations off` if the user prefers reduced motion, otherwise `Animations on`. Update if the setting changes.',
+  'hash-tabs':
+    'Render `Billing` when the URL hash is `#billing`, otherwise `Profile`. Update when the hash changes.',
+  'language-greeting':
+    "Render `Hola` if the user's preferred browser language is Spanish, otherwise `Hello`.",
 }
 
 const templates = {
