@@ -1093,3 +1093,127 @@ footer {
   padding: 24px 0 48px;
   color: var(--muted);
 }
+
+/* Browser support. */
+.support-badge {
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.support-badge.all {
+  background: color-mix(in srgb, #16a34a 14%, transparent);
+  color: #15803d;
+}
+
+.support-badge.new {
+  background: color-mix(in srgb, #2563eb 14%, transparent);
+  color: var(--accent);
+}
+
+.support-badge.limited {
+  background: color-mix(in srgb, #d97706 16%, transparent);
+  color: #b45309;
+}
+
+:root[data-theme='dark'] .support-badge.all {
+  color: #4ade80;
+}
+
+:root[data-theme='dark'] .support-badge.limited {
+  color: #fbbf24;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .support-badge.all {
+    color: #4ade80;
+  }
+
+  :root:not([data-theme='light']) .support-badge.limited {
+    color: #fbbf24;
+  }
+}
+
+.support-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.support-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.support-table th,
+.support-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.support-table thead th {
+  background: var(--surface);
+  color: var(--heading);
+  font-size: 12.5px;
+}
+
+.support-table tbody tr:last-child > * {
+  border-bottom: 0;
+}
+
+.support-table tbody th {
+  text-align: left;
+  color: var(--heading);
+  font-weight: 600;
+}
+
+.support-table td.yes {
+  color: #15803d;
+  font-family: var(--mono);
+}
+
+.support-table td.no {
+  background: color-mix(in srgb, #dc2626 9%, transparent);
+  color: #dc2626;
+  font-weight: 700;
+}
+
+.optional,
+.baseline {
+  display: block;
+  color: var(--muted);
+  font-size: 11.5px;
+  font-weight: 500;
+}
+
+.baseline.high {
+  color: #15803d;
+}
+
+.baseline.low {
+  color: var(--accent);
+}
+
+.baseline.limited {
+  color: #b45309;
+}
+
+.support-notes {
+  margin: 12px 0 0;
+  padding-left: 20px;
+}
+
+.support-notes li + li {
+  margin-top: 6px;
+}
+
+.support-source {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}

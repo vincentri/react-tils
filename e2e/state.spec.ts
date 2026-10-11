@@ -208,15 +208,20 @@ test('useThrottledCallback saves during a drag, and the final value', async ({ p
   await page.goto('/')
   const slider = page.getByTestId('throttle-slider')
   await slider.scrollIntoViewIfNeeded()
+  const started = Date.now()
   for (let value = 51; value <= 90; value++) {
     await slider.fill(String(value))
     await page.waitForTimeout(20)
   }
+  const elapsed = Date.now() - started
   const value = page.getByTestId('throttled')
   await expect(value).toHaveText(/^events 40 · saves \d+ · saved 90$/)
   const saves = Number((await value.textContent())!.match(/saves (\d+)/)![1])
+  // One right away, at most one per 500 ms after that, and the last one. The bound follows how
+  // long the drag really took: on a busy machine 40 moves can take several seconds.
   expect(saves).toBeGreaterThanOrEqual(2)
-  expect(saves).toBeLessThan(10)
+  expect(saves).toBeLessThanOrEqual(Math.ceil(elapsed / 500) + 2)
+  expect(saves).toBeLessThan(40)
 })
 
 test('usePrevious shows the change, and keeps it across unrelated re-renders', async ({ page }) => {

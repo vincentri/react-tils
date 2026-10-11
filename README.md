@@ -210,6 +210,7 @@ They fail if the code touches the DOM during server render, causes a hydration m
 ## Compatibility
 
 - React 18 and 19, including React Compiler.
+- Browsers: most hooks work in every modern browser. Each hook's docs page has a browser support table from MDN's data, and says what the hook does where an API is missing.
 - Tested in Next.js (App Router) and Vite apps, with npm, pnpm, yarn, and bun. Any bundler with ESM support works.
 - TypeScript with `moduleResolution` `bundler` or `nodenext`.
 - ESM only. Vitest works out of the box; Jest needs its ESM mode, or `transformIgnorePatterns` set so it transforms `@vincent.ri/react-tils`.

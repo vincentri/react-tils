@@ -52,7 +52,8 @@
     "eval:score": "vitest run --config eval/vitest.config.ts",
     "eval:selftest": "EVAL_OUT=./fixtures/ vitest run --config eval/vitest.config.ts",
     "demo": "vite --config demo/vite.config.ts",
-    "demo:build": "pnpm build && node scripts/llms.ts && vite build --config demo/vite.config.ts && vite build --config demo/vite.config.ts --ssr src/entry-server.tsx --outDir dist-server && node demo/prerender.ts",
+    "demo:build": "pnpm build && node scripts/browser-support.ts && node scripts/llms.ts && vite build --config demo/vite.config.ts && vite build --config demo/vite.config.ts --ssr src/entry-server.tsx --outDir dist-server && node demo/prerender.ts",
+    "docs:support": "node scripts/browser-support.ts",
     "demo:preview": "vite preview --config demo/vite.config.ts --port 4173 --strictPort",
     "e2e": "playwright test",
     "lint:pkg": "publint && attw --pack . --profile esm-only && node scripts/publish-dry-run.ts",
@@ -68,6 +69,7 @@
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
     "@changesets/cli": "^3.0.3",
+    "@mdn/browser-compat-data": "^8.1.5",
     "@playwright/test": "^1.64.0",
     "@size-limit/preset-small-lib": "^14.2.0",
     "@types/node": "^26.6.4",
@@ -86,7 +88,8 @@
     "tsdown": "^0.23.0",
     "typescript": "^7.0.2",
     "vite": "^8.3.4",
-    "vitest": "^5.0.3"
+    "vitest": "^5.0.3",
+    "web-features": "^3.42.0"
   },
   "peerDependencies": {
     "react": ">=18",

@@ -172,6 +172,9 @@ importers:
       '@changesets/cli':
         specifier: ^3.0.3
         version: 3.0.3
+      '@mdn/browser-compat-data':
+        specifier: ^8.1.5
+        version: 8.1.5
       '@playwright/test':
         specifier: ^1.64.0
         version: 1.64.0
@@ -229,6 +232,9 @@ importers:
       vitest:
         specifier: ^5.0.3
         version: 5.0.3(@types/node@26.6.4)(happy-dom@20.14.6)(vite@8.3.4(@types/node@26.6.4)(yaml@2.9.1))
+      web-features:
+        specifier: ^3.42.0
+        version: 3.42.0
 
   examples/nextjs:
     dependencies:
@@ -610,6 +616,9 @@ packages:
   '@manypkg/tools@2.1.2':
     resolution: {integrity: sha512-6QEf6yqFbETdwGITKq57aYoPfX/3K8XFNwsAlx0C1M7o8cb79sv1M3w+tWuWvIcSbNqrLF7OD7YpZMVVz335hQ==}
     engines: {node: '>=20.0.0'}
+
+  '@mdn/browser-compat-data@8.1.5':
+    resolution: {integrity: sha512-iNxW5XEJOA29iWbeog/8FX7eI1obR0PWV1SQbJOG9TnyTAqTUxBF5R5/rcz2qQiouCsiAqUVFErcN+gd0Fs3TQ==}
 
   '@next/env@16.4.0':
     resolution: {integrity: sha512-pyLlT5oafGlX8X7xjgGNXz5dNIDSxREm+qD6i9VLSZiZFopA/XWl8NM/KPmLx/8EG/++c49iid3gNWSQW1+2dQ==}
@@ -2313,6 +2322,9 @@ packages:
       jsdom:
         optional: true
 
+  web-features@3.42.0:
+    resolution: {integrity: sha512-Vq97bzyedg6EuPFnz1GIJqsI9me8CbxzwYrcBI/cNwjj66v77IsGmIZi9SxPHTu2t25F7ta4kZJPu4qvuYlhfQ==}
+
   whatwg-mimetype@3.0.0:
     resolution: {integrity: sha512-nt+N2dzIutVRxARx1nghPKGv1xHikU7HKdfafKkLNLindmPU/ch3U31NOCGGA/dmPcmb1VlofO0vnKAcsm0o/Q==}
     engines: {node: '>=12'}
@@ -2780,6 +2792,8 @@ snapshots:
       jju: 1.4.0
       tinyglobby: 0.2.17
       yaml: 2.9.1
+
+  '@mdn/browser-compat-data@8.1.5': {}
 
   '@next/env@16.4.0': {}
 
@@ -3960,6 +3974,8 @@ snapshots:
       happy-dom: 20.14.6
     transitivePeerDependencies:
       - msw
+
+  web-features@3.42.0: {}
 
   whatwg-mimetype@3.0.0: {}
 

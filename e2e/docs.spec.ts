@@ -55,6 +55,7 @@ test('every hook page is prerendered and hydrates without errors', async ({
     expect(await response!.text(), hook).toContain(`<h1><code>${hook}</code></h1>`)
     await expect(page.getByTestId('hook-example'), hook).not.toBeEmpty()
     await expect(page.getByTestId('hook-signature'), hook).toContainText(`function ${hook}`)
+    await expect(page.getByTestId('browser-support'), hook).toBeVisible()
   }
   // The fixture fails the test on any console error, including hydration mismatches.
 })
@@ -148,4 +149,25 @@ test('installation tutorial: from the sidebar, with package manager tabs and cop
       'bun add @vincent.ri/react-tils',
     )
   }
+})
+
+test('each hook page says which browsers support it, from MDN data', async ({ page }) => {
+  await page.goto('/hooks/useSpeechRecognition/')
+  await expect(page.getByTestId('support-badge')).toHaveText('! Not available in Firefox')
+  const table = page.getByTestId('browser-support')
+  // Prefixed support counts: the hook falls back to webkitSpeechRecognition.
+  await expect(table.getByRole('cell', { name: 'Safari: 14.1 and later' })).toBeVisible()
+  await expect(table.getByRole('cell', { name: 'Firefox: not supported' })).toBeVisible()
+  await expect(table).toContainText('supported is false and start does nothing')
+
+  await page.goto('/hooks/useMediaQuery/')
+  await expect(page.getByTestId('support-badge')).toHaveText('✓ Works in all modern browsers')
+
+  // An optional API doesn't count against the hook.
+  await page.goto('/hooks/useHash/')
+  await expect(page.getByTestId('support-badge')).toHaveText('✓ Works in all modern browsers')
+  await expect(page.getByTestId('browser-support')).toContainText('Navigation APIoptional')
+
+  await page.goto('/hooks/usePrevious/')
+  await expect(page.getByTestId('browser-support')).toContainText('works wherever React does')
 })

@@ -1,0 +1,1484 @@
+{
+  "source": "web-features 3.42.0, @mdn/browser-compat-data 8.1.5",
+  "hooks": {
+    "useAnimationFrame": {
+      "apis": [
+        {
+          "label": "requestAnimationFrame",
+          "key": "api.Window.requestAnimationFrame",
+          "baseline": "high",
+          "support": {
+            "chrome": "24",
+            "chrome_android": "25",
+            "edge": "12",
+            "firefox": "23",
+            "firefox_android": "23",
+            "safari": "7",
+            "safari_ios": "7"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "useAnnounce": {
+      "apis": [
+        {
+          "label": "requestAnimationFrame",
+          "key": "api.Window.requestAnimationFrame",
+          "baseline": "high",
+          "support": {
+            "chrome": "24",
+            "chrome_android": "25",
+            "edge": "12",
+            "firefox": "23",
+            "firefox_android": "23",
+            "safari": "7",
+            "safari_ios": "7"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "useAutosizeTextarea": {
+      "apis": [
+        {
+          "label": "ResizeObserver",
+          "key": "api.ResizeObserver",
+          "baseline": "high",
+          "support": {
+            "chrome": "64",
+            "chrome_android": "64",
+            "edge": "79",
+            "firefox": "69",
+            "firefox_android": "79",
+            "safari": "13.1",
+            "safari_ios": "13.4"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "useBeforeUnload": {
+      "apis": [
+        {
+          "label": "beforeunload event",
+          "key": "api.Window.beforeunload_event",
+          "baseline": false,
+          "support": {
+            "chrome": "1",
+            "chrome_android": "18",
+            "edge": "12",
+            "firefox": "1",
+            "firefox_android": "4",
+            "safari": "3"
+          },
+          "optional": false
+        }
+      ],
+      "notes": [
+        "Safari on iOS doesn't fire `beforeunload`, so there is no warning there; save drafts as the user types instead."
+      ]
+    },
+    "useBroadcastChannel": {
+      "apis": [
+        {
+          "label": "BroadcastChannel",
+          "key": "api.BroadcastChannel",
+          "baseline": "high",
+          "support": {
+            "chrome": "54",
+            "chrome_android": "54",
+            "edge": "79",
+            "firefox": "38",
+            "firefox_android": "38",
+            "safari": "15.4",
+            "safari_ios": "15.4"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "useCaretPosition": {
+      "apis": [
+        {
+          "label": "Pointer events",
+          "key": "api.PointerEvent",
+          "baseline": "high",
+          "support": {
+            "chrome": "55",
+            "chrome_android": "55",
+            "edge": "12",
+            "firefox": "59",
+            "firefox_android": "79",
+            "safari": "13",
+            "safari_ios": "13"
+          },
+          "optional": false
+        },
+        {
+          "label": "selectionchange event",
+          "key": "api.Document.selectionchange_event",
+          "baseline": "high",
+          "support": {
+            "chrome": "11",
+            "chrome_android": "18",
+            "edge": "12",
+            "firefox": "52",
+            "firefox_android": "52",
+            "safari": "5.1",
+            "safari_ios": "5"
+          },
+          "optional": false
+        },
+        {
+          "label": "requestAnimationFrame",
+          "key": "api.Window.requestAnimationFrame",
+          "baseline": "high",
+          "support": {
+            "chrome": "24",
+            "chrome_android": "25",
+            "edge": "12",
+            "firefox": "23",
+            "firefox_android": "23",
+            "safari": "7",
+            "safari_ios": "7"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "useClickOutside": {
+      "apis": [
+        {
+          "label": "Pointer events",
+          "key": "api.PointerEvent",
+          "baseline": "high",
+          "support": {
+            "chrome": "55",
+            "chrome_android": "55",
+            "edge": "12",
+            "firefox": "59",
+            "firefox_android": "79",
+            "safari": "13",
+            "safari_ios": "13"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "useControllableState": {
+      "apis": [],
+      "notes": []
+    },
+    "useCookie": {
+      "apis": [
+        {
+          "label": "document.cookie",
+          "key": "api.Document.cookie",
+          "baseline": "high",
+          "support": {
+            "chrome": "1",
+            "chrome_android": "18",
+            "edge": "12",
+            "firefox": "68",
+            "firefox_android": "68",
+            "safari": "4",
+            "safari_ios": "3.2"
+          },
+          "optional": false
+        },
+        {
+          "label": "Cookie Store API",
+          "key": "api.CookieStore",
+          "baseline": "low",
+          "support": {
+            "chrome": "87",
+            "chrome_android": "87",
+            "edge": "87",
+            "firefox": "140",
+            "firefox_android": "140",
+            "safari": "18.4",
+            "safari_ios": "18.4"
+          },
+          "optional": true
+        }
+      ],
+      "notes": [
+        "Changes made outside the hook are noticed right away where the Cookie Store API exists, and otherwise when the window regains focus."
+      ]
+    },
+    "useCopyToClipboard": {
+      "apis": [
+        {
+          "label": "clipboard.writeText",
+          "key": "api.Clipboard.writeText",
+          "baseline": "high",
+          "support": {
+            "chrome": "66",
+            "chrome_android": "66",
+            "edge": "79",
+            "firefox": "63",
+            "firefox_android": "63",
+            "safari": "13.1",
+            "safari_ios": "13.4"
+          },
+          "optional": false
+        }
+      ],
+      "notes": [
+        "Needs a secure page (HTTPS or localhost). `copy` resolves to `false` when the browser refuses."
+      ]
+    },
+    "useDebouncedCallback": {
+      "apis": [],
+      "notes": []
+    },
+    "useDebouncedValue": {
+      "apis": [],
+      "notes": []
+    },
+    "useDeviceOrientation": {
+      "apis": [
+        {
+          "label": "deviceorientation event",
+          "key": "api.Window.deviceorientation_event",
+          "baseline": "high",
+          "support": {
+            "chrome": "7",
+            "chrome_android": "18",
+            "edge": "12",
+            "firefox": "6",
+            "firefox_android": "6",
+            "safari": "17",
+            "safari_ios": "4.2"
+          },
+          "optional": false
+        },
+        {
+          "label": "DeviceOrientationEvent.requestPermission",
+          "key": "api.DeviceOrientationEvent.requestPermission_static",
+          "baseline": false,
+          "support": {
+            "chrome": "152",
+            "chrome_android": "152",
+            "edge": "152",
+            "safari_ios": "14.5"
+          },
+          "optional": true
+        }
+      ],
+      "notes": [
+        "iOS needs `requestPermission()` called from a tap. Desktops usually have no sensor, so `orientation` stays `null`."
+      ]
+    },
+    "useDocumentVisibility": {
+      "apis": [
+        {
+          "label": "Page Visibility",
+          "key": "api.Document.visibilityState",
+          "baseline": "high",
+          "support": {
+            "chrome": "33",
+            "chrome_android": "33",
+            "edge": "12",
+            "firefox": "18",
+            "firefox_android": "18",
+            "safari": "7",
+            "safari_ios": "7"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "useDrag": {
+      "apis": [
+        {
+          "label": "Pointer events",
+          "key": "api.PointerEvent",
+          "baseline": "high",
+          "support": {
+            "chrome": "55",
+            "chrome_android": "55",
+            "edge": "12",
+            "firefox": "59",
+            "firefox_android": "79",
+            "safari": "13",
+            "safari_ios": "13"
+          },
+          "optional": false
+        },
+        {
+          "label": "setPointerCapture",
+          "key": "api.Element.setPointerCapture",
+          "baseline": "high",
+          "support": {
+            "chrome": "55",
+            "chrome_android": "55",
+            "edge": "12",
+            "firefox": "59",
+            "firefox_android": "79",
+            "safari": "13",
+            "safari_ios": "13"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "useElementScroll": {
+      "apis": [
+        {
+          "label": "ResizeObserver",
+          "key": "api.ResizeObserver",
+          "baseline": "high",
+          "support": {
+            "chrome": "64",
+            "chrome_android": "64",
+            "edge": "79",
+            "firefox": "69",
+            "firefox_android": "79",
+            "safari": "13.1",
+            "safari_ios": "13.4"
+          },
+          "optional": false
+        },
+        {
+          "label": "MutationObserver",
+          "key": "api.MutationObserver",
+          "baseline": "high",
+          "support": {
+            "chrome": "26",
+            "chrome_android": "26",
+            "edge": "12",
+            "firefox": "14",
+            "firefox_android": "14",
+            "safari": "7",
+            "safari_ios": "7"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "useElementSize": {
+      "apis": [
+        {
+          "label": "ResizeObserver",
+          "key": "api.ResizeObserver",
+          "baseline": "high",
+          "support": {
+            "chrome": "64",
+            "chrome_android": "64",
+            "edge": "79",
+            "firefox": "69",
+            "firefox_android": "79",
+            "safari": "13.1",
+            "safari_ios": "13.4"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "useEventListener": {
+      "apis": [],
+      "notes": []
+    },
+    "useEventSource": {
+      "apis": [
+        {
+          "label": "Page Visibility",
+          "key": "api.Document.visibilityState",
+          "baseline": "high",
+          "support": {
+            "chrome": "33",
+            "chrome_android": "33",
+            "edge": "12",
+            "firefox": "18",
+            "firefox_android": "18",
+            "safari": "7",
+            "safari_ios": "7"
+          },
+          "optional": false
+        },
+        {
+          "label": "EventSource",
+          "key": "api.EventSource",
+          "baseline": "high",
+          "support": {
+            "chrome": "6",
+            "chrome_android": "18",
+            "edge": "79",
+            "firefox": "6",
+            "firefox_android": "45",
+            "safari": "5",
+            "safari_ios": "5"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "useFileDrop": {
+      "apis": [
+        {
+          "label": "Drag and drop files",
+          "key": "api.DataTransfer.files",
+          "baseline": "high",
+          "support": {
+            "chrome": "3",
+            "chrome_android": "18",
+            "edge": "12",
+            "firefox": "3.6",
+            "firefox_android": "4",
+            "safari": "4",
+            "safari_ios": "3.2"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "useFocusTrap": {
+      "apis": [
+        {
+          "label": "checkVisibility",
+          "key": "api.Element.checkVisibility",
+          "baseline": "high",
+          "support": {
+            "chrome": "105",
+            "chrome_android": "105",
+            "edge": "105",
+            "firefox": "106",
+            "firefox_android": "106",
+            "safari": "17.4",
+            "safari_ios": "17.4"
+          },
+          "optional": true
+        },
+        {
+          "label": "inert",
+          "key": "api.HTMLElement.inert",
+          "baseline": "high",
+          "support": {
+            "chrome": "102",
+            "chrome_android": "102",
+            "edge": "102",
+            "firefox": "112",
+            "firefox_android": "112",
+            "safari": "15.5",
+            "safari_ios": "15.5"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "useFocusWithin": {
+      "apis": [],
+      "notes": []
+    },
+    "useFullscreen": {
+      "apis": [
+        {
+          "label": "Fullscreen API",
+          "key": "api.Element.requestFullscreen",
+          "baseline": false,
+          "support": {
+            "chrome": "71",
+            "chrome_android": "71",
+            "edge": "79",
+            "firefox": "64",
+            "firefox_android": "64",
+            "safari": "16.4"
+          },
+          "optional": false
+        }
+      ],
+      "notes": [
+        "`supported` is `false` where `document.fullscreenEnabled` isn't true, including on iPhone, where Safari allows fullscreen only for `<video>`."
+      ]
+    },
+    "useGeolocation": {
+      "apis": [
+        {
+          "label": "Geolocation",
+          "key": "api.Geolocation.watchPosition",
+          "baseline": "high",
+          "support": {
+            "chrome": "5",
+            "chrome_android": "18",
+            "edge": "12",
+            "firefox": "3.5",
+            "firefox_android": "4",
+            "safari": "5",
+            "safari_ios": "≤3"
+          },
+          "optional": false
+        }
+      ],
+      "notes": [
+        "Needs a secure page (HTTPS or localhost)."
+      ]
+    },
+    "useHash": {
+      "apis": [
+        {
+          "label": "hashchange event",
+          "key": "api.Window.hashchange_event",
+          "baseline": "high",
+          "support": {
+            "chrome": "4",
+            "chrome_android": "18",
+            "edge": "12",
+            "firefox": "3.6",
+            "firefox_android": "4",
+            "safari": "5",
+            "safari_ios": "5"
+          },
+          "optional": false
+        },
+        {
+          "label": "Navigation API",
+          "key": "api.Navigation",
+          "baseline": "low",
+          "support": {
+            "chrome": "102",
+            "chrome_android": "102",
+            "edge": "102",
+            "firefox": "147",
+            "firefox_android": "147",
+            "safari": "26.2",
+            "safari_ios": "26.2"
+          },
+          "optional": true
+        }
+      ],
+      "notes": [
+        "Router navigation that changes the URL with `history.pushState` (e.g. Next.js `<Link>`) is noticed only where the Navigation API exists. Elsewhere the hash still updates on links, Back and Forward, and the hook's own setter."
+      ]
+    },
+    "useHotkey": {
+      "apis": [],
+      "notes": []
+    },
+    "useHydrated": {
+      "apis": [],
+      "notes": []
+    },
+    "useIdle": {
+      "apis": [
+        {
+          "label": "Pointer events",
+          "key": "api.PointerEvent",
+          "baseline": "high",
+          "support": {
+            "chrome": "55",
+            "chrome_android": "55",
+            "edge": "12",
+            "firefox": "59",
+            "firefox_android": "79",
+            "safari": "13",
+            "safari_ios": "13"
+          },
+          "optional": false
+        },
+        {
+          "label": "Touch events",
+          "key": "api.Element.touchstart_event",
+          "baseline": false,
+          "support": {
+            "chrome": "22",
+            "chrome_android": "25",
+            "edge": "12",
+            "firefox": "52",
+            "firefox_android": "6",
+            "safari_ios": "≤3"
+          },
+          "optional": true
+        },
+        {
+          "label": "wheel event",
+          "key": "api.Element.wheel_event",
+          "baseline": false,
+          "support": {
+            "chrome": "31",
+            "chrome_android": "31",
+            "edge": "12",
+            "firefox": "17",
+            "firefox_android": "17",
+            "safari": "7"
+          },
+          "optional": true
+        }
+      ],
+      "notes": []
+    },
+    "useInView": {
+      "apis": [
+        {
+          "label": "IntersectionObserver",
+          "key": "api.IntersectionObserver",
+          "baseline": "high",
+          "support": {
+            "chrome": "51",
+            "chrome_android": "51",
+            "edge": "15",
+            "firefox": "55",
+            "firefox_android": "55",
+            "safari": "12.1",
+            "safari_ios": "12.2"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "useInterval": {
+      "apis": [
+        {
+          "label": "Page Visibility",
+          "key": "api.Document.visibilityState",
+          "baseline": "high",
+          "support": {
+            "chrome": "33",
+            "chrome_android": "33",
+            "edge": "12",
+            "firefox": "18",
+            "firefox_android": "18",
+            "safari": "7",
+            "safari_ios": "7"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "useIsStuck": {
+      "apis": [
+        {
+          "label": "IntersectionObserver",
+          "key": "api.IntersectionObserver",
+          "baseline": "high",
+          "support": {
+            "chrome": "51",
+            "chrome_android": "51",
+            "edge": "15",
+            "firefox": "55",
+            "firefox_android": "55",
+            "safari": "12.1",
+            "safari_ios": "12.2"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "useLocalStorage": {
+      "apis": [
+        {
+          "label": "localStorage",
+          "key": "api.Window.localStorage",
+          "baseline": "high",
+          "support": {
+            "chrome": "4",
+            "chrome_android": "18",
+            "edge": "12",
+            "firefox": "3.5",
+            "firefox_android": "4",
+            "safari": "4",
+            "safari_ios": "3.2"
+          },
+          "optional": false
+        },
+        {
+          "label": "storage event",
+          "key": "api.Window.storage_event",
+          "baseline": "high",
+          "support": {
+            "chrome": "1",
+            "chrome_android": "18",
+            "edge": "15",
+            "firefox": "45",
+            "firefox_android": "45",
+            "safari": "4",
+            "safari_ios": "4"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "useLongPress": {
+      "apis": [
+        {
+          "label": "Pointer events",
+          "key": "api.PointerEvent",
+          "baseline": "high",
+          "support": {
+            "chrome": "55",
+            "chrome_android": "55",
+            "edge": "12",
+            "firefox": "59",
+            "firefox_android": "79",
+            "safari": "13",
+            "safari_ios": "13"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "useMediaQuery": {
+      "apis": [
+        {
+          "label": "matchMedia",
+          "key": "api.Window.matchMedia",
+          "baseline": "high",
+          "support": {
+            "chrome": "9",
+            "chrome_android": "18",
+            "edge": "12",
+            "firefox": "6",
+            "firefox_android": "6",
+            "safari": "5.1",
+            "safari_ios": "5"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "useMediaRecorder": {
+      "apis": [
+        {
+          "label": "MediaRecorder",
+          "key": "api.MediaRecorder",
+          "baseline": "high",
+          "support": {
+            "chrome": "47",
+            "chrome_android": "47",
+            "edge": "79",
+            "firefox": "25",
+            "firefox_android": "25",
+            "safari": "14.1",
+            "safari_ios": "14"
+          },
+          "optional": false
+        }
+      ],
+      "notes": [
+        "Browsers record different formats (Safari records MP4, others WebM); the hook picks one the browser supports and reports it as `mimeType`."
+      ]
+    },
+    "useMergedRefs": {
+      "apis": [],
+      "notes": []
+    },
+    "useNetworkInformation": {
+      "apis": [
+        {
+          "label": "Network Information API",
+          "key": "api.NetworkInformation",
+          "baseline": false,
+          "support": {
+            "chrome": "61",
+            "chrome_android": "38",
+            "edge": "79"
+          },
+          "optional": false
+        }
+      ],
+      "notes": [
+        "Where the API is missing, every field stays unknown: `effectiveType: 'unknown'`, `saveData: false`, and `null` estimates."
+      ]
+    },
+    "useNow": {
+      "apis": [],
+      "notes": []
+    },
+    "useOnline": {
+      "apis": [
+        {
+          "label": "navigator.onLine",
+          "key": "api.Navigator.onLine",
+          "baseline": "high",
+          "support": {
+            "chrome": "2",
+            "chrome_android": "18",
+            "edge": "12",
+            "firefox": "1.5",
+            "firefox_android": "4",
+            "safari": "4",
+            "safari_ios": "3.2"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "usePageRestore": {
+      "apis": [
+        {
+          "label": "pageshow event",
+          "key": "api.Window.pageshow_event",
+          "baseline": "high",
+          "support": {
+            "chrome": "3",
+            "chrome_android": "18",
+            "edge": "12",
+            "firefox": "6",
+            "firefox_android": "6",
+            "safari": "5",
+            "safari_ios": "4.2"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "usePasteFiles": {
+      "apis": [
+        {
+          "label": "paste event",
+          "key": "api.Element.paste_event",
+          "baseline": "high",
+          "support": {
+            "chrome": "1",
+            "chrome_android": "18",
+            "edge": "12",
+            "firefox": "22",
+            "firefox_android": "22",
+            "safari": "3",
+            "safari_ios": "3"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "usePermission": {
+      "apis": [
+        {
+          "label": "Permissions API",
+          "key": "api.Permissions.query",
+          "baseline": "high",
+          "support": {
+            "chrome": "43",
+            "chrome_android": "43",
+            "edge": "79",
+            "firefox": "46",
+            "firefox_android": "46",
+            "safari": "16",
+            "safari_ios": "16"
+          },
+          "optional": false
+        }
+      ],
+      "notes": [
+        "Browsers support different permission names; a name the browser doesn't know reports `'unknown'`."
+      ]
+    },
+    "usePointerPosition": {
+      "apis": [
+        {
+          "label": "Pointer events",
+          "key": "api.PointerEvent",
+          "baseline": "high",
+          "support": {
+            "chrome": "55",
+            "chrome_android": "55",
+            "edge": "12",
+            "firefox": "59",
+            "firefox_android": "79",
+            "safari": "13",
+            "safari_ios": "13"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "usePreferredLanguages": {
+      "apis": [
+        {
+          "label": "navigator.languages",
+          "key": "api.Navigator.languages",
+          "baseline": "high",
+          "support": {
+            "chrome": "37",
+            "chrome_android": "37",
+            "edge": "16",
+            "firefox": "32",
+            "firefox_android": "32",
+            "safari": "10.1",
+            "safari_ios": "10.3"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "usePrevious": {
+      "apis": [],
+      "notes": []
+    },
+    "useRovingFocus": {
+      "apis": [
+        {
+          "label": "MutationObserver",
+          "key": "api.MutationObserver",
+          "baseline": "high",
+          "support": {
+            "chrome": "26",
+            "chrome_android": "26",
+            "edge": "12",
+            "firefox": "14",
+            "firefox_android": "14",
+            "safari": "7",
+            "safari_ios": "7"
+          },
+          "optional": false
+        },
+        {
+          "label": "checkVisibility",
+          "key": "api.Element.checkVisibility",
+          "baseline": "high",
+          "support": {
+            "chrome": "105",
+            "chrome_android": "105",
+            "edge": "105",
+            "firefox": "106",
+            "firefox_android": "106",
+            "safari": "17.4",
+            "safari_ios": "17.4"
+          },
+          "optional": true
+        },
+        {
+          "label": "inert",
+          "key": "api.HTMLElement.inert",
+          "baseline": "high",
+          "support": {
+            "chrome": "102",
+            "chrome_android": "102",
+            "edge": "102",
+            "firefox": "112",
+            "firefox_android": "112",
+            "safari": "15.5",
+            "safari_ios": "15.5"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "useScript": {
+      "apis": [
+        {
+          "label": "URL",
+          "key": "api.URL",
+          "baseline": "high",
+          "support": {
+            "chrome": "32",
+            "chrome_android": "32",
+            "edge": "12",
+            "firefox": "19",
+            "firefox_android": "19",
+            "safari": "7",
+            "safari_ios": "7"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "useScrollDirection": {
+      "apis": [],
+      "notes": []
+    },
+    "useScrollLock": {
+      "apis": [],
+      "notes": []
+    },
+    "useScrollProgress": {
+      "apis": [
+        {
+          "label": "ResizeObserver",
+          "key": "api.ResizeObserver",
+          "baseline": "high",
+          "support": {
+            "chrome": "64",
+            "chrome_android": "64",
+            "edge": "79",
+            "firefox": "69",
+            "firefox_android": "79",
+            "safari": "13.1",
+            "safari_ios": "13.4"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "useScrollSpy": {
+      "apis": [],
+      "notes": []
+    },
+    "useSearchParam": {
+      "apis": [
+        {
+          "label": "history.pushState",
+          "key": "api.History.pushState",
+          "baseline": "high",
+          "support": {
+            "chrome": "5",
+            "chrome_android": "18",
+            "edge": "12",
+            "firefox": "4",
+            "firefox_android": "4",
+            "safari": "5",
+            "safari_ios": "4"
+          },
+          "optional": false
+        },
+        {
+          "label": "popstate event",
+          "key": "api.Window.popstate_event",
+          "baseline": "high",
+          "support": {
+            "chrome": "5",
+            "chrome_android": "18",
+            "edge": "12",
+            "firefox": "4",
+            "firefox_android": "4",
+            "safari": "5",
+            "safari_ios": "4.2"
+          },
+          "optional": false
+        },
+        {
+          "label": "Navigation API",
+          "key": "api.Navigation",
+          "baseline": "low",
+          "support": {
+            "chrome": "102",
+            "chrome_android": "102",
+            "edge": "102",
+            "firefox": "147",
+            "firefox_android": "147",
+            "safari": "26.2",
+            "safari_ios": "26.2"
+          },
+          "optional": true
+        },
+        {
+          "label": "URLSearchParams",
+          "key": "api.URLSearchParams",
+          "baseline": "high",
+          "support": {
+            "chrome": "49",
+            "chrome_android": "49",
+            "edge": "17",
+            "firefox": "29",
+            "firefox_android": "29",
+            "safari": "10.1",
+            "safari_ios": "10.3"
+          },
+          "optional": false
+        },
+        {
+          "label": "URL",
+          "key": "api.URL",
+          "baseline": "high",
+          "support": {
+            "chrome": "32",
+            "chrome_android": "32",
+            "edge": "12",
+            "firefox": "19",
+            "firefox_android": "19",
+            "safari": "7",
+            "safari_ios": "7"
+          },
+          "optional": false
+        }
+      ],
+      "notes": [
+        "Router navigation that changes the URL with `history.pushState` (e.g. Next.js `<Link>`) is noticed only where the Navigation API exists. Elsewhere the value still updates on Back and Forward and through the hook's own setter."
+      ]
+    },
+    "useServiceWorkerUpdate": {
+      "apis": [
+        {
+          "label": "Service workers",
+          "key": "api.ServiceWorkerContainer",
+          "baseline": "high",
+          "support": {
+            "chrome": "40",
+            "chrome_android": "40",
+            "edge": "17",
+            "firefox": "44",
+            "firefox_android": "44",
+            "safari": "11.1",
+            "safari_ios": "11.3"
+          },
+          "optional": false
+        }
+      ],
+      "notes": [
+        "Service workers need a secure page (HTTPS or localhost)."
+      ]
+    },
+    "useSessionStorage": {
+      "apis": [
+        {
+          "label": "sessionStorage",
+          "key": "api.Window.sessionStorage",
+          "baseline": "high",
+          "support": {
+            "chrome": "4",
+            "chrome_android": "18",
+            "edge": "12",
+            "firefox": "2",
+            "firefox_android": "4",
+            "safari": "4",
+            "safari_ios": "3.2"
+          },
+          "optional": false
+        },
+        {
+          "label": "storage event",
+          "key": "api.Window.storage_event",
+          "baseline": "high",
+          "support": {
+            "chrome": "1",
+            "chrome_android": "18",
+            "edge": "15",
+            "firefox": "45",
+            "firefox_android": "45",
+            "safari": "4",
+            "safari_ios": "4"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "useShare": {
+      "apis": [
+        {
+          "label": "Web Share API",
+          "key": "api.Navigator.share",
+          "baseline": false,
+          "support": {
+            "chrome": "128",
+            "chrome_android": "61",
+            "edge": "93",
+            "firefox_android": "79",
+            "safari": "12.1",
+            "safari_ios": "12.2"
+          },
+          "optional": false
+        },
+        {
+          "label": "navigator.canShare",
+          "key": "api.Navigator.canShare",
+          "baseline": false,
+          "support": {
+            "chrome": "128",
+            "chrome_android": "75",
+            "edge": "93",
+            "firefox_android": "96",
+            "safari": "14",
+            "safari_ios": "14"
+          },
+          "optional": true
+        }
+      ],
+      "notes": [
+        "Where `navigator.share` is missing, `supported` is `false` and `share` resolves to `false`; offer `useCopyToClipboard` instead."
+      ]
+    },
+    "useSpeechRecognition": {
+      "apis": [
+        {
+          "label": "Speech recognition",
+          "key": "api.SpeechRecognition",
+          "baseline": false,
+          "support": {
+            "chrome": "33",
+            "edge": "79",
+            "safari": "14.1",
+            "chrome_android": "33",
+            "safari_ios": "14.5"
+          },
+          "optional": false
+        }
+      ],
+      "notes": [
+        "Uses `SpeechRecognition` or its `webkit` prefixed version. Where neither exists (Firefox), `supported` is `false` and `start` does nothing."
+      ]
+    },
+    "useSpeechSynthesis": {
+      "apis": [
+        {
+          "label": "Speech synthesis",
+          "key": "api.SpeechSynthesis",
+          "baseline": "high",
+          "support": {
+            "chrome": "33",
+            "chrome_android": "33",
+            "edge": "14",
+            "firefox": "49",
+            "firefox_android": "62",
+            "safari": "7",
+            "safari_ios": "7"
+          },
+          "optional": false
+        }
+      ],
+      "notes": [
+        "Where the API is missing, `supported` is `false`. The voices on offer depend on the browser and operating system."
+      ]
+    },
+    "useStickToBottom": {
+      "apis": [
+        {
+          "label": "Touch events",
+          "key": "api.Element.touchstart_event",
+          "baseline": false,
+          "support": {
+            "chrome": "22",
+            "chrome_android": "25",
+            "edge": "12",
+            "firefox": "52",
+            "firefox_android": "6",
+            "safari_ios": "≤3"
+          },
+          "optional": true
+        },
+        {
+          "label": "wheel event",
+          "key": "api.Element.wheel_event",
+          "baseline": false,
+          "support": {
+            "chrome": "31",
+            "chrome_android": "31",
+            "edge": "12",
+            "firefox": "17",
+            "firefox_android": "17",
+            "safari": "7"
+          },
+          "optional": true
+        },
+        {
+          "label": "ResizeObserver",
+          "key": "api.ResizeObserver",
+          "baseline": "high",
+          "support": {
+            "chrome": "64",
+            "chrome_android": "64",
+            "edge": "79",
+            "firefox": "69",
+            "firefox_android": "79",
+            "safari": "13.1",
+            "safari_ios": "13.4"
+          },
+          "optional": false
+        },
+        {
+          "label": "MutationObserver",
+          "key": "api.MutationObserver",
+          "baseline": "high",
+          "support": {
+            "chrome": "26",
+            "chrome_android": "26",
+            "edge": "12",
+            "firefox": "14",
+            "firefox_android": "14",
+            "safari": "7",
+            "safari_ios": "7"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "useSwipe": {
+      "apis": [
+        {
+          "label": "Pointer events",
+          "key": "api.PointerEvent",
+          "baseline": "high",
+          "support": {
+            "chrome": "55",
+            "chrome_android": "55",
+            "edge": "12",
+            "firefox": "59",
+            "firefox_android": "79",
+            "safari": "13",
+            "safari_ios": "13"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "useTextSelection": {
+      "apis": [
+        {
+          "label": "Pointer events",
+          "key": "api.PointerEvent",
+          "baseline": "high",
+          "support": {
+            "chrome": "55",
+            "chrome_android": "55",
+            "edge": "12",
+            "firefox": "59",
+            "firefox_android": "79",
+            "safari": "13",
+            "safari_ios": "13"
+          },
+          "optional": false
+        },
+        {
+          "label": "getSelection",
+          "key": "api.Window.getSelection",
+          "baseline": "high",
+          "support": {
+            "chrome": "1",
+            "chrome_android": "18",
+            "edge": "12",
+            "firefox": "1",
+            "firefox_android": "4",
+            "safari": "1",
+            "safari_ios": "1"
+          },
+          "optional": false
+        },
+        {
+          "label": "selectionchange event",
+          "key": "api.Document.selectionchange_event",
+          "baseline": "high",
+          "support": {
+            "chrome": "11",
+            "chrome_android": "18",
+            "edge": "12",
+            "firefox": "52",
+            "firefox_android": "52",
+            "safari": "5.1",
+            "safari_ios": "5"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "useThrottledCallback": {
+      "apis": [],
+      "notes": []
+    },
+    "useTimeout": {
+      "apis": [],
+      "notes": []
+    },
+    "useUserMedia": {
+      "apis": [
+        {
+          "label": "getUserMedia",
+          "key": "api.MediaDevices.getUserMedia",
+          "baseline": "high",
+          "support": {
+            "chrome": "53",
+            "chrome_android": "53",
+            "edge": "12",
+            "firefox": "36",
+            "firefox_android": "36",
+            "safari": "11",
+            "safari_ios": "11"
+          },
+          "optional": false
+        }
+      ],
+      "notes": [
+        "Needs a secure page (HTTPS or localhost)."
+      ]
+    },
+    "useVisualViewport": {
+      "apis": [
+        {
+          "label": "VisualViewport",
+          "key": "api.VisualViewport",
+          "baseline": "high",
+          "support": {
+            "chrome": "61",
+            "chrome_android": "61",
+            "edge": "79",
+            "firefox": "91",
+            "firefox_android": "68",
+            "safari": "13",
+            "safari_ios": "13"
+          },
+          "optional": false
+        }
+      ],
+      "notes": []
+    },
+    "useWakeLock": {
+      "apis": [
+        {
+          "label": "Page Visibility",
+          "key": "api.Document.visibilityState",
+          "baseline": "high",
+          "support": {
+            "chrome": "33",
+            "chrome_android": "33",
+            "edge": "12",
+            "firefox": "18",
+            "firefox_android": "18",
+            "safari": "7",
+            "safari_ios": "7"
+          },
+          "optional": false
+        },
+        {
+          "label": "Screen Wake Lock API",
+          "key": "api.WakeLock",
+          "baseline": "low",
+          "support": {
+            "chrome": "84",
+            "chrome_android": "84",
+            "edge": "84",
+            "firefox": "126",
+            "firefox_android": "126",
+            "safari": "16.4",
+            "safari_ios": "18.4"
+          },
+          "optional": false
+        }
+      ],
+      "notes": [
+        "Where the API is missing, `supported` is `false` and the screen follows the device's normal sleep settings."
+      ]
+    },
+    "useWindowFocus": {
+      "apis": [],
+      "notes": []
+    },
+    "useWindowScroll": {
+      "apis": [],
+      "notes": []
+    },
+    "useWindowSize": {
+      "apis": [],
+      "notes": []
+    }
+  }
+}

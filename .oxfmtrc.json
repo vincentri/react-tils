@@ -10,6 +10,7 @@
     "examples/*/next-env.d.ts",
     "eval/fixtures/RESULTS.md",
     "eval/fixtures/results.json",
-    "eval/results-realistic.md"
+    "eval/results-realistic.md",
+    "demo/src/browser-support.json"
   ]
 }

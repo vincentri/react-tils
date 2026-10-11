@@ -1,6 +1,15 @@
 // The docs site's own UI: code blocks, the theme switch, and search. Built with the library's
 // hooks, so the site is also a working example of them.
-import { type KeyboardEvent, type ReactNode, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  createElement,
+  Fragment,
+  type KeyboardEvent,
+  type ReactNode,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {
   useClickOutside,
   useCopyToClipboard,
@@ -222,5 +231,14 @@ export function Search({ entries }: { entries: SearchEntry[] }) {
         </ul>
       )}
     </div>
+  )
+}
+
+/** Text with `code` spans. */
+export function Prose({ text }: { text: string }) {
+  return createElement(
+    Fragment,
+    null,
+    ...text.split('`').map((part, i) => (i % 2 === 1 ? createElement('code', null, part) : part)),
   )
 }

@@ -1,6 +1,5 @@
 import {
   createContext,
-  createElement,
   type CSSProperties,
   Fragment,
   type ReactNode,
@@ -80,7 +79,8 @@ import {
   useWindowScroll,
   useWindowSize,
 } from '@vincent.ri/react-tils'
-import { Code, Search, type SearchEntry, ThemeToggle } from './chrome'
+import { BrowserSupport, SupportBadge } from './BrowserSupport'
+import { Code, Prose, Search, type SearchEntry, ThemeToggle } from './chrome'
 import { hookDoc, PACKAGE, REPO, summary } from './docs'
 import { GettingStarted, gettingStartedEntries } from './GettingStarted'
 import pkg from '../../package.json'
@@ -90,15 +90,6 @@ export const hookUrl = (hook: string) => `${BASE}hooks/${hook}/`
 
 // On a hook's own page, its demo card shows only the live demo: the page has the rest.
 const OnHookPage = createContext(false)
-
-/** Text with `code` spans. */
-function Prose({ text }: { text: string }) {
-  return createElement(
-    Fragment,
-    null,
-    ...text.split('`').map((part, i) => (i % 2 === 1 ? createElement('code', null, part) : part)),
-  )
-}
 
 function Card({ hook, hint, children }: { hook: string; hint: string; children: ReactNode }) {
   const hooks = hook.split(' · ')
@@ -1572,6 +1563,7 @@ function HookPage({ hook, demo }: { hook: string; demo: ReactNode }) {
       <p className="meta">
         {doc.size && <span data-testid="hook-size">{doc.size} minified and brotlied</span>}
         <a href={`${REPO}/blob/main/src/${hook}.ts`}>Source</a>
+        <SupportBadge hook={hook} />
       </p>
       {doc.description.map((paragraph) => (
         <p key={paragraph}>
@@ -1638,6 +1630,8 @@ function HookPage({ hook, demo }: { hook: string; demo: ReactNode }) {
           <Code>{doc.types}</Code>
         </>
       )}
+
+      <BrowserSupport hook={hook} />
 
       {doc.aliases && (
         <>
