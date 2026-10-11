@@ -458,10 +458,11 @@ test('useCaretPosition follows the caret and places the mention popup there', as
   await field.pressSequentially('hi @a')
   const popup = page.getByTestId('mention-popup')
   await expect(popup).toHaveText('@alice')
-  const at = await position()
-  const popupBox = (await popup.boundingBox())!
-  expect(Math.abs(popupBox.x - at.left)).toBeLessThanOrEqual(2)
-  expect(popupBox.y).toBeGreaterThan(at.top)
+  // The caret is measured on the next frame, so wait until the popup and the reading agree.
+  await expect
+    .poll(async () => Math.abs((await popup.boundingBox())!.x - (await position()).left))
+    .toBeLessThanOrEqual(2)
+  expect((await popup.boundingBox())!.y).toBeGreaterThan((await position()).top)
 
   await page.keyboard.press('Space')
   await expect(popup).toHaveCount(0)
