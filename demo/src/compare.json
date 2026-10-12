@@ -1,10 +1,10 @@
 {
-  "measured": "2026-10-11",
+  "measured": "2026-10-12",
   "libraries": [
     {
       "id": "react-tils",
       "pkg": "@vincent.ri/react-tils",
-      "version": "0.1.4",
+      "version": "0.1.5",
       "size": 11953
     },
     {
