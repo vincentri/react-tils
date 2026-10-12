@@ -54,7 +54,7 @@ npx react-tils init
 
 It adds one line to your `CLAUDE.md` and `AGENTS.md` (creating them if needed), plus a Cursor rule if you use Cursor, pointing the agent at `node_modules/@vincent.ri/react-tils/AGENTS.md`. Running it again changes nothing.
 
-In our evaluation, that one line took the share of agent solutions with a wrong first frame from 17/27 (Claude Haiku) and 14/27 (Claude Sonnet) to 0/27 for both. See [Evaluation](#evaluation).
+In our evaluation, that one line took agent solutions with a wrong first frame from 17 of 27 (Claude Haiku) and 14 of 27 (Claude Sonnet) to 0 of 27 for both. See [Evaluation](#evaluation).
 
 ## How server rendering works
 
@@ -220,14 +220,16 @@ They fail if the code touches the DOM during server render, causes a hydration m
 
 ## Evaluation
 
-Headless Claude Code agents were given 9 everyday tasks in a Next.js project (responsive sidebar, window width, theme toggle, offline banner, pause when hidden, dark mode, reduced motion, tabs from the URL hash, greeting in the browser's language), 3 runs each. Prompts were normal requests and never mentioned server rendering.
+**With `npx react-tils init`, AI agents wrote the wrong-first-frame bug in 0 of 54 solutions, down from 31 of 54 without the library.**
 
-| Agent         | Wrong first frame, no library | Library installed | Library + `init` pointer |
-| ------------- | ----------------------------- | ----------------- | ------------------------ |
-| Claude Haiku  | 17/27                         | 10/27             | **0/27**                 |
-| Claude Sonnet | 14/27                         | 12/27             | **0/27**                 |
+Headless Claude Code agents were given 9 everyday tasks in a Next.js project (responsive sidebar, window width, theme toggle, offline banner, pause when hidden, dark mode, reduced motion, tabs from the URL hash, greeting in the browser's language), 3 runs each. Prompts were normal requests and never mentioned server rendering. Each cell counts solutions with a wrong first frame, so lower is better:
 
-Without the pointer, agents used the installed library in 10 of 54 runs; with it, in all 54. Hard failures were rare: Haiku's two or three hydration mismatches per setup went to zero with the pointer, and Sonnet passed every hard check in every setup. The common bug is the wrong first frame. Run with current Claude models only, in October 2026. Method, caveats, and how to reproduce it are in [CONTRIBUTING.md](CONTRIBUTING.md#evaluation).
+| Agent         | Without react-tils | Installed, no pointer | Installed + `init` |
+| ------------- | ------------------ | --------------------- | ------------------ |
+| Claude Haiku  | 17 of 27           | 10 of 27              | **0 of 27**        |
+| Claude Sonnet | 14 of 27           | 12 of 27              | **0 of 27**        |
+
+Installing alone barely helps: agents used the library in only 10 of 54 runs. The one-line pointer that `init` adds made them use it in all 54. Hard failures were rare in every setup: Haiku's two or three hydration mismatches per setup went to zero with the pointer, and Sonnet passed every hard check throughout. Run with current Claude models only, in October 2026. Method, caveats, and how to reproduce it are in [CONTRIBUTING.md](CONTRIBUTING.md#evaluation).
 
 ## Contributing
 
