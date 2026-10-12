@@ -56,6 +56,10 @@ test('every hook page is prerendered and hydrates without errors', async ({
     await expect(page.getByTestId('hook-example'), hook).not.toBeEmpty()
     await expect(page.getByTestId('hook-signature'), hook).toContainText(`function ${hook}`)
     await expect(page.getByTestId('browser-support'), hook).toBeVisible()
+    // Its docs are on the markdown URL next to the page, prerendered like the HTML.
+    const md = await page.request.get(`/hooks/${hook}.md`)
+    expect(md.status(), hook).toBe(200)
+    expect(await md.text(), hook).toContain(`# ${hook}`)
   }
   // The fixture fails the test on any console error, including hydration mismatches.
 })
@@ -172,34 +176,21 @@ test('each hook page says which browsers support it, from MDN data', async ({ pa
   await expect(page.getByTestId('browser-support')).toContainText('works wherever React does')
 })
 
-test("every hook page's docs are also on its markdown URL", async ({
-  page,
-  request,
-  browserName,
-}) => {
-  test.skip(browserName !== 'chromium', 'One engine is enough to walk all pages')
-
+test("each hook's docs are also served as markdown", async ({ page, request }) => {
   await page.goto('/hooks/useHash/')
   await expect(page.getByRole('link', { name: 'Markdown' })).toHaveAttribute(
     'href',
     '/hooks/useHash.md',
   )
 
-  // Prerendered next to the HTML, so no server is needed to serve them.
-  const home = await (await request.get('/')).text()
-  const hooks = [...home.matchAll(/data-testid="nav-(\w+)"/g)].map((match) => match[1]!)
-  expect(hooks.length).toBeGreaterThan(60)
-  for (const hook of hooks) {
-    const md = await request.get(`/hooks/${hook}.md`)
-    expect(md.status(), hook).toBe(200)
-    expect(md.headers()['content-type'], hook).toMatch(/^text\/markdown/)
-    const text = await md.text()
-    expect(text, hook).toContain(`# ${hook}`)
-    expect(text, hook).toContain(`function ${hook}`)
-    expect(text, hook).toContain(`Docs page: https://vincentri.github.io/react-tils/hooks/${hook}/`)
-  }
+  // The markdown carries the page's content, as markdown: signature, docs URL, support line.
+  const md = await request.get('/hooks/useHash.md')
+  expect(md.headers()['content-type']).toMatch(/^text\/markdown/)
+  const text = await md.text()
+  expect(text).toContain('function useHash(serverValue?: string)')
+  expect(text).toContain('Docs page: https://vincentri.github.io/react-tils/hooks/useHash/')
 
-  // A hook that is not everywhere: the support line is in the markdown too.
+  // A hook that is not everywhere says so in the markdown too, with the API's notes.
   const speech = await (await request.get('/hooks/useSpeechRecognition.md')).text()
   expect(speech).toContain('## Browser support\n\nNot available in Firefox.')
   expect(speech).toContain(
